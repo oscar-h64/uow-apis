@@ -1,0 +1,94 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4b672917cb4d8481a8fcae74b2ab2c85a8106c8036fe8a417a26f874fae169a9
+
+name:           tabula
+version:        0.1.0.0
+synopsis:       Haskell bindings for the Tabula API
+description:    Please see the README on GitGub at <https://github.com/mbg/tabula#readme>
+homepage:       https://github.com/mbg/tabula#readme
+bug-reports:    https://github.com/mbg/tabula/issues
+author:         Michael B. Gale
+maintainer:     m.gale@warwick.ac.uk
+copyright:      2018 Michael B. Gale
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/mbg/tabula
+
+library
+  hs-source-dirs:
+      src
+  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving
+  build-depends:
+      aeson >=1.1 && <1.2
+    , base >=4.7 && <5
+    , bytestring >=0.10 && <0.11
+    , conduit >=1.2 && <1.3
+    , conduit-extra >=1.1 && <1.2
+    , exceptions >=0.8 && <0.9
+    , http-client >=0.5 && <0.6
+    , http-client-tls
+    , http-conduit >=2.2 && <2.3
+    , iso8601-time >=0.1 && <0.2
+    , mtl >=2.2 && <2.3
+    , servant >=0.11 && <0.12
+    , servant-client >=0.11 && <0.12
+    , text >=1.2 && <1.3
+    , time >=1.6 && <1.7
+    , unordered-containers >=0.2 && <0.3
+    , uuid-types >=1.0 && <1.1
+  exposed-modules:
+      Warwick.Tabula
+      Warwick.Tabula.API
+      Warwick.Tabula.Attachment
+      Warwick.Tabula.Config
+      Warwick.Tabula.Coursework
+      Warwick.Tabula.Date
+      Warwick.Tabula.Error
+      Warwick.Tabula.Internal
+      Warwick.Tabula.Job
+      Warwick.Tabula.JSON
+      Warwick.Tabula.Types
+  other-modules:
+      Paths_tabula
+  default-language: Haskell2010
+
+test-suite tabula-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=1.1 && <1.2
+    , base >=4.7 && <5
+    , bytestring >=0.10 && <0.11
+    , conduit >=1.2 && <1.3
+    , conduit-extra >=1.1 && <1.2
+    , exceptions >=0.8 && <0.9
+    , http-client >=0.5 && <0.6
+    , http-client-tls
+    , http-conduit >=2.2 && <2.3
+    , iso8601-time >=0.1 && <0.2
+    , mtl >=2.2 && <2.3
+    , servant >=0.11 && <0.12
+    , servant-client >=0.11 && <0.12
+    , tabula
+    , text >=1.2 && <1.3
+    , time >=1.6 && <1.7
+    , unordered-containers >=0.2 && <0.3
+    , uuid-types >=1.0 && <1.1
+  other-modules:
+      Paths_tabula
+  default-language: Haskell2010
