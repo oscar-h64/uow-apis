@@ -43,7 +43,7 @@ import Data.Conduit.Binary hiding (mapM_)
 
 import Data.Aeson
 
-import Network.HTTP.Conduit
+import Network.HTTP.Conduit (newManager, tlsManagerSettings)
 import Network.HTTP.Simple
 import qualified Network.HTTP.Client.Conduit as C
 
@@ -56,6 +56,9 @@ import Warwick.Tabula.Error
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.API
 import qualified Warwick.Tabula.Internal as I
+
+import Warwick.Tabula.TabulaSession
+import Warwick.DownloadSubmission
 
 -------------------------------------------------------------------------------
 
@@ -78,24 +81,11 @@ urlForInstance (CustomInstance url) = url
 
 -------------------------------------------------------------------------------
 
--- | Represents the configuration for a Tabula session.
-data TabulaSession = TabulaSession {
-    sessionAuthData :: BasicAuthData,
-    sessionManager  :: Manager,
-    sessionURL      :: BaseUrl
-}
 
--- | Represents computations involving the Tabula API.
-type Tabula = StateT TabulaSession (ExceptT TabulaError ClientM)
 
-tabulaAuthData :: Tabula BasicAuthData
-tabulaAuthData = gets sessionAuthData
 
-tabulaManager :: Tabula Manager
-tabulaManager = gets sessionManager
 
-tabulaURL :: Tabula BaseUrl
-tabulaURL = gets sessionURL
+
 
 -- | `withTabula` @instance @config @action runs the computation @action
 -- by connecting to @instance with the configuration specified by @config.
@@ -111,7 +101,7 @@ withTabula inst (TabulaConfig {..}) m = do
         env  = ClientEnv manager url
         sesh = TabulaSession auth manager url
 
-    r <- runClientM (runExceptT $ evalStateT m sesh) env
+    r <- runClientM (runExceptT $ evalStateT m sesh) (env Nothing)
 
     case r of
         Left serr -> return $ Left $ TransportError serr
@@ -125,7 +115,7 @@ withTabula inst (TabulaConfig {..}) m = do
 handle :: (FromJSON a, HasPayload a)
        => ClientM (TabulaResponse a) -> Tabula (TabulaResponse a)
 handle m = lift $ lift $ m `catch` \(e :: ServantError) -> case e of
-   FailureResponse {..} -> case decode responseBody of
+   FailureResponse r -> case decode (responseBody r) of
        Nothing -> throwM e
        Just r  -> return r
    _                    -> throwM e
@@ -142,25 +132,9 @@ listSubmissions mc aid = do
     authData <- tabulaAuthData
     handle $ I.listSubmissions authData mc (unAssignmentID aid)
 
-buildDownloadURL :: BaseUrl
-                 -> ModuleCode
-                 -> AssignmentID
-                 -> Submission
-                 -> FilePath
-                 -> BS.ByteString
-buildDownloadURL url mc aid sub fn = BS.concat
-    [ BS.packChars $ baseUrlPath url
-    , "/module/"
-    , moduleCode mc
-    , "/assignments/"
-    , toASCIIBytes $ unAssignmentID aid
-    , "/submissions/"
-    , BS.packChars (submissionID sub)
-    , "/"
-    , BS.packChars fn
-    ]
 
-downloadSubmission :: String
+
+{-downloadSubmission :: String
                    -> ModuleCode
                    -> AssignmentID
                    -> Submission
@@ -183,6 +157,6 @@ downloadSubmission sid mc aid sub fn out = do
     runConduitRes $ do
          response <- http request manager
          C.responseBody response $$+- sinkFile out
-    return ()
+    return ()-}
 
 -------------------------------------------------------------------------------
