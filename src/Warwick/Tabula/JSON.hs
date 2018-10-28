@@ -3,7 +3,7 @@
 -- Copyright 2018 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
-module Warwick.Tabula.JSON (parseTabulaJSON) where
+module Warwick.Tabula.JSON (parseTabulaJSON, formatTabulaJSON) where
 
 --------------------------------------------------------------------------------
 
