@@ -15,6 +15,9 @@ instance FromJSON TabulaDateTime where
             Nothing -> fail "Date and time not formatted in ISO8601."
             Just d  -> return (TabulaDateTime d)
 
+instance ToJSON TabulaDateTime where
+    toJSON (TabulaDateTime time) = String (T.pack $ formatISO8601 time)
+
 newtype TabulaDate = TabulaDate { getDate :: UTCTime }
     deriving Show
 
