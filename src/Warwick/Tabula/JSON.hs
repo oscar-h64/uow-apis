@@ -15,6 +15,11 @@ import Data.Char
 
 --------------------------------------------------------------------------------
 
+jsonOpts :: Options
+jsonOpts = defaultOptions {
+    fieldLabelModifier = toFieldName
+}
+
 toFieldName :: String -> String
 toFieldName = while isUpper toLower . dropWhile isLower
     where while p f [] = []
@@ -24,9 +29,9 @@ toFieldName = while isUpper toLower . dropWhile isLower
 
 -- | Formatting options for field names.
 parseTabulaJSON :: (Generic a, GFromJSON Zero (Rep a)) => Value -> Parser a
-parseTabulaJSON = genericParseJSON opts
-    where opts = defaultOptions {
-        fieldLabelModifier = toFieldName
-    }
+parseTabulaJSON = genericParseJSON jsonOpts
+
+formatTabulaJSON :: (Generic a, GToJSON Zero (Rep a)) => a -> Value
+formatTabulaJSON = genericToJSON jsonOpts
 
 --------------------------------------------------------------------------------
