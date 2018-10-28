@@ -7,7 +7,7 @@ import Data.Time
 import Data.Time.ISO8601
 
 newtype TabulaDateTime = TabulaDateTime { getDateTime :: UTCTime }
-    deriving Show
+    deriving (Eq, Show)
 
 instance FromJSON TabulaDateTime where
     parseJSON = withText "ISO8601 date+time format" $
