@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 115680acab2c978441c2551a2e34d378ba3fe43aa0256dbc0a82b8ce7adfec5a
+-- hash: 0c47d100269f4a47298ae2b2f91085d6d6a9e40cb46e1cd285fd9b2c1932b277
 
 name:           tabula
 version:        0.1.0.0
@@ -38,6 +38,7 @@ library
       Warwick.Tabula.Internal
       Warwick.Tabula.Job
       Warwick.Tabula.JSON
+      Warwick.Tabula.Relationship
       Warwick.Tabula.TabulaSession
       Warwick.Tabula.Types
   other-modules:

@@ -20,6 +20,7 @@ import Warwick.Tabula.Error
 import Warwick.Tabula.Attachment
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Job
+import Warwick.Tabula.Relationship
 
 --------------------------------------------------------------------------------
 
@@ -50,6 +51,8 @@ type Coursework =
  --  :<|> TabulaAuth :> "module" :> Capture "moduleCode" String :> "assignments" :> Capture "assignmentId" String :> "submissions" :> Capture "submissionId" String :> Capture "filename" String :> Raw
  :<|> TabulaAuth :> "attachments" :> QueryParam "filename" String :> ReqBody '[OctetStream] BS.ByteString :> Post '[JSON] (TabulaResponse Attachment)
  :<|> TabulaAuth :> "job" :> Capture "jobID" UUID :> Get '[JSON] (TabulaResponse JobInstance)
+ :<|> TabulaAuth :> "member" :> Capture "userID" String :> "relationships" :> Get '[JSON] (TabulaResponse [Relationship])
+
 type API = Coursework
 
 tabula :: Proxy API

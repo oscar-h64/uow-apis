@@ -18,6 +18,7 @@ import Warwick.Tabula.API
 import Warwick.Tabula.Attachment
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Job
+import Warwick.Tabula.Relationship
 
 --------------------------------------------------------------------------------
 
@@ -28,10 +29,13 @@ uploadAttachment :: BasicAuthData -> Maybe String -> BS.ByteString -> ClientM (T
 
 retrieveJob :: BasicAuthData -> UUID -> ClientM (TabulaResponse JobInstance)
 
+listRelationships :: BasicAuthData -> String -> ClientM (TabulaResponse [Relationship])
+
 -- | Automatically generate client functions.
 listAssignments :<|>
     listSubmissions :<|>
     uploadAttachment :<|>
-    retrieveJob = client tabula
+    retrieveJob :<|>
+    listRelationships = client tabula
 
 --------------------------------------------------------------------------------
