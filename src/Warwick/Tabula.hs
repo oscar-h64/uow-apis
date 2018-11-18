@@ -7,6 +7,7 @@ module Warwick.Tabula (
     --module Warwick.Tabula.API,
     --module Warwick.Tabula.Internal,
     module Warwick.Tabula.Coursework,
+    module Warwick.Tabula.Relationship,
 
     TabulaInstance(..),
 
@@ -22,7 +23,9 @@ module Warwick.Tabula (
     listAssignments,
     listSubmissions,
 
-    downloadSubmission
+    downloadSubmission,
+
+    listRelationships
 ) where
 
 --------------------------------------------------------------------------------
@@ -54,6 +57,7 @@ import Warwick.Tabula.Config
 import Warwick.Tabula.Types
 import Warwick.Tabula.Error
 import Warwick.Tabula.Coursework
+import Warwick.Tabula.Relationship
 import Warwick.Tabula.API
 import qualified Warwick.Tabula.Internal as I
 
@@ -132,6 +136,11 @@ listSubmissions mc aid = do
     authData <- tabulaAuthData
     handle $ I.listSubmissions authData mc (unAssignmentID aid)
 
+listRelationships ::
+    String -> Tabula (TabulaResponse [Relationship])
+listRelationships uid = do
+    authData <- tabulaAuthData
+    handle $ I.listRelationships authData uid
 
 
 {-downloadSubmission :: String
