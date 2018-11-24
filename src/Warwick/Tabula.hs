@@ -17,6 +17,7 @@ module Warwick.Tabula (
     AssignmentID(..),
 
     TabulaResponse(..),
+    TabulaAssignmentResponse(..),
 
     withTabula,
 
@@ -25,7 +26,8 @@ module Warwick.Tabula (
 
     downloadSubmission,
 
-    listRelationships
+    listRelationships,
+    personAssignments
 ) where
 
 --------------------------------------------------------------------------------
@@ -142,30 +144,14 @@ listRelationships uid = do
     authData <- tabulaAuthData
     handle $ I.listRelationships authData uid
 
-
-{-downloadSubmission :: String
-                   -> ModuleCode
-                   -> AssignmentID
-                   -> Submission
-                   -> FilePath
-                   -> FilePath
-                   -> Tabula ()
-downloadSubmission sid mc aid sub fn out = do
-    manager            <- tabulaManager
-    baseURL            <- tabulaURL
-    BasicAuthData {..} <- tabulaAuthData
-    let url = buildDownloadURL baseURL mc aid sub fn
-        request
-            = applyBasicAuth basicAuthUsername basicAuthPassword
-            $ setRequestMethod "GET"
-            $ setRequestPath url
-            $ setRequestSecure True
-            $ setRequestPort (baseUrlPort baseURL)
-            $ setRequestHost (BS.packChars $ baseUrlHost baseURL)
-            $ defaultRequest
-    runConduitRes $ do
-         response <- http request manager
-         C.responseBody response $$+- sinkFile out
-    return ()-}
+personAssignments ::
+    String -> Tabula TabulaAssignmentResponse
+personAssignments uid = do
+    authData <- tabulaAuthData
+    lift $ lift $ I.personAssignments authData uid `catch` \(e :: ServantError) -> case e of
+       FailureResponse r -> case decode (responseBody r) of
+           Nothing -> throwM e
+           Just r  -> return r
+       _                    -> throwM e
 
 -------------------------------------------------------------------------------
