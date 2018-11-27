@@ -51,3 +51,11 @@ instance HasPayload [Relationship] where
     payloadFieldName _ = "relationships"
 
 --------------------------------------------------------------------------------
+
+-- | `relationshipsOfType` @rid retrieves all `Relationship` values where
+-- the relationship type id is set to @rid.
+relationshipsOfType :: String -> [Relationship] -> [Relationship]
+relationshipsOfType rid = filter $ \Relationship{..} ->
+    relationshipTypeID relationshipType == rid
+
+--------------------------------------------------------------------------------
