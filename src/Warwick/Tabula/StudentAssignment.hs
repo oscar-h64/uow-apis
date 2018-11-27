@@ -72,7 +72,7 @@ data StudentAssignmentSubmission = StudentAssignmentSubmission {
     studentAssignmentSubmissionAuthorisedLate :: Bool,
     --studentAssignmentSubmissionAttachments :: []
     studentAssignmentSubmissionSubmittedDate  :: TabulaDateTime,
-    studentAssignmentSubmissionCloseDate      :: TabulaDateTime,
+    studentAssignmentSubmissionCloseDate      :: Maybe TabulaDateTime,
     studentAssignmentSubmissionWordCount      :: Maybe Int
 } deriving Show
 
@@ -82,7 +82,7 @@ instance FromJSON StudentAssignmentSubmission where
                                     <*> v .: "late"
                                     <*> v .: "authorisedLate"
                                     <*> v .: "submittedDate"
-                                    <*> v .: "closeDate"
+                                    <*> v .:? "closeDate"
                                     <*> v .: "wordCount"
 
 data StudentAssignment = StudentAssignment {
