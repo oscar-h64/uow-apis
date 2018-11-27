@@ -6,6 +6,8 @@
 module Warwick.Tabula.Types (
     module UUID,
 
+    UUIDorString(..),
+
     module Warwick.Tabula.Date,
     module Warwick.Tabula.JSON,
 
@@ -46,6 +48,13 @@ instance FromJSON a => FromJSON (ObjectList a) where
         ObjectList <$> mapM (parseJSON . snd) (HM.toList obj)
 
 --------------------------------------------------------------------------------
+
+data UUIDorString = UUID UUID | NotUUID String deriving Show
+
+instance FromJSON UUIDorString where
+    parseJSON (String v) = case fromText v of
+        Nothing -> return $ NotUUID $ T.unpack v
+        Just uuid -> return $ UUID uuid
 
 instance IsString UUID where
     fromString str = case UUID.fromString str of

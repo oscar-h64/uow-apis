@@ -67,7 +67,7 @@ instance FromJSON StudentAssignmentFeedback where
                                   <*> v .:? "downloadPdf"
 
 data StudentAssignmentSubmission = StudentAssignmentSubmission {
-    studentAssignmentSubmissionID             :: UUID,
+    studentAssignmentSubmissionID             :: UUIDorString,
     studentAssignmentSubmissionLate           :: Bool,
     studentAssignmentSubmissionAuthorisedLate :: Bool,
     --studentAssignmentSubmissionAttachments :: []
