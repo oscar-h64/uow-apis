@@ -101,7 +101,7 @@ data StudentAssignment = StudentAssignment {
     studentAssignmentOpened :: Bool,
     studentAssignmentClosed :: Bool,
     studentAssignmentOpenDate :: TabulaDateTime,
-    studentAssignmentCloseDate :: TabulaDateTime,
+    studentAssignmentCloseDate :: Maybe TabulaDateTime,
     studentAssignmentSubmission :: Maybe StudentAssignmentSubmission,
     studentAssignmentFeedback  :: Maybe StudentAssignmentFeedback,
     studentAssignmentExtension :: Maybe StudentAssignmentExtension
@@ -123,10 +123,10 @@ instance FromJSON StudentAssignment where
                           <*> v .: "opened"
                           <*> v .: "closed"
                           <*> v .: "openDate"
-                          <*> v .: "closeDate"
-                          <*> v .: "submission"
-                          <*> v .: "feedback"
-                          <*> v .: "extension"
+                          <*> v .:? "closeDate"
+                          <*> v .:? "submission"
+                          <*> v .:? "feedback"
+                          <*> v .:? "extension"
 
 data AssignmentInformation = AssignmentInformation {
     enrolledAssignments :: [StudentAssignment],
