@@ -139,3 +139,10 @@ instance FromJSON AssignmentInformation where
                               <*> v .: "historicAssignments"
 
 --------------------------------------------------------------------------------
+
+lateSubmissions :: [StudentAssignment] -> [StudentAssignment]
+lateSubmissions = filter $ \StudentAssignment{..} -> case studentAssignmentSubmission of
+    Nothing -> False
+    Just (StudentAssignmentSubmission {..}) -> studentAssignmentSubmissionLate
+
+--------------------------------------------------------------------------------
