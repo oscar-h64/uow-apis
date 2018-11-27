@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0c47d100269f4a47298ae2b2f91085d6d6a9e40cb46e1cd285fd9b2c1932b277
+-- hash: 4e3a0b985b663885457483ccb1738576a4fc4baa2f86c5aa115b62bdb160e0b6
 
 name:           tabula
 version:        0.1.0.0
@@ -39,13 +39,14 @@ library
       Warwick.Tabula.Job
       Warwick.Tabula.JSON
       Warwick.Tabula.Relationship
+      Warwick.Tabula.StudentAssignment
       Warwick.Tabula.TabulaSession
       Warwick.Tabula.Types
   other-modules:
       Paths_tabula
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving
+  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving OverlappingInstances
   build-depends:
       aeson
     , base
@@ -73,7 +74,7 @@ test-suite tabula-test
       Paths_tabula
   hs-source-dirs:
       test
-  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving
+  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving OverlappingInstances
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson

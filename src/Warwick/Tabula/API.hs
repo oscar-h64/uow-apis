@@ -21,6 +21,7 @@ import Warwick.Tabula.Attachment
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Job
 import Warwick.Tabula.Relationship
+import Warwick.Tabula.StudentAssignment
 
 --------------------------------------------------------------------------------
 
@@ -29,11 +30,13 @@ data TabulaResponse a
     = TabulaOK {
         tabulaStatus  :: String,
         tabulaData    :: a
-    }
-    {- | TabulaError {
-        tabulaStatus  :: String,
-        tabulaError   :: TabulaError
-    }  -} deriving (Show)
+    } deriving (Show)
+
+data TabulaAssignmentResponse
+    = TabulaAssignmentOK {
+        tabulaAssignmentStatus :: String,
+        tabulaAssignmentData   :: AssignmentInformation
+    } deriving Show
 
 instance (HasPayload a, FromJSON a) => FromJSON (TabulaResponse a) where
     parseJSON = withObject "TabulaResponse" $ \v -> do
@@ -41,6 +44,14 @@ instance (HasPayload a, FromJSON a) => FromJSON (TabulaResponse a) where
         if s
         then TabulaOK <$> v .: "status"
                       <*> v .: payloadFieldName (Proxy :: Proxy a)
+        else fail "200 OK, but success is not true (this should not happen)"
+
+instance FromJSON TabulaAssignmentResponse where
+    parseJSON = withObject "TabulaAssignmentResponse" $ \v -> do
+        s <- v .: "success"
+        if s
+        then TabulaAssignmentOK <$> v .: "status"
+                                <*> parseJSON (Object v)
         else fail "200 OK, but success is not true (this should not happen)"
 
 type TabulaAuth = BasicAuth "" ()
@@ -52,6 +63,7 @@ type Coursework =
  :<|> TabulaAuth :> "attachments" :> QueryParam "filename" String :> ReqBody '[OctetStream] BS.ByteString :> Post '[JSON] (TabulaResponse Attachment)
  :<|> TabulaAuth :> "job" :> Capture "jobID" UUID :> Get '[JSON] (TabulaResponse JobInstance)
  :<|> TabulaAuth :> "member" :> Capture "userID" String :> "relationships" :> Get '[JSON] (TabulaResponse [Relationship])
+ :<|> TabulaAuth :> "member" :> Capture "userID" String :> "assignments" :> Get '[JSON] TabulaAssignmentResponse
 
 type API = Coursework
 

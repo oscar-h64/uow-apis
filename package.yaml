@@ -47,6 +47,7 @@ default-extensions:
 - ScopedTypeVariables
 - RecordWildCards
 - GeneralizedNewtypeDeriving
+- OverlappingInstances
 
 library:
   source-dirs: src
