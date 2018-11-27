@@ -46,32 +46,32 @@ instance FromJSON StudentAssignmentExtension where
 
 data StudentAssignmentFeedback = StudentAssignmentFeedback {
     studentAssignmentFeedbackID :: UUID,
-    studentAssignmentFeedbackMark :: Maybe String,
+    studentAssignmentFeedbackMark :: Maybe Int,
     studentAssignmentFeedbackGrade :: Maybe String,
     --studentAssignmentFeedbackAdjustments :: (),
-    studentAssignmentFeedbackGenericFeedback :: String,
-    studentAssignmentFeedbackComments :: String,
+    studentAssignmentFeedbackGenericFeedback :: Maybe String,
+    studentAssignmentFeedbackComments :: Maybe String,
     --studentAssignmentFeedbackAttachments :: []
-    studentAssignmentFeedbackDownloadZIP :: String,
-    studentAssignmentFeedbackDownloadPDF :: String
+    studentAssignmentFeedbackDownloadZIP :: Maybe String,
+    studentAssignmentFeedbackDownloadPDF :: Maybe String
 } deriving Show
 
 instance FromJSON StudentAssignmentFeedback where
     parseJSON = withObject "StudentAssignmentFeedback" $ \v ->
         StudentAssignmentFeedback <$> v .: "id"
-                                  <*> v .: "mark"
-                                  <*> v .: "grade"
-                                  <*> v .: "genericFeedback"
-                                  <*> v .: "comments"
-                                  <*> v .: "downloadZip"
-                                  <*> v .: "downloadPdf"
+                                  <*> v .:? "mark"
+                                  <*> v .:? "grade"
+                                  <*> v .:? "genericFeedback"
+                                  <*> v .:? "comments"
+                                  <*> v .:? "downloadZip"
+                                  <*> v .:? "downloadPdf"
 
 data StudentAssignmentSubmission = StudentAssignmentSubmission {
     studentAssignmentSubmissionID             :: UUID,
     studentAssignmentSubmissionLate           :: Bool,
     studentAssignmentSubmissionAuthorisedLate :: Bool,
     --studentAssignmentSubmissionAttachments :: []
-    studentAssignmentSubmissionSubmittedDate  :: TabulaDateTime,
+    studentAssignmentSubmissionSubmittedDate  :: Maybe TabulaDateTime,
     studentAssignmentSubmissionCloseDate      :: Maybe TabulaDateTime,
     studentAssignmentSubmissionWordCount      :: Maybe Int
 } deriving Show
@@ -81,9 +81,9 @@ instance FromJSON StudentAssignmentSubmission where
         StudentAssignmentSubmission <$> v .: "id"
                                     <*> v .: "late"
                                     <*> v .: "authorisedLate"
-                                    <*> v .: "submittedDate"
+                                    <*> v .:? "submittedDate"
                                     <*> v .:? "closeDate"
-                                    <*> v .: "wordCount"
+                                    <*> v .:? "wordCount"
 
 data StudentAssignment = StudentAssignment {
     studentAssignmentID           :: UUID,
