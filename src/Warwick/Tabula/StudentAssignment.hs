@@ -33,7 +33,7 @@ instance FromJSON ExtensionStatus where
 data StudentAssignmentExtension = StudentAssignmentExtension {
     studentAssignmentExtID        :: UUID,
     studentAssignmentExtState     :: ExtensionStatus,
-    studentAssignmentExtReqExpiry :: TabulaDateTime,
+    studentAssignmentExtReqExpiry :: Maybe TabulaDateTime,
     studentAssignmentExtExpiry    :: TabulaDateTime
 } deriving Show
 
@@ -41,7 +41,7 @@ instance FromJSON StudentAssignmentExtension where
     parseJSON = withObject "StudentAssignmentExtension" $ \v ->
         StudentAssignmentExtension <$> v .: "id"
                                    <*> v .: "state"
-                                   <*> v .: "requestedExpiryDate"
+                                   <*> v .:? "requestedExpiryDate"
                                    <*> v .: "expiryDate"
 
 data StudentAssignmentFeedback = StudentAssignmentFeedback {
