@@ -21,7 +21,7 @@ import           Network.HTTP.Types           (hContentLength, statusCode)
 import System.IO (withFile, IOMode(..))
 
 import Servant.API.BasicAuth
-import Servant.Client hiding (responseBody)
+import Servant.Client hiding (responseBody, responseHeaders)
 
 import Warwick.Tabula.TabulaSession
 import Warwick.Tabula.Types
@@ -73,16 +73,21 @@ downloadSubmission sid mc aid sub fn out = do
     liftIO $ LBS.writeFile out (responseBody response)
     return ()
 
-downloadSubmissionWithCallback :: String
+data TabulaDownloadCallbacks a = Callbacks {
+    onWrapper :: IO () -> IO (),
+    onLength  :: Int -> IO a,
+    onUpdate  :: a -> C8.ByteString -> IO ()
+}
+
+downloadSubmissionWithCallbacks :: String
                    -> ModuleCode
                    -> AssignmentID
                    -> Submission
                    -> FilePath
                    -> FilePath
-                   -> (IO () -> IO ())
-                   -> (C8.ByteString -> IO b)
+                   -> TabulaDownloadCallbacks a
                    -> Tabula ()
-downloadSubmissionWithCallback sid mc aid sub fn out wrapper updateProgress = do
+downloadSubmissionWithCallbacks sid mc aid sub fn out (Callbacks {..}) = do
     manager            <- tabulaManager
     baseURL            <- tabulaURL
     BasicAuthData {..} <- tabulaAuthData
@@ -98,16 +103,19 @@ downloadSubmissionWithCallback sid mc aid sub fn out wrapper updateProgress = do
             $ setRequestCheckStatus
             $ req
     --res <- liftIO $ runConduitRes $ http request manager
-    liftIO $ wrapper $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
+    liftIO $ onWrapper $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
         putStrLn $ "The status code was: " ++
                    show (statusCode $ responseStatus response)
+
+        let Just cl = lookup hContentLength (responseHeaders response)
+        r <- onLength (read (C8.unpack cl))
 
         let loop = do
                 bs <- brRead $ responseBody response
                 if BS.null bs
                     then putStrLn "\nFinished response body"
                     else do
-                        updateProgress bs
+                        onUpdate r bs
                         BS.hPut h bs
                         loop
         loop
