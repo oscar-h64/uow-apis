@@ -26,6 +26,7 @@ dependencies:
 - iso8601-time # >= 0.1 && < 0.2
 - unordered-containers # >= 0.2 && < 0.3
 - aeson # >= 1.1 && < 1.2
+- http-types
 - http-client # >= 0.5 && < 0.6
 - http-client-tls
 - conduit # >= 1.2 && < 1.3

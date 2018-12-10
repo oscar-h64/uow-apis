@@ -25,6 +25,7 @@ module Warwick.Tabula (
     listSubmissions,
 
     downloadSubmission,
+    downloadSubmissionWithCallback,
 
     listRelationships,
     personAssignments

@@ -11,8 +11,14 @@ import qualified Data.ByteString.Char8 as C8
 
 import Network.HTTP.Client
 import Network.HTTP.Client.TLS
-import Network.HTTP.Simple hiding (httpLbs)
+import Network.HTTP.Simple hiding (httpLbs, withResponse)
 import qualified Network.HTTP.Client.Conduit as C
+
+import           Network.HTTP.Conduit         (http, parseUrl, responseBody,
+                                               responseHeaders)
+import           Network.HTTP.Types           (hContentLength, statusCode)
+
+import System.IO (withFile, IOMode(..))
 
 import Servant.API.BasicAuth
 import Servant.Client hiding (responseBody)
@@ -65,4 +71,47 @@ downloadSubmission sid mc aid sub fn out = do
             $ req
     response <- liftIO $ httpLbs request manager
     liftIO $ LBS.writeFile out (responseBody response)
+    return ()
+
+downloadSubmissionWithCallback :: String
+                   -> ModuleCode
+                   -> AssignmentID
+                   -> Submission
+                   -> FilePath
+                   -> FilePath
+                   -> (C8.ByteString -> IO a)
+                   -> Tabula ()
+downloadSubmissionWithCallback sid mc aid sub fn out updateProgress = do
+    manager            <- tabulaManager
+    baseURL            <- tabulaURL
+    BasicAuthData {..} <- tabulaAuthData
+    req <- parseRequest ("https://" ++ baseUrlHost baseURL ++ buildDownloadURL baseURL mc aid sub fn)
+    let
+        request
+            = applyBasicAuth basicAuthUsername basicAuthPassword
+            $ setRequestMethod "GET"
+            -- $ setRequestPath url
+            $ setRequestSecure True
+            $ setRequestPort (baseUrlPort baseURL)
+            $ setRequestHost (BS.packChars $ baseUrlHost baseURL)
+            $ setRequestCheckStatus
+            $ req
+    --res <- liftIO $ runConduitRes $ http request manager
+    liftIO $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
+        putStrLn $ "The status code was: " ++
+                   show (statusCode $ responseStatus response)
+
+        let loop = do
+                bs <- brRead $ responseBody response
+                if BS.null bs
+                    then putStrLn "\nFinished response body"
+                    else do
+                        updateProgress bs
+                        BS.hPut h bs
+                        loop
+        loop
+
+
+    --response <- liftIO $ httpLbs request manager
+    --liftIO $ LBS.writeFile out (responseBody response)
     return ()

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4e3a0b985b663885457483ccb1738576a4fc4baa2f86c5aa115b62bdb160e0b6
+-- hash: c0b03cc23e2a2de42271a2c1ff4cc864615d48b53f284b2f09b7d80fa25191b8
 
 name:           tabula
 version:        0.1.0.0
@@ -57,6 +57,7 @@ library
     , http-client
     , http-client-tls
     , http-conduit
+    , http-types
     , iso8601-time
     , mtl
     , servant
@@ -86,6 +87,7 @@ test-suite tabula-test
     , http-client
     , http-client-tls
     , http-conduit
+    , http-types
     , iso8601-time
     , mtl
     , servant
