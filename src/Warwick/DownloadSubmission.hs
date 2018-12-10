@@ -102,7 +102,7 @@ downloadSubmissionWithCallbacks sid mc aid sub fn out (Callbacks {..}) = do
             $ setRequestPort (baseUrlPort baseURL)
             $ setRequestHost (BS.packChars $ baseUrlHost baseURL)
             $ setRequestCheckStatus
-            $ req
+            $ req { responseTimeout = responseTimeoutNone }
     --res <- liftIO $ runConduitRes $ http request manager
     liftIO $ onWrapper $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
         --putStrLn $ "The status code was: " ++
