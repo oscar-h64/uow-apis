@@ -79,9 +79,10 @@ downloadSubmissionWithCallback :: String
                    -> Submission
                    -> FilePath
                    -> FilePath
-                   -> (C8.ByteString -> IO a)
+                   -> (IO () -> IO ())
+                   -> (C8.ByteString -> IO b)
                    -> Tabula ()
-downloadSubmissionWithCallback sid mc aid sub fn out updateProgress = do
+downloadSubmissionWithCallback sid mc aid sub fn out wrapper updateProgress = do
     manager            <- tabulaManager
     baseURL            <- tabulaURL
     BasicAuthData {..} <- tabulaAuthData
@@ -97,7 +98,7 @@ downloadSubmissionWithCallback sid mc aid sub fn out updateProgress = do
             $ setRequestCheckStatus
             $ req
     --res <- liftIO $ runConduitRes $ http request manager
-    liftIO $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
+    liftIO $ wrapper $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
         putStrLn $ "The status code was: " ++
                    show (statusCode $ responseStatus response)
 
