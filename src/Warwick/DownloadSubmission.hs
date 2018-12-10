@@ -77,7 +77,7 @@ data TabulaDownloadCallbacks a = Callbacks {
     onWrapper  :: IO () -> IO (),
     onLength   :: Int -> IO a,
     onUpdate   :: a -> C8.ByteString -> IO (),
-    onComplete :: IO ()
+    onComplete :: a -> IO ()
 }
 
 downloadSubmissionWithCallbacks :: String
@@ -114,7 +114,7 @@ downloadSubmissionWithCallbacks sid mc aid sub fn out (Callbacks {..}) = do
         let loop = do
                 bs <- brRead $ responseBody response
                 if BS.null bs
-                    then onComplete
+                    then onComplete r
                     else do
                         onUpdate r bs
                         BS.hPut h bs
