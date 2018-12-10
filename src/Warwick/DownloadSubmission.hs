@@ -74,9 +74,10 @@ downloadSubmission sid mc aid sub fn out = do
     return ()
 
 data TabulaDownloadCallbacks a = Callbacks {
-    onWrapper :: IO () -> IO (),
-    onLength  :: Int -> IO a,
-    onUpdate  :: a -> C8.ByteString -> IO ()
+    onWrapper  :: IO () -> IO (),
+    onLength   :: Int -> IO a,
+    onUpdate   :: a -> C8.ByteString -> IO (),
+    onComplete :: IO ()
 }
 
 downloadSubmissionWithCallbacks :: String
@@ -104,8 +105,8 @@ downloadSubmissionWithCallbacks sid mc aid sub fn out (Callbacks {..}) = do
             $ req
     --res <- liftIO $ runConduitRes $ http request manager
     liftIO $ onWrapper $ withFile out WriteMode $ \h -> withResponse request manager $ \response -> do
-        putStrLn $ "The status code was: " ++
-                   show (statusCode $ responseStatus response)
+        --putStrLn $ "The status code was: " ++
+         --          show (statusCode $ responseStatus response)
 
         let Just cl = lookup hContentLength (responseHeaders response)
         r <- onLength (read (C8.unpack cl))
@@ -113,7 +114,7 @@ downloadSubmissionWithCallbacks sid mc aid sub fn out (Callbacks {..}) = do
         let loop = do
                 bs <- brRead $ responseBody response
                 if BS.null bs
-                    then putStrLn "\nFinished response body"
+                    then onComplete
                     else do
                         onUpdate r bs
                         BS.hPut h bs
