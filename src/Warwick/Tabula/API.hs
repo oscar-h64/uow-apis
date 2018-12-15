@@ -59,7 +59,6 @@ type TabulaAuth = BasicAuth "" ()
 type Coursework =
       TabulaAuth :> "module" :> Capture "moduleCode" ModuleCode :> "assignments" :> QueryParam "academicYear" String :> Get '[JSON] (TabulaResponse [Assignment])
  :<|> TabulaAuth :> "module" :> Capture "moduleCode" ModuleCode :> "assignments" :> Capture "assignmentId" UUID :> "submissions" :> Get '[JSON] (TabulaResponse (HM.HashMap String (Maybe Submission)))
- --  :<|> TabulaAuth :> "module" :> Capture "moduleCode" String :> "assignments" :> Capture "assignmentId" String :> "submissions" :> Capture "submissionId" String :> Capture "filename" String :> Raw
  :<|> TabulaAuth :> "attachments" :> QueryParam "filename" String :> ReqBody '[OctetStream] BS.ByteString :> Post '[JSON] (TabulaResponse Attachment)
  :<|> TabulaAuth :> "job" :> Capture "jobID" UUID :> Get '[JSON] (TabulaResponse JobInstance)
  :<|> TabulaAuth :> "member" :> Capture "userID" String :> "relationships" :> Get '[JSON] (TabulaResponse [Relationship])
