@@ -4,12 +4,12 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c0b03cc23e2a2de42271a2c1ff4cc864615d48b53f284b2f09b7d80fa25191b8
+-- hash: 0420bc54441be7a5422c2457652edb58c9471a3578e4b80643edd3af56c9657b
 
 name:           tabula
 version:        0.1.0.0
 synopsis:       Haskell bindings for the Tabula API
-description:    Please see the README on GitGub at <https://github.com/mbg/tabula#readme>
+description:    Please see the README on GitHub at <https://github.com/mbg/tabula#readme>
 homepage:       https://github.com/mbg/tabula#readme
 bug-reports:    https://github.com/mbg/tabula/issues
 author:         Michael B. Gale
@@ -38,6 +38,7 @@ library
       Warwick.Tabula.Internal
       Warwick.Tabula.Job
       Warwick.Tabula.JSON
+      Warwick.Tabula.Member
       Warwick.Tabula.Relationship
       Warwick.Tabula.StudentAssignment
       Warwick.Tabula.TabulaSession
@@ -62,37 +63,6 @@ library
     , mtl
     , servant
     , servant-client
-    , text
-    , time
-    , unordered-containers
-    , uuid-types
-  default-language: Haskell2010
-
-test-suite tabula-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Paths_tabula
-  hs-source-dirs:
-      test
-  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving OverlappingInstances
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      aeson
-    , base
-    , bytestring
-    , conduit
-    , conduit-extra
-    , exceptions
-    , http-client
-    , http-client-tls
-    , http-conduit
-    , http-types
-    , iso8601-time
-    , mtl
-    , servant
-    , servant-client
-    , tabula
     , text
     , time
     , unordered-containers

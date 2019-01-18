@@ -28,6 +28,7 @@ module Warwick.Tabula (
     downloadSubmission,
     downloadSubmissionWithCallbacks,
 
+    retrieveMember,
     listRelationships,
     personAssignments
 ) where
@@ -48,6 +49,8 @@ import qualified Data.HashMap.Lazy as HM
 import Data.Conduit
 import Data.Conduit.Binary hiding (mapM_)
 
+import Data.List (intercalate)
+
 import Data.Aeson
 
 import Network.HTTP.Conduit (newManager, tlsManagerSettings)
@@ -61,6 +64,7 @@ import Warwick.Tabula.Config
 import Warwick.Tabula.Types
 import Warwick.Tabula.Error
 import Warwick.Tabula.Coursework
+import Warwick.Tabula.Member
 import Warwick.Tabula.Relationship
 import Warwick.Tabula.API
 import qualified Warwick.Tabula.Internal as I
@@ -122,6 +126,8 @@ handle m = lift $ lift $ m `catch` \(e :: ServantError) -> case e of
        Just r  -> return r
    _                    -> throwM e
 
+-------------------------------------------------------------------------------
+
 listAssignments ::
     ModuleCode -> Maybe AcademicYear -> Tabula (TabulaResponse [Assignment])
 listAssignments mc yr = do
@@ -133,6 +139,14 @@ listSubmissions ::
 listSubmissions mc aid = do
     authData <- tabulaAuthData
     handle $ I.listSubmissions authData mc (unAssignmentID aid)
+
+-------------------------------------------------------------------------------
+
+retrieveMember :: String -> [String] -> Tabula (TabulaResponse Member)
+retrieveMember uid fields = do
+    let fdata = if Prelude.null fields then Nothing else Just (intercalate "," fields)
+    authData <- tabulaAuthData
+    handle $ I.retrieveMember authData uid fdata
 
 listRelationships ::
     String -> Tabula (TabulaResponse [Relationship])

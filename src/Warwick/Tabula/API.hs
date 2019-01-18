@@ -20,6 +20,7 @@ import Warwick.Tabula.Error
 import Warwick.Tabula.Attachment
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Job
+import Warwick.Tabula.Member
 import Warwick.Tabula.Relationship
 import Warwick.Tabula.StudentAssignment
 
@@ -56,15 +57,20 @@ instance FromJSON TabulaAssignmentResponse where
 
 type TabulaAuth = BasicAuth "" ()
 
-type Coursework =
+type CourseworkAPI =
       TabulaAuth :> "module" :> Capture "moduleCode" ModuleCode :> "assignments" :> QueryParam "academicYear" String :> Get '[JSON] (TabulaResponse [Assignment])
  :<|> TabulaAuth :> "module" :> Capture "moduleCode" ModuleCode :> "assignments" :> Capture "assignmentId" UUID :> "submissions" :> Get '[JSON] (TabulaResponse (HM.HashMap String (Maybe Submission)))
  :<|> TabulaAuth :> "attachments" :> QueryParam "filename" String :> ReqBody '[OctetStream] BS.ByteString :> Post '[JSON] (TabulaResponse Attachment)
  :<|> TabulaAuth :> "job" :> Capture "jobID" UUID :> Get '[JSON] (TabulaResponse JobInstance)
+
+type TabulaMemberAPI =
+      TabulaAuth :> "member" :> Capture "userID" String :> QueryParam "fields" String :> Get '[JSON] (TabulaResponse Member)
  :<|> TabulaAuth :> "member" :> Capture "userID" String :> "relationships" :> Get '[JSON] (TabulaResponse [Relationship])
  :<|> TabulaAuth :> "member" :> Capture "userID" String :> "assignments" :> Get '[JSON] TabulaAssignmentResponse
 
-type API = Coursework
+type TabulaAPI = CourseworkAPI :<|> TabulaMemberAPI
+
+type API = TabulaAPI
 
 tabula :: Proxy API
 tabula = Proxy
