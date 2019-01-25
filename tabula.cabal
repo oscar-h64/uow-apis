@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0420bc54441be7a5422c2457652edb58c9471a3578e4b80643edd3af56c9657b
+-- hash: 9cac02660222207f2e90bc738df2abd746d2695d0382c41e2c373c96219a9eeb
 
 name:           tabula
 version:        0.1.0.0
@@ -50,6 +50,7 @@ library
   default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving OverlappingInstances
   build-depends:
       aeson
+    , attoparsec
     , base
     , bytestring
     , conduit

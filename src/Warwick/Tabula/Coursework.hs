@@ -85,6 +85,9 @@ data Assignment = Assignment {
 instance HasPayload [Assignment] where
     payloadFieldName _ = "assignments"
 
+instance HasPayload Assignment where
+    payloadFieldName _ = "assignment"
+
 instance FromJSON Assignment where
     parseJSON = parseTabulaJSON
 
