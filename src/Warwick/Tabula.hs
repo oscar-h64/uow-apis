@@ -75,25 +75,6 @@ import Warwick.DownloadSubmission
 
 -------------------------------------------------------------------------------
 
--- | Enumerates Tabula instances.
-data TabulaInstance = Sandbox | Live | CustomInstance BaseUrl
-
--- | The URL to the Tabula API.
-liveURL :: BaseUrl
-liveURL = BaseUrl Https "tabula.warwick.ac.uk" 443 "/api/v1"
-
--- | The URL to the Tabula Sandbox API.
-sandboxURL :: BaseUrl
-sandboxURL = BaseUrl Https "tabula-sandbox.warwick.ac.uk" 443 "/api/v1"
-
--- | Determines the location of a given Tabula instance.
-urlForInstance :: TabulaInstance -> BaseUrl
-urlForInstance Sandbox              = sandboxURL
-urlForInstance Live                 = liveURL
-urlForInstance (CustomInstance url) = url
-
--------------------------------------------------------------------------------
-
 -- | 'withTabula' @instance config action@ runs the computation @action@
 -- by connecting to @instance@ with the configuration specified by @config@.
 withTabula ::
