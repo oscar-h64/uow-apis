@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e5b81c796a9d20703033392490fb9fe5d6ca105aed754df80e2805d61e492c76
+-- hash: 7a46ddca3a270f0496f79eef31c6218959dda7f66e0b61fd9ca1056b34aa923d
 
 name:           uow-apis
 version:        0.2.0.0
@@ -39,7 +39,6 @@ library
       Warwick.Tabula.Attachment
       Warwick.Tabula.Config
       Warwick.Tabula.Coursework
-      Warwick.Tabula.Date
       Warwick.Tabula.Internal
       Warwick.Tabula.Job
       Warwick.Tabula.JSON
