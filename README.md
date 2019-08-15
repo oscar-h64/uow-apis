@@ -171,7 +171,7 @@ withAPI Live config $ searchProfiles "michael"
 withAPI Live config $ lookupProfile "1234567"
 ```
 
-## MyWarwick API
+## My Warwick API
 
 The endpoints for posting items to the alert and activity streams are supported. Example for `postAlert`:
 
