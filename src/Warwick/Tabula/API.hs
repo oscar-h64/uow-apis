@@ -64,6 +64,12 @@ instance FromJSON TabulaAssignmentResponse where
 
 type TabulaAuth = BasicAuth "" ()
 
+type AdminAPI = 
+     TabulaAuth :>
+     "module" :>
+     Capture "moduleCode" ModuleCode :>
+     Get '[JSON] (TabulaResponse Module)
+
 -- | Represents the coursework part of Tabula's API as a type.
 type CourseworkAPI =
       TabulaAuth :> 
@@ -151,6 +157,7 @@ type TimetableAPI =
 
 -- | Represents the Tabula API as a type.
 type TabulaAPI = 
+    AdminAPI :<|>
     CourseworkAPI :<|> 
     MemberAPI :<|>
     TimetableAPI

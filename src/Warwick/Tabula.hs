@@ -19,6 +19,8 @@ module Warwick.Tabula (
 
     withTabula,
 
+    retrieveModule,
+
     listAssignments,
     retrieveAssignment,
     listSubmissions,
@@ -100,6 +102,14 @@ handle m = lift $ lift $ m `catch` \(e :: ServantError) -> case e of
        Nothing -> throwM e
        Just r  -> return r
    _                    -> throwM e
+
+-------------------------------------------------------------------------------
+
+-- | `retrieveModule` @code@ retrieves the module identified by @code@.
+retrieveModule :: ModuleCode -> Warwick (TabulaResponse Module)
+retrieveModule mc = do 
+    authData <- getAuthData
+    handle $ I.retrieveModule authData mc
 
 -------------------------------------------------------------------------------
 

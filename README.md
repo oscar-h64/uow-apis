@@ -6,6 +6,12 @@ Haskell bindings for various University of Warwick APIs. Note that this library 
 
 The Tabula API client currently supports the following endpoints:
 
+* [Retrieve module](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/admin/retrieve-module)
+
+```haskell
+withAPI Live config $ retrieveModule "cs141"
+```
+
 * [List all assignments](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/assignments/list-assignments), including the ability to specify the academic year for which to list assignments:
 
 ```haskell
