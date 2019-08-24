@@ -65,7 +65,7 @@ data User = User {
     -- | A value indicating whether this user's password is expired.
     userPasswordExpired :: Bool,
     -- | A value indicating whether this is the user's primary account.
-    userWarwickPrimary :: Maybe YesNo
+    userWarwickPrimary :: Maybe Bool
 } deriving Show
 
 -- | Represents a mapping of user attributes to their values.
@@ -102,6 +102,8 @@ instance FromXML User where
         -- construct a hashmap of user attributes
         hm <- elementsToHM (children node)
 
+        primary <- maybeAttribute hm "warwickprimary"
+
         User <$> requireAttribute hm "warwickuniid"
              <*> requireAttribute hm "cn"
              <*> maybeAttribute hm "mail"
@@ -115,6 +117,6 @@ instance FromXML User where
              <*> requireAttribute hm "staff"
              <*> requireAttribute hm "logindisabled"
              <*> requireAttribute hm "passwordexpired"
-             <*> maybeAttribute hm "warwickprimary"
+             <*> pure (unAbominate <$> primary)
 
 --------------------------------------------------------------------------------
