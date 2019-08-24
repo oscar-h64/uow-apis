@@ -26,9 +26,11 @@ dependencies:
 - iso8601-time
 - unordered-containers
 - aeson
+- xeno
 - http-types
 - http-client
 - http-client-tls
+- http-media
 - conduit
 - conduit-extra
 - http-conduit
@@ -48,6 +50,7 @@ default-extensions:
 - ScopedTypeVariables
 - RecordWildCards
 - GeneralizedNewtypeDeriving
+- MultiParamTypeClasses
 - OverlappingInstances
 
 library:

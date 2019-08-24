@@ -201,3 +201,11 @@ withAPI Live config $ postAlert "example-provider" item
 ```
 
 To add the item to the activity stream instead of the alert stream, simply replace `postAlert` with `postActivity` in the example above.
+
+## SSO API 
+
+The endpoint for searching users is implemented:
+
+```haskell
+withSSO Live "[API KEY]" $ userSearch defaultSearch{ ssoSearchID = Just "1234567" }
+```

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f38b8076e250ba5280e0519fc4abf1be19fb6776ede6c485842ea08361390166
+-- hash: 1f287fff83c39cf8640a0351511078a08aafc89ca0ff8ffc3b0e2066866f0b01
 
 name:           uow-apis
 version:        0.2.0.0
@@ -38,6 +38,11 @@ library
       Warwick.Peoplesearch.API
       Warwick.Peoplesearch.Profile
       Warwick.Peoplesearch.Response
+      Warwick.SSO
+      Warwick.SSO.API
+      Warwick.SSO.SearchParams
+      Warwick.SSO.User
+      Warwick.SSO.YesNo
       Warwick.Tabula
       Warwick.Tabula.API
       Warwick.Tabula.Attachment
@@ -59,11 +64,12 @@ library
       Warwick.Tabula.Relationship
       Warwick.Tabula.StudentAssignment
       Warwick.Tabula.Types
+      Warwick.XML
   other-modules:
       Paths_uow_apis
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving OverlappingInstances
+  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving MultiParamTypeClasses OverlappingInstances
   build-depends:
       aeson
     , base
@@ -74,6 +80,7 @@ library
     , http-client
     , http-client-tls
     , http-conduit
+    , http-media
     , http-types
     , iso8601-time
     , mtl
@@ -83,4 +90,5 @@ library
     , time
     , unordered-containers
     , uuid-types
+    , xeno
   default-language: Haskell2010
