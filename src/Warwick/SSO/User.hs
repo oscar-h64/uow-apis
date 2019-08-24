@@ -26,13 +26,19 @@ import Warwick.SSO.YesNo
 -- | Enumerates different classes of users.
 data UserClass
     = Staff
-    | Student
+    | UG 
+    | PGT 
+    | PGR
+    | NonAccredited
     | Alumni
     | Applicant
 
 instance ToHttpApiData UserClass where 
     toQueryParam Staff = "Staff"
-    toQueryParam Student = "Student"
+    toQueryParam UG = "UG"
+    toQueryParam PGT = "PG(T)"
+    toQueryParam PGR = "PG(R)"
+    toQueryParam NonAccredited = "N/A"
     toQueryParam Alumni = "Alumni"
     toQueryParam Applicant = "Applicant"
 
