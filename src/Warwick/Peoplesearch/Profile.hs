@@ -49,7 +49,7 @@ data MembershipDetails = MembershipDetails {
     -- | Their preferred surname.
     mdPreferredSurname :: Text,
     -- | Their end date at the university.
-    mdEndDate :: Date,
+    mdEndDate :: Maybe Date,
     -- | Their preferred first name.
     mdPreferredFirstName :: Text,
     -- | The last time their profile was modified.
@@ -59,7 +59,7 @@ data MembershipDetails = MembershipDetails {
     -- | Their title, if available.
     mdTitle :: Maybe Text,
     -- | Their start date at the university.
-    mdStartDate :: Date,
+    mdStartDate :: Maybe Date,
     -- | Their university email address.
     mdEmail :: Maybe Text,
     -- | The code of the department they belong to.
