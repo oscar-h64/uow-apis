@@ -61,7 +61,7 @@ data MembershipDetails = MembershipDetails {
     -- | Their start date at the university.
     mdStartDate :: Date,
     -- | Their university email address.
-    mdEmail :: Text,
+    mdEmail :: Maybe Text,
     -- | The code of the department they belong to.
     mdDeptCode :: Maybe Text,
     -- | The URL of their homepage, if available.
