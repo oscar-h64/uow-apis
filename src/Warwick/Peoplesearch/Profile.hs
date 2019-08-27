@@ -97,7 +97,7 @@ data Profile = Profile {
     pScore :: Double, 
     pJobFunction :: Maybe Text,
     pID :: UUID,
-    pDepartment :: Department,
+    pDepartment :: Maybe Department,
     pSequenceNumber :: Int,
     pMatchFields :: Text,
     -- TODO: no idea what the format of these is
@@ -127,7 +127,7 @@ instance FromJSON Profile where
                 <*> obj .: "score"
                 <*> obj .: "jobFunction"
                 <*> obj .: "id"
-                <*> obj .: "department"
+                <*> obj .:? "department"
                 <*> obj .: "sequenceNumber"
                 <*> obj .: "matchFields"
                 -- <*> obj .: "deptRoleSubCategories"
