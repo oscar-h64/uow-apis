@@ -57,7 +57,7 @@ data User = User {
     -- | The department code of the user's primary department.
     userWarwickDeptCode :: Text,
     -- | The short name of the user's primary department.
-    userWarwickDeptShort :: Text,
+    userWarwickDeptShort :: Maybe Text,
     -- | The full name of the user's primary department.
     userDepartment :: Text,
     -- | The name of the user's organisational unit.
@@ -116,7 +116,7 @@ instance FromXML User where
              <*> requireAttribute hm "givenName"
              <*> requireAttribute hm "sn"
              <*> requireAttribute hm "warwickdeptcode"
-             <*> requireAttribute hm "deptshort"
+             <*> maybeAttribute hm "deptshort"
              <*> requireAttribute hm "department"
              <*> requireAttribute hm "ou"
              <*> requireAttribute hm "student"
