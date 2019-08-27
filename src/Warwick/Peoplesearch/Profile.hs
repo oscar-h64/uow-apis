@@ -63,7 +63,7 @@ data MembershipDetails = MembershipDetails {
     -- | Their university email address.
     mdEmail :: Text,
     -- | The code of the department they belong to.
-    mdDeptCode :: Text,
+    mdDeptCode :: Maybe Text,
     -- | The URL of their homepage, if available.
     mdHomepage :: Maybe Text
 } deriving Show
