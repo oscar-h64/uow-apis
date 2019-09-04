@@ -147,10 +147,10 @@ listRelationships uid = do
     handle $ I.listRelationships authData uid
 
 personAssignments ::
-    String -> Warwick TabulaAssignmentResponse
-personAssignments uid = do
+    String -> Maybe AcademicYear -> Warwick TabulaAssignmentResponse
+personAssignments uid academicYear = do
     authData <- getAuthData
-    lift $ lift $ I.personAssignments authData uid `catch` \(e :: ServantError) -> case e of
+    lift $ lift $ I.personAssignments authData uid (pack <$> academicYear) `catch` \(e :: ServantError) -> case e of
        FailureResponse r -> case decode (responseBody r) of
            Nothing -> throwM e
            Just r  -> return r

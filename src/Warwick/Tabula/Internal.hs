@@ -46,7 +46,7 @@ retrieveJob :: BasicAuthData -> UUID -> ClientM (TabulaResponse JobInstance)
 
 retrieveMember :: BasicAuthData -> String -> Maybe String -> ClientM (TabulaResponse Member)
 listRelationships :: BasicAuthData -> String -> ClientM (TabulaResponse [Relationship])
-personAssignments :: BasicAuthData -> String -> ClientM TabulaAssignmentResponse
+personAssignments :: BasicAuthData -> String -> Maybe Text -> ClientM TabulaAssignmentResponse
 
 listAssignments :<|>
     retrieveAssignment :<|>

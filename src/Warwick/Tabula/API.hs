@@ -118,6 +118,7 @@ type MemberAPI =
       "member" :> 
       Capture "userID" String :> 
       "assignments" :> 
+      QueryParam "academicYear" Text :>
       Get '[JSON] TabulaAssignmentResponse
  :<|> TabulaAuth :>
       "members" :> 

@@ -26,12 +26,18 @@ withAPI Live config $
    listAssignments "cs141" (Just "18/19")
 ```
 
-* [Get a person's assignment information](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/assignments/get-member-assignments)
+* [Get a person's assignment information](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/assignments/get-member-assignments). You can optionally specify the academic year for which to retrieve assignments.
 
 ```haskell
 -- retrieve all assignments for "1234567"
 withAPI Live config $ 
-   personAssignments "1234567"
+   personAssignments "1234567" Nothing
+```
+
+```haskell
+-- retrieve all assignments for "1234567" in the 18/19 academic year
+withAPI Live config $ 
+   personAssignments "1234567" (Just "18/19")
 ```
 
 * [List all submissions](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/submissions/list-submissions). The assignment UUID can either be obtained via `listAssignments` or directly from Tabula.
