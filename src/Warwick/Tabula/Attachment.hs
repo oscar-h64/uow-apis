@@ -22,7 +22,7 @@ data Attachment = Attachment {
     attachmentFilename  :: String--,
     --attachmentUploadedBy :: String,
     --attachmentDateUploaded :: TabulaDateTime
-} deriving (Show, Generic)
+} deriving (Eq, Show, Generic)
 
 instance FromJSON Attachment where
     parseJSON = parseTabulaJSON

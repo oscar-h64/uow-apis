@@ -18,7 +18,7 @@ data DepartmentR = DepartmentR {
     dCode :: Text, 
     -- | The department's name.
     dName :: Text
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON DepartmentR where 
     parseJSON = withObject "Department (reduced)" $ \obj ->

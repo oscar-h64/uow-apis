@@ -33,6 +33,7 @@ module Warwick.Tabula (
     listRelationships,
     personAssignments,
     listMembers,
+    retrieveAttendance,
     
     retrieveTermDates,
     retrieveTermDatesFor,
@@ -176,6 +177,15 @@ listMembers MemberSearchFilter{..} offset limit = do
         (toSearchParam filterSprStatuses)
         (toSearchParam filterModules)
         (toSearchParam filterHallsOfResidence)  
+
+-- | 'retrieveAttendance' @userId academicYear@ retrieves information about
+-- the attendance of the user identified by @userId@, limited to
+-- the academic year given by @academicYear@.
+retrieveAttendance ::
+    Text -> AcademicYear -> Warwick (TabulaResponse MemberAttendance)
+retrieveAttendance user academicYear = do 
+    authData <- getAuthData
+    handle $ I.retrieveAttendance authData user (pack academicYear)
 
 -------------------------------------------------------------------------------
 

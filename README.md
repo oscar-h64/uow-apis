@@ -114,6 +114,13 @@ settings = defaultMemberSearch {
 withAPI Live config $ listMembers settings 0 10
 ```
 
+* [Retrieve a student's attendance](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/monitoring-points/member-attendance)
+
+```haskell
+-- list the attendance for "1234567" in the academic year starting in 2018
+withAPI Live config $ retrieveAttendance "1234567" "2018"
+```
+
 * [Retrieve term dates](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/timetabling/termdates), including the ability to specify the academic year:
 
 ```haskell

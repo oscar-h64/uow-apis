@@ -38,7 +38,7 @@ instance ToJSON DateTime where
     toJSON (DateTime time) = String (T.pack $ formatISO8601 time)
 
 newtype Date = Date { getDate :: UTCTime }
-    deriving Show
+    deriving (Eq, Show)
 
 -- TODO: maybe this should only format the date component?
 instance ToJSON Date where 

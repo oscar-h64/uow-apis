@@ -136,6 +136,12 @@ type MemberAPI =
       QueryParam "modules" Text :>
       QueryParam "hallsOfResidence" Text :>
       Get '[JSON] (TabulaResponse [Member])
+ :<|> TabulaAuth :>
+      "member" :>
+      Capture "universityId" Text :> 
+      "attendance" :> 
+      Capture "academicYear" Text :>
+      Get '[JSON] (TabulaResponse MemberAttendance)
 
 -- | Represents the timetabling part of Tabula's API as a type.
 type TimetableAPI =

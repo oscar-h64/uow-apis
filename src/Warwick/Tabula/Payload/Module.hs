@@ -18,18 +18,18 @@ import Warwick.Tabula.Types
 -- | Represents information about a module.
 data Module = Module {
     -- | A value indicating whether the module is currently active.
-    mActive :: Bool,
+    mActive :: Maybe Bool,
     -- | Information about the department responsible for the module.
     mAdminDepartment :: DepartmentR,
     -- | The module code.
     mCode :: Text,
     -- | The name of the module.
     mName :: Text
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON Module where 
     parseJSON = withObject "Module" $ \obj ->
-        Module <$> obj .: "active" 
+        Module <$> obj .:? "active" 
                <*> obj .: "adminDepartment"
                <*> obj .: "code"
                <*> obj .: "name"

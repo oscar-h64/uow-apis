@@ -73,10 +73,17 @@ listMembers ::
     Maybe Text ->
     ClientM (TabulaResponse [Member])
 
+retrieveAttendance :: 
+    BasicAuthData -> 
+    Text ->
+    Text ->
+    ClientM (TabulaResponse MemberAttendance)
+
 retrieveMember :<|>
     listRelationships :<|>
     personAssignments :<|>
-    listMembers = memberAPI
+    listMembers :<|>
+    retrieveAttendance = memberAPI
 
 --------------------------------------------------------------------------------
 
