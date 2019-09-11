@@ -60,6 +60,16 @@ withAPI Live config $ do
             listSubmissions "cs141" assignmentID
 ```
 
+* [Upload marks](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/assignments/upload-marks)
+
+```haskell
+marks :: Marks 
+marks = Marks [FeedbackItem { fiId="1234567", fiMark=Just "73", fiGrade=Nothing, fiFeedback=Just "Good work" }]
+
+withAPI Live config $
+   postMarks "cs141" "00000000-0000-0000-0000-000000000000" marks
+```
+
 * [Download a submission](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/submissions/download-submission-file)
 
 ```haskell
