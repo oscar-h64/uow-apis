@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: db4c8615c60caf67a8252489b7ec971df0ae805c29d134036fd9ac1840bf85ab
+-- hash: 5427636a3b25b4d20347fce3312d08ce17a512414591186976113c7b826b3be4
 
 name:           uow-apis
 version:        0.2.0.0
@@ -58,8 +58,10 @@ library
       Warwick.Tabula.Payload.CourseDetails
       Warwick.Tabula.Payload.Department
       Warwick.Tabula.Payload.Holiday
+      Warwick.Tabula.Payload.Marks
       Warwick.Tabula.Payload.Module
       Warwick.Tabula.Payload.MonitoringPoints
+      Warwick.Tabula.Payload.None
       Warwick.Tabula.Payload.Note
       Warwick.Tabula.Payload.SmallGroup
       Warwick.Tabula.Payload.StudentCourseDetails

@@ -24,6 +24,7 @@ module Warwick.Tabula (
     listAssignments,
     retrieveAssignment,
     listSubmissions,
+    postMarks,
 
     TabulaDownloadCallbacks(..),
     downloadSubmission,
@@ -132,6 +133,14 @@ listSubmissions ::
 listSubmissions mc aid = do
     authData <- getAuthData
     handle $ I.listSubmissions authData mc (unAssignmentID aid)
+
+-- | 'postMarks' @moduleCode assignmentId marks@ uploads the feedback 
+-- contained in @marks@ for the assignment identified by @assignmentId@.
+postMarks ::
+    ModuleCode -> AssignmentID -> Marks -> Warwick (TabulaResponse None)
+postMarks mc aid marks = do 
+    authData <- getAuthData
+    handle $ I.postMarks authData mc (unAssignmentID aid) marks
 
 -------------------------------------------------------------------------------
 

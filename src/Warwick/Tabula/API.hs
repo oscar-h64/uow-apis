@@ -92,6 +92,14 @@ type CourseworkAPI =
       Capture "assignmentId" UUID :> 
       "submissions" :> 
       Get '[JSON] (TabulaResponse (HM.HashMap String (Maybe Submission)))
+ :<|> TabulaAuth :>
+      "module" :>
+      Capture "moduleCode" ModuleCode :>
+      "assignments" :>
+      Capture "assignmentId" UUID :> 
+      "marks" :>
+      ReqBody '[JSON] Marks :>
+      Post '[JSON] (TabulaResponse None)
  :<|> TabulaAuth :> 
       "attachments" :> 
       QueryParam "filename" String :> 

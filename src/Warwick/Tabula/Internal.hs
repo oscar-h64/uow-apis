@@ -39,6 +39,7 @@ retrieveModule = adminAPI
 listAssignments :: BasicAuthData -> ModuleCode -> Maybe AcademicYear -> ClientM (TabulaResponse [Assignment])
 retrieveAssignment :: BasicAuthData -> ModuleCode -> UUID -> Maybe String -> ClientM (TabulaResponse Assignment)
 listSubmissions :: BasicAuthData -> ModuleCode -> UUID -> ClientM (TabulaResponse (HM.HashMap String (Maybe Submission)))
+postMarks :: BasicAuthData -> ModuleCode -> UUID -> Marks -> ClientM (TabulaResponse None)
 
 uploadAttachment :: BasicAuthData -> Maybe String -> BS.ByteString -> ClientM (TabulaResponse Attachment)
 
@@ -51,6 +52,7 @@ personAssignments :: BasicAuthData -> String -> Maybe Text -> ClientM TabulaAssi
 listAssignments :<|>
     retrieveAssignment :<|>
     listSubmissions :<|>
+    postMarks :<|>
     uploadAttachment :<|>
     retrieveJob = courseworkAPI
 
