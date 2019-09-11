@@ -232,3 +232,12 @@ The endpoint for searching users is implemented:
 ```haskell
 withSSO Live "[API KEY]" $ userSearch defaultSearch{ ssoSearchID = Just "1234567" }
 ```
+
+## Sitebuilder API
+
+The endpoint for editing pages is implemented:
+
+```haskell
+-- replace the contents of the page at /fac/sci/dcs/test with the contents of test.html
+withAPI Live config $ editPageFromFile "/fac/sci/dcs/test" "change notes" "./test.html"
+```

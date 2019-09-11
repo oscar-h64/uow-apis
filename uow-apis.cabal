@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5427636a3b25b4d20347fce3312d08ce17a512414591186976113c7b826b3be4
+-- hash: f6dfa7d6561a9192beb041d8f8852d27325314784d1a3331684122c4a790b482
 
 name:           uow-apis
 version:        0.2.0.0
@@ -38,6 +38,10 @@ library
       Warwick.Peoplesearch.API
       Warwick.Peoplesearch.Profile
       Warwick.Peoplesearch.Response
+      Warwick.Sitebuilder
+      Warwick.Sitebuilder.API
+      Warwick.Sitebuilder.Atom
+      Warwick.Sitebuilder.PageUpdate
       Warwick.SSO
       Warwick.SSO.API
       Warwick.SSO.SearchParams
@@ -83,6 +87,7 @@ library
     , conduit
     , conduit-extra
     , exceptions
+    , feed
     , http-client
     , http-client-tls
     , http-conduit
@@ -97,4 +102,6 @@ library
     , unordered-containers
     , uuid-types
     , xeno
+    , xml-conduit
+    , xml-types
   default-language: Haskell2010

@@ -27,6 +27,9 @@ dependencies:
 - unordered-containers
 - aeson
 - xeno
+- xml-types
+- xml-conduit
+- feed
 - http-types
 - http-client
 - http-client-tls
