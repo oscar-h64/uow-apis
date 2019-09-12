@@ -11,7 +11,8 @@ module Warwick.Sitebuilder (
     SitebuilderInstance(..),
 
     editPage,
-    editPageFromFile
+    editPageFromFile,
+    uploadFile
 ) where 
 
 --------------------------------------------------------------------------------
