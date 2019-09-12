@@ -5,6 +5,7 @@
 
 module Warwick.Sitebuilder (
     module Warwick.Config,
+    module Warwick.Common,
     module API,
 
     SitebuilderInstance(..),
@@ -19,9 +20,12 @@ import Control.Monad.Except
 import Control.Monad.Reader
 
 import Data.Aeson
+import qualified Data.ByteString as BS
 import Data.Text
+import Data.Text.Encoding
 
 import Network.HTTP.Conduit
+import Network.Mime
 
 import Servant.Client
 
@@ -68,5 +72,18 @@ editPageFromFile page comment fp = do
         puContents = pack contents,
         puChangeNote = comment
     }
+
+uploadFile :: Text -> Text -> FilePath -> Warwick ()
+uploadFile page slug fp = do 
+    -- try to determine the mime type for the file
+    let mimeType = decodeUtf8 $ defaultMimeLookup (pack fp) 
+
+    -- get the basic auth data and contents of the file
+    authData <- getAuthData
+    contents <- liftIO $ BS.readFile fp 
+
+    -- upload the file
+    lift $ lift $ void $ 
+        API.uploadFile authData (Just page) (Just slug) (Just mimeType) contents
 
 --------------------------------------------------------------------------------

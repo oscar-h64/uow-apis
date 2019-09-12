@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f6dfa7d6561a9192beb041d8f8852d27325314784d1a3331684122c4a790b482
+-- hash: aa4e9855a864c64324bb28944ebb60313c47c252256b94227bf29b6cdf0c68ef
 
 name:           uow-apis
 version:        0.2.0.0
@@ -94,6 +94,7 @@ library
     , http-media
     , http-types
     , iso8601-time
+    , mime-types
     , mtl
     , servant
     , servant-client

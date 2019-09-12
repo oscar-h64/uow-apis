@@ -235,9 +235,25 @@ withSSO Live "[API KEY]" $ userSearch defaultSearch{ ssoSearchID = Just "1234567
 
 ## Sitebuilder API
 
-The endpoint for editing pages is implemented:
+An existing Sitebuilder page can be edited ([API docs](https://warwick.ac.uk/services/its/servicessupport/web/sitebuilder2/faqs/api/pages-and-files/edit-content)). You can either specify the new contents of the file by hand (first example) or load the new contents from a file (second example):
 
 ```haskell
+update :: PageUpdate
+update = PageUpdate {
+    puContents = "<html><body>Test</body></html>",
+    puChangeNote = "Test change"
+}
+
+-- replace the contents of the page at /fac/sci/dcs/test with data from `update`
+withAPI Live config $ editPage "/fac/sci/dcs/test" update
+
 -- replace the contents of the page at /fac/sci/dcs/test with the contents of test.html
 withAPI Live config $ editPageFromFile "/fac/sci/dcs/test" "change notes" "./test.html"
+```
+
+Files can be uploaded ([API docs](https://warwick.ac.uk/services/its/servicessupport/web/sitebuilder2/faqs/api/pages-and-files/upload-file)):
+
+```haskell
+-- uploads the file README.md to the directory at /fac/sci/dcs/test using the name README
+withAPI Live cfg $ uploadFile "/fac/sci/dcs/test" "README" "./README.md"
 ```

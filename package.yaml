@@ -34,6 +34,7 @@ dependencies:
 - http-client
 - http-client-tls
 - http-media
+- mime-types
 - conduit
 - conduit-extra
 - http-conduit

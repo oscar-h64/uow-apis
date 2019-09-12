@@ -7,6 +7,7 @@ module Warwick.Sitebuilder.API where
 
 --------------------------------------------------------------------------------
 
+import Data.ByteString as BS
 import Data.Text
 import Data.Proxy
 
@@ -28,14 +29,23 @@ instance MimeUnrender ATOM () where
 type SitebuilderAuth = BasicAuth "" ()
 
 type SitebuilderAPI =
-    SitebuilderAuth :>
-    "edit" :>
-    "atom" :>
-    "atom.htm" :>
-    QueryParam "page" Text :>
-    QueryParam "type" Text :>
-    ReqBody '[ATOM] PageUpdate :>
-    Put '[ATOM] ()
+      SitebuilderAuth :>
+      "edit" :>
+      "atom" :>
+      "atom.htm" :>
+      QueryParam "page" Text :>
+      QueryParam "type" Text :>
+      ReqBody '[ATOM] PageUpdate :>
+      Put '[ATOM] ()
+ :<|> SitebuilderAuth :>
+      "edit" :>
+      "atom" :>
+      "file.htm" :>
+      QueryParam "page" Text :> 
+      Header "Slug" Text :>
+      Header "Content-Type" Text :>
+      ReqBody '[OctetStream] BS.ByteString :>
+      Post '[JSON] NoContent
 
 -- | A proxy value for the 'SitebuilderAPI' type.
 sitebuilder :: Proxy SitebuilderAPI
@@ -44,6 +54,15 @@ sitebuilder = Proxy
 --------------------------------------------------------------------------------
 
 editPage :: BasicAuthData -> Maybe Text -> Maybe Text -> PageUpdate -> ClientM ()
-editPage = client sitebuilder
+
+uploadFile :: BasicAuthData
+           -> Maybe Text -- ^ The page path
+           -> Maybe Text -- ^ The "Slug" header
+           -> Maybe Text -- ^ The "Content-Type" header
+           -> ByteString -- ^ The file contents
+           -> ClientM NoContent
+
+editPage 
+ :<|> uploadFile = client sitebuilder
 
 --------------------------------------------------------------------------------
