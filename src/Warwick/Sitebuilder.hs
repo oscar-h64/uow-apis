@@ -3,6 +3,8 @@
 -- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
+{-# LANGUAGE OverloadedStrings #-}
+
 module Warwick.Sitebuilder (
     module Warwick.Config,
     module Warwick.Common,
@@ -22,12 +24,17 @@ import Control.Monad.Reader
 
 import Data.Aeson
 import qualified Data.ByteString as BS
+import qualified Data.ByteString.Internal as BS
 import Data.Text
 import Data.Text.Encoding
 
-import Network.HTTP.Conduit
+
+import Network.HTTP.Client
+import Network.HTTP.Client.TLS
+import Network.HTTP.Simple hiding (httpLbs, withResponse)
 import Network.Mime
 
+import Servant.API.BasicAuth
 import Servant.Client
 
 import Warwick.Config
@@ -76,15 +83,24 @@ editPageFromFile page comment fp = do
 
 uploadFile :: Text -> Text -> FilePath -> Warwick ()
 uploadFile page slug fp = do 
-    -- try to determine the mime type for the file
-    let mimeType = decodeUtf8 $ defaultMimeLookup (pack fp) 
-
-    -- get the basic auth data and contents of the file
-    authData <- getAuthData
-    contents <- liftIO $ BS.readFile fp 
-
-    -- upload the file
-    lift $ lift $ void $ 
-        API.uploadFile authData (Just page) (Just slug) (Just mimeType) contents
+    manager            <- getManager
+    baseURL            <- getURL
+    BasicAuthData {..} <- getAuthData
+    req <- parseRequest ("https://" ++ baseUrlHost baseURL ++ baseUrlPath baseURL ++ "/edit/atom/file.htm?page=" ++ unpack page)
+    let
+        mimeType = defaultMimeLookup (pack fp) 
+        request
+            = applyBasicAuth basicAuthUsername basicAuthPassword
+            $ setRequestMethod "POST"
+            $ setRequestSecure True
+            $ setRequestPort (baseUrlPort baseURL)
+            $ setRequestHost (BS.packChars $ baseUrlHost baseURL)
+            $ setRequestCheckStatus
+            $ setRequestHeader "Slug" [encodeUtf8 slug]
+            $ setRequestHeader "Content-Type" [mimeType]
+            $ setRequestBodyFile fp
+            $ req
+    response <- liftIO $ httpLbs request manager
+    pure ()
 
 --------------------------------------------------------------------------------

@@ -37,15 +37,6 @@ type SitebuilderAPI =
       QueryParam "type" Text :>
       ReqBody '[ATOM] PageUpdate :>
       Put '[ATOM] ()
- :<|> SitebuilderAuth :>
-      "edit" :>
-      "atom" :>
-      "file.htm" :>
-      QueryParam "page" Text :> 
-      Header "Slug" Text :>
-      Header "Content-Type" Text :>
-      ReqBody '[OctetStream] BS.ByteString :>
-      Post '[JSON] NoContent
 
 -- | A proxy value for the 'SitebuilderAPI' type.
 sitebuilder :: Proxy SitebuilderAPI
@@ -55,14 +46,6 @@ sitebuilder = Proxy
 
 editPage :: BasicAuthData -> Maybe Text -> Maybe Text -> PageUpdate -> ClientM ()
 
-uploadFile :: BasicAuthData
-           -> Maybe Text -- ^ The page path
-           -> Maybe Text -- ^ The "Slug" header
-           -> Maybe Text -- ^ The "Content-Type" header
-           -> ByteString -- ^ The file contents
-           -> ClientM NoContent
-
-editPage 
- :<|> uploadFile = client sitebuilder
+editPage = client sitebuilder
 
 --------------------------------------------------------------------------------
