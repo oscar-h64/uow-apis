@@ -14,6 +14,7 @@ module Warwick.Sitebuilder (
 
     editPage,
     editPageFromFile,
+    pageInfo,
     uploadFile
 ) where 
 
@@ -41,6 +42,7 @@ import Warwick.Config
 import Warwick.Common
 
 import qualified Warwick.Sitebuilder.API as API
+import qualified Warwick.Sitebuilder.PageInfo as API
 import qualified Warwick.Sitebuilder.PageUpdate as API
 
 --------------------------------------------------------------------------------
@@ -80,6 +82,11 @@ editPageFromFile page comment fp = do
         puContents = pack contents,
         puChangeNote = comment
     }
+
+pageInfo :: Text -> Warwick API.PageInfo
+pageInfo page = do 
+    authData <- getAuthData
+    lift $ lift $ API.pageInfo authData (Just page)
 
 uploadFile :: Text -> Text -> FilePath -> Warwick ()
 uploadFile page slug fp = do 

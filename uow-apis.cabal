@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aa4e9855a864c64324bb28944ebb60313c47c252256b94227bf29b6cdf0c68ef
+-- hash: d9b9865c79a1953653b8ef937778e0311b1d02aae75c69375eb4c88a4749f921
 
 name:           uow-apis
 version:        0.2.0.0
@@ -41,6 +41,7 @@ library
       Warwick.Sitebuilder
       Warwick.Sitebuilder.API
       Warwick.Sitebuilder.Atom
+      Warwick.Sitebuilder.PageInfo
       Warwick.Sitebuilder.PageUpdate
       Warwick.SSO
       Warwick.SSO.API

@@ -17,6 +17,7 @@ import Servant.API
 import Servant.Client
 
 import Warwick.Sitebuilder.Atom
+import Warwick.Sitebuilder.PageInfo
 import Warwick.Sitebuilder.PageUpdate
 
 --------------------------------------------------------------------------------
@@ -37,6 +38,11 @@ type SitebuilderAPI =
       QueryParam "type" Text :>
       ReqBody '[ATOM] PageUpdate :>
       Put '[ATOM] ()
+ :<|> SitebuilderAuth :>
+      "api" :>
+      "page.json" :>
+      QueryParam "page" Text :>
+      Get '[JSON] PageInfo
 
 -- | A proxy value for the 'SitebuilderAPI' type.
 sitebuilder :: Proxy SitebuilderAPI
@@ -45,7 +51,8 @@ sitebuilder = Proxy
 --------------------------------------------------------------------------------
 
 editPage :: BasicAuthData -> Maybe Text -> Maybe Text -> PageUpdate -> ClientM ()
+pageInfo :: BasicAuthData -> Maybe Text -> ClientM PageInfo
 
-editPage = client sitebuilder
+editPage :<|> pageInfo = client sitebuilder
 
 --------------------------------------------------------------------------------

@@ -23,7 +23,7 @@ import Warwick.Sitebuilder.Atom
 data PageUpdate = PageUpdate {
     puContents :: Text,
     puChangeNote :: Text
-}
+} deriving Show
 
 instance MimeRender ATOM PageUpdate where 
     mimeRender _ PageUpdate{..} = 
