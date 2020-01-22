@@ -43,6 +43,13 @@ type SitebuilderAPI =
       "page.json" :>
       QueryParam "page" Text :>
       Get '[JSON] PageInfo
+ :<|> SitebuilderAuth :>
+      "edit" :>
+      "atom" :>
+      "atom.htm" :>
+      QueryParam "page" Text :> 
+      QueryParam "type" Text :>
+      Delete '[ATOM] ()
 
 -- | A proxy value for the 'SitebuilderAPI' type.
 sitebuilder :: Proxy SitebuilderAPI
@@ -52,7 +59,8 @@ sitebuilder = Proxy
 
 editPage :: BasicAuthData -> Maybe Text -> Maybe Text -> PageUpdate -> ClientM ()
 pageInfo :: BasicAuthData -> Maybe Text -> ClientM PageInfo
+purge :: BasicAuthData -> Maybe Text -> Maybe Text -> ClientM ()
 
-editPage :<|> pageInfo = client sitebuilder
+editPage :<|> pageInfo :<|> purge = client sitebuilder
 
 --------------------------------------------------------------------------------

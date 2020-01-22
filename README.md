@@ -257,3 +257,17 @@ Files can be uploaded ([API docs](https://warwick.ac.uk/services/its/servicessup
 -- uploads the file README.md to the directory at /fac/sci/dcs/test using the name README
 withAPI Live cfg $ uploadFile "/fac/sci/dcs/test" "README" "./README.md"
 ```
+
+Pages ([API docs](https://warwick.ac.uk/services/its/servicessupport/web/sitebuilder2/faqs/api/pages-and-files/purge-page)) and files ([API docs](https://warwick.ac.uk/services/its/servicessupport/web/sitebuilder2/faqs/api/pages-and-files/purge-file)) can be purged:
+
+```haskell
+-- purges the page at /fac/sci/dcs/test 
+withAPI Live cfg $ purge "/fac/sci/dcs/test"
+```
+
+Files can be uploaded ([API docs](https://warwick.ac.uk/services/its/servicessupport/web/sitebuilder2/faqs/api/pages-and-files/upload-file)):
+
+```haskell
+-- uploads "/Users/example/test.pdf" to "/fac/sci/dcs/test" as "test.pdf"
+withAPI Live cfg $ uploadFile "/fac/sci/dcs/test" "test.pdf" "/Users/example/test.pdf"
+```

@@ -15,7 +15,8 @@ module Warwick.Sitebuilder (
     editPage,
     editPageFromFile,
     pageInfo,
-    uploadFile
+    uploadFile,
+    purge
 ) where 
 
 --------------------------------------------------------------------------------
@@ -70,11 +71,15 @@ instance HasBaseUrl SitebuilderInstance where
 
 -------------------------------------------------------------------------------
 
+-- | 'editPage' @path update@ updates the page at @path@ with @update@.
 editPage :: Text -> API.PageUpdate -> Warwick ()
 editPage page content = do 
     authData <- getAuthData
     lift $ lift $ API.editPage authData (Just page) (Just "single") content 
 
+-- | 'editPageFromFile' @page comment filepath@ updates the page at @page@ with 
+-- the contents of the file located at @filepath@. @comment@ is used as the
+-- change note for this edit.
 editPageFromFile :: Text -> Text -> FilePath -> Warwick ()
 editPageFromFile page comment fp = do 
     contents <- liftIO $ readFile fp
@@ -83,11 +88,23 @@ editPageFromFile page comment fp = do
         puChangeNote = comment
     }
 
+-- | 'pageInfo' @path@ retrieves information about the page at @path@.
 pageInfo :: Text -> Warwick API.PageInfo
 pageInfo page = do 
     authData <- getAuthData
     lift $ lift $ API.pageInfo authData (Just page)
 
+-- | 'purge' @path@ purges the page or file located at @path@.
+purge :: Text -> Warwick ()
+purge page = do 
+    authData <- getAuthData
+    lift $ lift $ API.purge authData (Just page) (Just "single")
+
+-------------------------------------------------------------------------------
+
+-- | 'uploadFile' @path slug filepath@ uploads the file located at @filepath@
+-- to the page located at @path@. @slug@ is used to determine the name of the
+-- file that should be created at @path@. 
 uploadFile :: Text -> Text -> FilePath -> Warwick ()
 uploadFile page slug fp = do 
     manager            <- getManager
