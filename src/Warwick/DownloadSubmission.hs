@@ -8,6 +8,7 @@ import qualified Data.ByteString as BS
 import qualified Data.ByteString.Internal as BS
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.ByteString.Char8 as C8
+import qualified Data.Text as T
 
 import Network.HTTP.Client
 import Network.HTTP.Client.TLS
@@ -38,7 +39,7 @@ buildDownloadURL :: BaseUrl
 buildDownloadURL url mc aid subid fn = concat
     [ baseUrlPath url
     , "/module/"
-    , C8.unpack (moduleCode mc)
+    , T.unpack (moduleCode mc)
     , "/assignments/"
     , C8.unpack (toASCIIBytes $ unAssignmentID aid)
     , "/submissions/"

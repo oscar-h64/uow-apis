@@ -54,11 +54,11 @@ instance FromJSON a => FromJSON (ObjectList a) where
 
 --------------------------------------------------------------------------------
 
-data UUIDorString = UUID UUID | NotUUID String deriving Show
+data UUIDorString = UUID UUID | NotUUID T.Text deriving Show
 
 instance FromJSON UUIDorString where
     parseJSON (String v) = case fromText v of
-        Nothing -> return $ NotUUID $ T.unpack v
+        Nothing -> return $ NotUUID v
         Just uuid -> return $ UUID uuid
 
 instance IsString UUID where
@@ -68,11 +68,11 @@ instance IsString UUID where
 
 type AcademicYear = String
 
-newtype ModuleCode = ModuleCode { moduleCode :: BS.ByteString }
+newtype ModuleCode = ModuleCode { moduleCode :: T.Text }
     deriving IsString
 
 instance ToHttpApiData ModuleCode where
-    toQueryParam (ModuleCode mc) = T.decodeUtf8 mc
+    toQueryParam (ModuleCode mc) = mc
 
 newtype AssignmentID = AssignmentID { unAssignmentID :: UUID }
     deriving (IsString)
