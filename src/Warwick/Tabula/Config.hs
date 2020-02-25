@@ -12,11 +12,7 @@ module Warwick.Tabula.Config (
 
 --------------------------------------------------------------------------------
 
-import GHC.Generics
-
 import Data.Aeson
-import qualified Data.ByteString.Lazy as BS
-import Data.Text
 
 import Servant.Client
 

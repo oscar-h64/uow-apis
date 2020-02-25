@@ -27,6 +27,14 @@ import Warwick.Tabula.StudentAssignment
 
 --------------------------------------------------------------------------------
 
+-- | Represents a Tabula error message.
+data TabulaError = TabulaError (Maybe Text)
+     deriving (Eq, Show)
+
+instance FromJSON TabulaError where 
+     parseJSON = withObject "TabulaError" $ \obj ->
+          TabulaError <$> obj .: "message"
+
 -- | Represents Tabula responses with payloads of type a.
 data TabulaResponse a
     = TabulaOK {

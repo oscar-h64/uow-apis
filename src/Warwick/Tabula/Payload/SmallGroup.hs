@@ -260,6 +260,8 @@ instance FromJSON StudentAttendance where
         StudentAttendance <$> obj .: "student"
                           <*> obj .: "events"
 
+--------------------------------------------------------------------------------
+
 data SmallGroupAttendanceResponse = SmallGroupAttendanceResponse {
     sgarEvents :: M.Map Text Event,
     sgarInstances :: M.Map Text [Int],

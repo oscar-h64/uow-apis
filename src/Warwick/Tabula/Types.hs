@@ -14,7 +14,7 @@ module Warwick.Tabula.Types (
     HasPayload(..),
 
     ObjectList(..),
-    AcademicYear(..),
+    AcademicYear,
     ModuleCode(..),
     AssignmentID(..),
     SubmissionID(..)
@@ -22,13 +22,13 @@ module Warwick.Tabula.Types (
 
 --------------------------------------------------------------------------------
 
+import Control.Monad
+
 import Data.String
 import Data.Aeson
 import Data.Aeson.Types
-import qualified Data.ByteString as BS
 import qualified Data.HashMap.Lazy as HM
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
 import Data.Proxy
 import Data.UUID.Types as UUID
 
@@ -60,6 +60,7 @@ instance FromJSON UUIDorString where
     parseJSON (String v) = case fromText v of
         Nothing -> return $ NotUUID v
         Just uuid -> return $ UUID uuid
+    parseJSON _ = mzero
 
 instance IsString UUID where
     fromString str = case UUID.fromString str of

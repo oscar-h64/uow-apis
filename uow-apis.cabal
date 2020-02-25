@@ -4,17 +4,17 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5ee2a41d09876dbb00f0369e5adcd05510a9bdb82863e1f3b0a9a3044e13f2f1
+-- hash: 5962a41e2a2d70e35a5e424647cd49e969fc910475d949072090f39ab06ce85e
 
 name:           uow-apis
-version:        0.2.0.0
+version:        0.3.0.0
 synopsis:       Haskell bindings for UoW APIs
 description:    Please see the README on GitHub at <https://github.com/mbg/uow-apis#readme>
 homepage:       https://github.com/mbg/uow-apis#readme
 bug-reports:    https://github.com/mbg/uow-apis/issues
 author:         Michael B. Gale
 maintainer:     m.gale@warwick.ac.uk
-copyright:      2019 Michael B. Gale
+copyright:      Copyright (c) Michael B. Gale
 license:        MIT
 license-file:   LICENSE
 build-type:     Simple
@@ -82,7 +82,8 @@ library
       Paths_uow_apis
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving MultiParamTypeClasses OverlappingInstances
+  default-extensions: OverloadedStrings FlexibleInstances FlexibleContexts DeriveGeneric DataKinds TypeOperators ScopedTypeVariables RecordWildCards GeneralizedNewtypeDeriving MultiParamTypeClasses
+  ghc-options: -Wall
   build-depends:
       aeson
     , base

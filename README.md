@@ -9,26 +9,26 @@ The Tabula API client currently supports the following endpoints:
 * [Retrieve module](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/admin/retrieve-module)
 
 ```haskell
-withAPI Live config $ retrieveModule "cs141"
+withTabula Live config $ retrieveModule "cs141"
 ```
 
 * [Retrieve department](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/admin/retrieve-department)
 
 ```haskell
-withAPI Live config $ retrieveDepartment "cs"
+withTabula Live config $ retrieveDepartment "cs"
 ```
 
 * [List all assignments](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/assignments/list-assignments), including the ability to specify the academic year for which to list assignments:
 
 ```haskell
 -- retrieve all assignments for cs141
-withAPI Live config $ 
+withTabula Live config $ 
    listAssignments "cs141" Nothing
 ```
 
 ```haskell
 -- retrieve all assignments for cs141 in 18/19
-withAPI Live config $ 
+withTabula Live config $ 
    listAssignments "cs141" (Just "18/19")
 ```
 
@@ -36,13 +36,13 @@ withAPI Live config $
 
 ```haskell
 -- retrieve all assignments for "1234567"
-withAPI Live config $ 
+withTabula Live config $ 
    personAssignments "1234567" Nothing
 ```
 
 ```haskell
 -- retrieve all assignments for "1234567" in the 18/19 academic year
-withAPI Live config $ 
+withTabula Live config $ 
    personAssignments "1234567" (Just "18/19")
 ```
 
@@ -50,13 +50,13 @@ withAPI Live config $
 
 ```haskell
 -- retrieve all submissions for an assignment
-withAPI Live config $ 
+withTabula Live config $ 
    listSubmissions "cs141" "00000000-0000-0000-0000-000000000000"
 ```
 
 ```haskell
 -- retrieve all submissions for every assignment for cs141 in 18/19
-withAPI Live config $ do
+withTabula Live config $ do
    result <- listAssignments "cs141" (Just "18/19")
 
    case result of 
@@ -72,7 +72,7 @@ withAPI Live config $ do
 marks :: Marks 
 marks = Marks [FeedbackItem { fiId="1234567", fiMark=Just "73", fiGrade=Nothing, fiFeedback=Just "Good work" }]
 
-withAPI Live config $
+withTabula Live config $
    postMarks "cs141" "00000000-0000-0000-0000-000000000000" marks
 ```
 
@@ -80,7 +80,7 @@ withAPI Live config $
 
 ```haskell
 -- download a submission
-withAPI Live config $ downloadSubmission 
+withTabula Live config $ downloadSubmission 
     -- the University ID of the student
     "1234567"
     -- the module code
@@ -101,39 +101,39 @@ An alternative version of `downloadSubmission` with callbacks to monitor downloa
 
 ```haskell
 -- retrieve all small group sets for CS141 for the current academic year
-withAPI Live config $ listSmallGroupSets "cs141" Nothing
+withTabula Live config $ listSmallGroupSets "cs141" Nothing
 ```
 
 ```haskell
 -- retrieve all small group sets for CS141 for the 19/20 academic year
-withAPI Live config $ listSmallGroupSets "cs141" (Just "19/20")
+withTabula Live config $ listSmallGroupSets "cs141" (Just "19/20")
 ```
 
 * [Retrieve small group set allocations](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/groups/smallgroupsets/retrieve-allocations)
 
 ```haskell
 -- retrieve all allocations for the small group set whose ID is "00000000-0000-0000-0000-000000000000"
-withAPI Live config $ retrieveSmallGroupAllocations "cs141" "00000000-0000-0000-0000-000000000000"
+withTabula Live config $ retrieveSmallGroupAllocations "cs141" "00000000-0000-0000-0000-000000000000"
 ```
 
 * [Retrieve small group attendance](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/groups/smallgroups/attendance-for-group)
 
 ```haskell
 -- retrieve attendance information for all events belonging to the small group identified by "00000000-0000-0000-0000-000000000000"
-withAPI Live config $ retrieveSmallGroupAttendance "00000000-0000-0000-0000-000000000000"
+withTabula Live config $ retrieveSmallGroupAttendance "00000000-0000-0000-0000-000000000000"
 ```
 
 * [Retrieve a member](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/member/retrieve-member), including support for specifying which fields should be retrieved:
 
 ```haskell
 -- retrieve all fields
-withAPI Live config $ 
+withTabula Live config $ 
    retrieveMember "1234567" []
 ```
 
 ```haskell
 -- only retrieve "member.fullname"
-withAPI Live config $ 
+withTabula Live config $ 
    retrieveMember "1234567" ["member.fullname"]
 ```
 
@@ -141,7 +141,7 @@ withAPI Live config $
 
 ```haskell
 -- list all relationships that "1234567" has
-withAPI Live config $ 
+withTabula Live config $ 
    listRelationships "1234567"
 ```
 
@@ -153,51 +153,51 @@ settings = defaultMemberSearch {
    filterDepartment = ["cs"]
 }
 
-withAPI Live config $ listMembers settings 0 10
+withTabula Live config $ listMembers settings 0 10
 ```
 
 * [Retrieve a student's attendance](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/monitoring-points/member-attendance)
 
 ```haskell
 -- list the attendance for "1234567" in the academic year starting in 2018
-withAPI Live config $ retrieveAttendance "1234567" "2018"
+withTabula Live config $ retrieveAttendance "1234567" "2018"
 ```
 
 * [Retrieve term dates](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/timetabling/termdates), including the ability to specify the academic year:
 
 ```haskell
 -- Retrieve term dates for the current academic year
-withAPI Live config $ retrieveTermDates
+withTabula Live config $ retrieveTermDates
 ```
 
 ```haskell
 -- Retrieve term dates for the academic year starting in 2020 (20/21)
-withAPI Live config $ retrieveTermDatesFor "2020"
+withTabula Live config $ retrieveTermDatesFor "2020"
 ```
 
 * [Retrieve term weeks](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/timetabling/termweeks), including the ability to specify the numbering system and the academic year:
 
 ```haskell
 -- Retrieve term weeks for the current academic year
-withAPI Live config $
+withTabula Live config $
     retrieveTermWeeks Nothing
 ```
 
 ```haskell
 -- Retrieve term weeks for the current academic year, named using termly numbering
-withAPI Live config $
+withTabula Live config $
     retrieveTermWeeks (Just TermNumbering)
 ```
 
 ```haskell
 -- Retrieve term weeks for the 20/21 academic year
-withAPI Live config $
+withTabula Live config $
     retrieveTermWeeksFor "2020" Nothing
 ```
 
 ```haskell
 -- Retrieve term weeks for the 20/21 academic year, named using termly numbering
-withAPI Live config $
+withTabula Live config $
     retrieveTermWeeksFor "2020" (Just TermNumbering)
 ```
 
@@ -205,7 +205,7 @@ withAPI Live config $
 
 ```haskell
 -- Retrieve all holiday dates Tabula knows of
-withAPI Live config $ retrieveHolidays
+withTabula Live config $ retrieveHolidays
 ```
 
 ### Partially implemented endpoints
