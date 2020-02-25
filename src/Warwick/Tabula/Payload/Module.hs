@@ -8,7 +8,6 @@ module Warwick.Tabula.Payload.Module where
 --------------------------------------------------------------------------------
 
 import Data.Aeson
-import Data.Text
 
 import Warwick.Tabula.Payload.Department
 import Warwick.Tabula.Payload.BaseModule

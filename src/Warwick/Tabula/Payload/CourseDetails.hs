@@ -10,8 +10,6 @@ module Warwick.Tabula.Payload.CourseDetails where
 import Data.Aeson
 import Data.Text
 
-import Warwick.Tabula.Types
-
 --------------------------------------------------------------------------------
 
 -- | Represents basic information about a degree programme.

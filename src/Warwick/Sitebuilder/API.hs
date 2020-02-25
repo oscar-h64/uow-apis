@@ -7,7 +7,6 @@ module Warwick.Sitebuilder.API where
 
 --------------------------------------------------------------------------------
 
-import Data.ByteString as BS
 import Data.Text
 import Data.Proxy
 

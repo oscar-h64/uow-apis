@@ -10,8 +10,6 @@ module Warwick.Tabula.Payload.BaseModule where
 import Data.Aeson
 import Data.Text
 
-import Warwick.Tabula.Types
-
 --------------------------------------------------------------------------------
 
 -- | Represents information about a module.

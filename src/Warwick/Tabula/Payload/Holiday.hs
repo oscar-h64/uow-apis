@@ -8,7 +8,6 @@ module Warwick.Tabula.Payload.Holiday where
 --------------------------------------------------------------------------------
 
 import Data.Aeson
-import Data.Time.Clock
 
 import Warwick.Tabula.Types
 

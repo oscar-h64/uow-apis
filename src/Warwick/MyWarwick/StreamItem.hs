@@ -9,7 +9,6 @@ module Warwick.MyWarwick.StreamItem where
 
 import Data.Aeson
 import Data.Text
-import Data.UUID.Types
 
 --------------------------------------------------------------------------------
 

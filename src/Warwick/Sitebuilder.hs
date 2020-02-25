@@ -22,17 +22,13 @@ module Warwick.Sitebuilder (
 --------------------------------------------------------------------------------
 
 import Control.Monad.Except
-import Control.Monad.Reader
 
 import Data.Aeson
-import qualified Data.ByteString as BS
 import qualified Data.ByteString.Internal as BS
 import Data.Text
 import Data.Text.Encoding
 
-
 import Network.HTTP.Client
-import Network.HTTP.Client.TLS
 import Network.HTTP.Simple hiding (httpLbs, withResponse)
 import Network.Mime
 

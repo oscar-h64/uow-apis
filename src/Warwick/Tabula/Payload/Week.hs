@@ -8,7 +8,6 @@ module Warwick.Tabula.Payload.Week where
 --------------------------------------------------------------------------------
 
 import Data.Aeson
-import Data.Time.Clock
 import Data.Text (Text)
 
 import Servant.API

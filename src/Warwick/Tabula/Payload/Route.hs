@@ -10,8 +10,6 @@ module Warwick.Tabula.Payload.Route where
 import Data.Aeson
 import Data.Text
 
-import Warwick.Tabula.Types
-
 --------------------------------------------------------------------------------
 
 -- | Represents information about a route (course).

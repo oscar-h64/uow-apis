@@ -19,6 +19,7 @@ import Warwick.Tabula.Attachment
 
 data AttendanceNote = AttendanceNote {
     anAbsenceType :: Text, 
+    anAbsenceTypeDescription :: Text,
     anContents :: Maybe Text,
     anUpdatedDate :: Date,
     anUpdatedBy :: Text,
@@ -28,6 +29,7 @@ data AttendanceNote = AttendanceNote {
 instance FromJSON AttendanceNote where 
     parseJSON = withObject "AttendanceNote" $ \obj ->
         AttendanceNote <$> obj .: "absenceType"
+                       <*> obj .: "absenceTypeDescription"
                        <*> obj .:? "contents"
                        <*> obj .: "updatedDate"
                        <*> obj .: "updatedBy"
