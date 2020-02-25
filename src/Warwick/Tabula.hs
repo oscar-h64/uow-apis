@@ -9,6 +9,9 @@ module Warwick.Tabula (
     module Warwick.Tabula.Coursework,
     module Warwick.Tabula.Relationship,
 
+    Tabula,
+    TabulaErr(..),
+
     TabulaInstance(..),
 
     ModuleCode(..),
@@ -90,8 +93,8 @@ getAuthData = gets sessionAuthData
 data TabulaErr 
     = TransportError ServantError 
     | TabulaErrorRes {
-         tabulaStatus :: String,
-         tabulaErrors :: [TabulaError]
+         tabulaErrStatus   :: String,
+         tabulaErrMessages :: [TabulaError]
     } 
     deriving (Eq, Show)
 
@@ -101,11 +104,10 @@ instance FromJSON TabulaErr where
 
 -- | 'withTabula' @instance config action@ runs the computation @action@
 -- by connecting to @instance@ with the configuration specified by @config@.
-withTabula :: (FromJSON a, HasPayload a)
-           => TabulaInstance 
+withTabula :: TabulaInstance 
            -> APIConfig 
-           -> Tabula (TabulaResponse a) 
-           -> IO (Either TabulaErr (TabulaResponse a))
+           -> Tabula a 
+           -> IO (Either TabulaErr a)
 withTabula inst APIConfig{..} m = do
     manager <- newManager tlsManagerSettings
 
