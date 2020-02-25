@@ -11,6 +11,10 @@ module Warwick.Tabula.Types (
     module Warwick.Common,
     module Warwick.Tabula.JSON,
 
+    Tabula,
+    TabulaError(..),
+    TabulaErr(..),
+
     HasPayload(..),
 
     ObjectList(..),
@@ -23,6 +27,8 @@ module Warwick.Tabula.Types (
 --------------------------------------------------------------------------------
 
 import Control.Monad
+import Control.Monad.Except
+import Control.Monad.State
 
 import Data.String
 import Data.Aeson
@@ -33,9 +39,35 @@ import Data.Proxy
 import Data.UUID.Types as UUID
 
 import Servant.API
+import Servant.Client
 
-import Warwick.Common
+import Warwick.Common hiding (TransportError)
 import Warwick.Tabula.JSON
+
+--------------------------------------------------------------------------------
+
+-- | Represents a Tabula error message.
+data TabulaError = TabulaError (Maybe T.Text)
+     deriving (Eq, Show)
+
+instance FromJSON TabulaError where 
+     parseJSON = withObject "TabulaError" $ \obj ->
+          TabulaError <$> obj .: "message"
+
+-- | Represents computations involving the Tabula API.
+type Tabula = StateT APISession (ExceptT TabulaErr ClientM)
+
+data TabulaErr 
+    = TransportError ServantError 
+    | TabulaErrorRes {
+         tabulaErrStatus   :: String,
+         tabulaErrMessages :: [TabulaError]
+    } 
+    deriving (Eq, Show)
+
+instance FromJSON TabulaErr where 
+    parseJSON = withObject "TabulaErrorRes" $ \v ->
+        TabulaErrorRes <$> v .: "status" <*> v .: "errors"
 
 --------------------------------------------------------------------------------
 

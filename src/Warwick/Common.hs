@@ -71,14 +71,17 @@ data APISession = APISession {
     sessionURL      :: BaseUrl
 }
 
-getAuthData :: Warwick BasicAuthData
-getAuthData = gets sessionAuthData
+class Monad m => HasApiSession m where 
+    getAuthData :: m BasicAuthData
+    getManager :: m Manager
+    getURL :: m BaseUrl
 
-getManager :: Warwick Manager
-getManager = gets sessionManager
+instance Monad m => HasApiSession (StateT APISession m) where 
+    getAuthData = gets sessionAuthData
 
-getURL :: Warwick BaseUrl
-getURL = gets sessionURL
+    getManager = gets sessionManager
+
+    getURL = gets sessionURL
 
 --------------------------------------------------------------------------------
 

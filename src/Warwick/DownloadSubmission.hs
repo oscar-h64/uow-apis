@@ -54,7 +54,7 @@ downloadSubmission :: String
                    -> String
                    -> FilePath
                    -> FilePath
-                   -> Warwick ()
+                   -> Tabula ()
 downloadSubmission sid mc aid subid fn out = do
     manager            <- getManager
     baseURL            <- getURL

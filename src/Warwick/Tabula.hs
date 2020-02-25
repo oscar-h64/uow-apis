@@ -70,9 +70,9 @@ import Servant.API.BasicAuth
 import Servant.Client
 
 import Warwick.Config
-import Warwick.Common hiding (TransportError, getAuthData)
+import Warwick.Common hiding (TransportError)
 import Warwick.Tabula.Config
-import Warwick.Tabula.Types hiding (TransportError, getAuthData)
+import Warwick.Tabula.Types
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Member
 import Warwick.Tabula.Payload
@@ -83,24 +83,6 @@ import qualified Warwick.Tabula.Internal as I
 import Warwick.DownloadSubmission
 
 -------------------------------------------------------------------------------
-
--- | Represents computations involving the Tabula API.
-type Tabula = StateT APISession (ExceptT TabulaErr ClientM)
-
-getAuthData :: Tabula BasicAuthData
-getAuthData = gets sessionAuthData
-
-data TabulaErr 
-    = TransportError ServantError 
-    | TabulaErrorRes {
-         tabulaErrStatus   :: String,
-         tabulaErrMessages :: [TabulaError]
-    } 
-    deriving (Eq, Show)
-
-instance FromJSON TabulaErr where 
-    parseJSON = withObject "TabulaErrorRes" $ \v ->
-        TabulaErrorRes <$> v .: "status" <*> v .: "errors"
 
 -- | 'withTabula' @instance config action@ runs the computation @action@
 -- by connecting to @instance@ with the configuration specified by @config@.
