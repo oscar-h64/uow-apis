@@ -48,4 +48,7 @@ instance FromJSON Department where
 instance HasPayload Department where 
     payloadFieldName _ = "department"
 
+instance HasPayload [Department] where 
+    payloadFieldName _ = "departments"
+
 --------------------------------------------------------------------------------

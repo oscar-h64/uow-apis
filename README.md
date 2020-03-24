@@ -12,6 +12,12 @@ The Tabula API client currently supports the following endpoints:
 withTabula Live config $ retrieveModule "cs141"
 ```
 
+* [List departments](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/admin/list-departments)
+
+```haskell
+withTabula Live config $ listDepartments
+```
+
 * [Retrieve department](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/admin/retrieve-department)
 
 ```haskell

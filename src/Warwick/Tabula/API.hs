@@ -69,6 +69,9 @@ type AdminAPI =
       "module" :>
       Capture "moduleCode" ModuleCode :>
       Get '[JSON] (TabulaResponse Module)
+ :<|> TabulaAuth :> 
+      "department" :>
+      Get '[JSON] (TabulaResponse [Department])
  :<|> TabulaAuth :>
       "department" :>
       Capture "departmentCode" Text :>

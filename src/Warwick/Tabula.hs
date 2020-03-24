@@ -23,6 +23,7 @@ module Warwick.Tabula (
     withTabula,
 
     retrieveModule,
+    listDepartments,
     retrieveDepartment,
 
     listAssignments,
@@ -126,6 +127,12 @@ retrieveModule :: ModuleCode -> Tabula (TabulaResponse Module)
 retrieveModule mc = do 
     authData <- getAuthData
     handle $ I.retrieveModule authData mc
+
+-- | 'listDepartments' retrieves information about all departments. 
+listDepartments :: Tabula (TabulaResponse [Department])
+listDepartments = do 
+    authData <- getAuthData 
+    handle $ I.listDepartments authData
 
 -- | `retrieveDepartment` @deptCode@ retrieves information about the 
 -- department identified by @deptCode@.
