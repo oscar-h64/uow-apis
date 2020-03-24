@@ -54,6 +54,9 @@ instance FromJSON TabulaError where
      parseJSON = withObject "TabulaError" $ \obj ->
           TabulaError <$> obj .: "message"
 
+instance ToJSON TabulaError where 
+    toJSON (TabulaError msg) = object [ "message" .= msg ]
+
 -- | Represents computations involving the Tabula API.
 type Tabula = StateT APISession (ExceptT TabulaErr ClientM)
 
