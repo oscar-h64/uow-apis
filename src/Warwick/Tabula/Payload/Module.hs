@@ -20,15 +20,18 @@ data Module = Module {
     -- | The base module details.
     mBaseModule :: BaseModule,
     -- | Information about the department responsible for the module.
-    mAdminDepartment :: DepartmentR
+    mAdminDepartment :: Maybe DepartmentR
 } deriving (Eq, Show)
 
 instance FromJSON Module where 
     parseJSON = withObject "Module" $ \obj ->
         Module <$> parseJSON (Object obj) 
-               <*> obj .: "adminDepartment"
+               <*> obj .:? "adminDepartment"
 
 instance HasPayload Module where 
     payloadFieldName _ = "module"
+
+instance HasPayload [Module] where 
+    payloadFieldName _ = "modules"
 
 --------------------------------------------------------------------------------

@@ -33,8 +33,12 @@ adminAPI :<|> courseworkAPI :<|> smallGroupAPI :<|> memberAPI :<|> timetableAPI 
 retrieveModule :: BasicAuthData -> ModuleCode -> ClientM (TabulaResponse Module)
 listDepartments :: BasicAuthData -> ClientM (TabulaResponse [Department])
 retrieveDepartment :: BasicAuthData -> Text -> ClientM (TabulaResponse Department)
+listDepartmentModules :: BasicAuthData -> Text -> ClientM (TabulaResponse [Module])
 
-retrieveModule :<|> listDepartments :<|> retrieveDepartment = adminAPI
+retrieveModule :<|> 
+    listDepartments :<|> 
+    retrieveDepartment :<|> 
+    listDepartmentModules = adminAPI
 
 --------------------------------------------------------------------------------
 

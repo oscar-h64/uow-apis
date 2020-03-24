@@ -24,6 +24,12 @@ withTabula Live config $ listDepartments
 withTabula Live config $ retrieveDepartment "cs"
 ```
 
+* [List modules by department](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/admin/list-modules)
+
+```haskell
+withTabula Live config $ listDepartmentModules "cs"
+```
+
 * [List all assignments](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/coursework/assignments/list-assignments), including the ability to specify the academic year for which to list assignments:
 
 ```haskell

@@ -76,6 +76,11 @@ type AdminAPI =
       "department" :>
       Capture "departmentCode" Text :>
       Get '[JSON] (TabulaResponse Department)
+ :<|> TabulaAuth :>
+      "department" :>
+      Capture "departmentCode" Text :>
+      "modules" :>
+      Get '[JSON] (TabulaResponse [Module])
 
 -- | Represents the coursework part of Tabula's API as a type.
 type CourseworkAPI =
