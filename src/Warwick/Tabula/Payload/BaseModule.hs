@@ -3,7 +3,9 @@
 -- Copyright 2019-2020 Michael B. Gale (m.gale@warwick.ac.uk)                 --
 --------------------------------------------------------------------------------
 
-module Warwick.Tabula.Payload.BaseModule where 
+module Warwick.Tabula.Payload.BaseModule (
+    BaseModule(..)
+) where 
 
 --------------------------------------------------------------------------------
 
@@ -27,5 +29,12 @@ instance FromJSON BaseModule where
         BaseModule <$> obj .:? "active" 
                    <*> obj .: "code"
                    <*> obj .: "name"
+
+instance ToJSON BaseModule where 
+    toJSON BaseModule{..} = 
+        object [ "active" .= mActive 
+               , "code" .= mCode 
+               , "name" .= mName
+               ]
 
 --------------------------------------------------------------------------------

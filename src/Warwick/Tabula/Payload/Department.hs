@@ -29,6 +29,10 @@ instance FromJSON DepartmentR where
         DepartmentR <$> obj .: "code" 
                     <*> obj .: "name"
 
+instance ToJSON DepartmentR where 
+    toJSON DepartmentR{..} =
+        object [ "code" .= dCode, "name" .= dName ]
+
 data Department = Department {
     dBasics :: DepartmentR,
     dFullName :: Text,
@@ -44,6 +48,16 @@ instance FromJSON Department where
                    <*> obj .: "shortName"
                    <*> obj .: "modules"
                    <*> obj .: "routes"
+
+instance ToJSON Department where 
+    toJSON Department{..} = 
+        object [ "code" .= dCode dBasics
+               , "name" .= dName dBasics 
+               , "fullName" .= dFullName
+               , "shortName" .= dShortName
+               , "modules" .= dModules
+               , "dRoutes" .= dRoutes
+               ]
 
 instance HasPayload Department where 
     payloadFieldName _ = "department"

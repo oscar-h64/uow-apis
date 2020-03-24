@@ -28,6 +28,14 @@ instance FromJSON Module where
         Module <$> parseJSON (Object obj) 
                <*> obj .:? "adminDepartment"
 
+instance ToJSON Module where 
+    toJSON Module{..} = 
+        object [ "active" .= mActive mBaseModule
+               , "code" .= mCode mBaseModule
+               , "name" .= mCode mBaseModule
+               , "adminDepartment" .= mAdminDepartment
+               ]
+
 instance HasPayload Module where 
     payloadFieldName _ = "module"
 

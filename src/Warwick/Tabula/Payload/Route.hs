@@ -31,4 +31,12 @@ instance FromJSON Route where
               <*> obj .: "name"
               <*> obj .:? "active"
 
+instance ToJSON Route where 
+    toJSON Route{..} = 
+        object [ "code" .= routeCode
+               , "degreeType" .= routeDegreeType
+               , "name" .= routeName
+               , "active" .= routeActive
+               ]
+
 --------------------------------------------------------------------------------
