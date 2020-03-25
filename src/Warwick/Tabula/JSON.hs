@@ -1,9 +1,14 @@
 --------------------------------------------------------------------------------
 -- Haskell bindings for the Tabula API                                        --
--- Copyright 2018 Michael B. Gale (m.gale@warwick.ac.uk)                      --
+-- Copyright (c) Michael B. Gale (m.gale@warwick.ac.uk)                       --
 --------------------------------------------------------------------------------
 
-module Warwick.Tabula.JSON (parseTabulaJSON, formatTabulaJSON) where
+module Warwick.Tabula.JSON (
+    compactObject,
+    (.=?),
+    parseTabulaJSON, 
+    formatTabulaJSON
+) where
 
 --------------------------------------------------------------------------------
 
@@ -12,8 +17,22 @@ import GHC.Generics
 import Data.Aeson
 import Data.Aeson.Types
 import Data.Char
+import Data.HashMap.Lazy as HM
+import Data.Hashable
+import Data.Text (Text)
 
 --------------------------------------------------------------------------------
+
+-- | 'compactObject' @objects@ is similar to Aeson's `object` function, except
+-- that empty entries are omitted.
+compactObject :: [Object] -> Value 
+compactObject es = Object $ HM.unions es
+
+-- | @key .=? val@ constructs a `HashMap` with a single entry or an empty 
+-- hashmap if @val@ is `Nothing`.
+(.=?) :: ToJSON v => Text -> Maybe v -> Object
+(.=?) _ Nothing = HM.empty 
+(.=?) key (Just val) = HM.singleton key (toJSON val)
 
 jsonOpts :: Options
 jsonOpts = defaultOptions {

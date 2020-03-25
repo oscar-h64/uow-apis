@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5962a41e2a2d70e35a5e424647cd49e969fc910475d949072090f39ab06ce85e
+-- hash: 2933a0a737a5aa662f3799a78236c4292d29b40f38597933cdee2a9a4264bd75
 
 name:           uow-apis
 version:        0.3.0.0
@@ -93,6 +93,7 @@ library
     , containers
     , exceptions
     , feed
+    , hashable
     , http-client
     , http-client-tls
     , http-conduit

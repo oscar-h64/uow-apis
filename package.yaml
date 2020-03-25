@@ -26,6 +26,7 @@ dependencies:
 - iso8601-time
 - containers
 - unordered-containers
+- hashable
 - aeson
 - xeno
 - xml-types

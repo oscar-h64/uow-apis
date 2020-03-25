@@ -8,10 +8,12 @@ module Warwick.Tabula.Payload.Module where
 --------------------------------------------------------------------------------
 
 import Data.Aeson
+import Data.HashMap.Lazy as HM
 
 import Warwick.Tabula.Payload.Department
 import Warwick.Tabula.Payload.BaseModule
 import Warwick.Tabula.Types
+import Warwick.Tabula.JSON
 
 --------------------------------------------------------------------------------
 
@@ -29,12 +31,12 @@ instance FromJSON Module where
                <*> obj .:? "adminDepartment"
 
 instance ToJSON Module where 
-    toJSON Module{..} = 
-        object [ "active" .= mActive mBaseModule
-               , "code" .= mCode mBaseModule
-               , "name" .= mCode mBaseModule
-               , "adminDepartment" .= mAdminDepartment
-               ]
+    toJSON Module{..} = compactObject 
+        [ "active" .=? mActive mBaseModule
+        , "code" .= mCode mBaseModule
+        , "name" .= mName mBaseModule
+        , "adminDepartment" .=? mAdminDepartment
+        ] 
 
 instance HasPayload Module where 
     payloadFieldName _ = "module"
