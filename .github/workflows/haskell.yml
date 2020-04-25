@@ -1,0 +1,44 @@
+name: Haskell CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1  
+    
+    - name: Install system dependencies 
+      run: |
+        sudo apt-get install libpcre3-dev
+
+    - name: Install the Haskell Stack 
+      run: |
+        mkdir -p ~/.local/bin
+        curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+
+    - name: Cache .stack
+      id: cache-stack
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-${{ hashFiles('uow-apis.cabal') }}
+        restore-keys: |
+            ${{ runner.os }}-stack
+            ${{ runner.os }}
+
+    - name: Install GHC 
+      run: |
+        export PATH=$HOME/.local/bin:$PATH
+        stack --no-terminal --install-ghc setup
+
+    - name: Install dependencies
+      run: |
+        export PATH=$HOME/.local/bin:$PATH
+        stack --no-terminal build --only-dependencies --fast
+        
+    - name: Build 
+      run: |
+        export PATH=$HOME/.local/bin:$PATH
+        stack --no-terminal build --fast
