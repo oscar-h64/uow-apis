@@ -87,6 +87,11 @@ listSmallGroupSets :<|>
 
 --------------------------------------------------------------------------------
 
+retrieveMembers :: BasicAuthData 
+                -> [Text] 
+                -> Maybe Text 
+                -> ClientM (TabulaResponse (HM.HashMap Text Member))
+
 listMembers ::
     BasicAuthData ->
     [Text] ->
@@ -111,6 +116,7 @@ retrieveAttendance ::
     ClientM (TabulaResponse MemberAttendance)
 
 retrieveMember :<|>
+    retrieveMembers :<|>
     listRelationships :<|>
     personAssignments :<|>
     listMembers :<|>

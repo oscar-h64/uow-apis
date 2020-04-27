@@ -9,6 +9,7 @@ module Warwick.Tabula.API where
 
 import Data.Aeson
 import qualified Data.HashMap.Lazy as HM
+import qualified Data.Map as M
 import Data.ByteString as BS
 import Data.UUID.Types
 import Data.Proxy
@@ -24,6 +25,11 @@ import Warwick.Tabula.Member
 import Warwick.Tabula.Payload
 import Warwick.Tabula.Relationship
 import Warwick.Tabula.StudentAssignment
+
+--------------------------------------------------------------------------------
+
+instance HasPayload (HM.HashMap Text Member) where 
+     payloadFieldName _ = "members"
 
 --------------------------------------------------------------------------------
 
@@ -149,6 +155,11 @@ type MemberAPI =
       Capture "userID" String :> 
       QueryParam "fields" String :> 
       Get '[JSON] (TabulaResponse Member)
+ :<|> TabulaAuth :>
+      "memberProfiles" :>
+      QueryParams "members" Text :>
+      QueryParam "fields" Text :> 
+      Get '[JSON] (TabulaResponse (HM.HashMap Text Member))
  :<|> TabulaAuth :> 
       "member" :> 
       Capture "userID" String :> 

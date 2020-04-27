@@ -41,6 +41,7 @@ module Warwick.Tabula (
     retrieveSmallGroupAttendance,
 
     retrieveMember,
+    retrieveMembers,
     listRelationships,
     personAssignments,
     listMembers,
@@ -61,6 +62,7 @@ import Control.Monad.Except
 import Data.Text.Encoding (encodeUtf8)
 import qualified Data.HashMap.Lazy as HM
 import Data.Text (Text, pack)
+import qualified Data.Text as T
 
 import Data.List (intercalate)
 
@@ -213,6 +215,15 @@ retrieveMember uid fields = do
     let fdata = if Prelude.null fields then Nothing else Just (intercalate "," fields)
     authData <- getAuthData
     handle $ I.retrieveMember authData uid fdata
+
+retrieveMembers :: [Text] 
+                -> [Text] 
+                -> Tabula (TabulaResponse (HM.HashMap Text Member))
+retrieveMembers uids fields = do
+    let fdata | Prelude.null fields = Nothing 
+              | otherwise = Just (T.intercalate "," fields)
+    authData <- getAuthData
+    handle $ I.retrieveMembers authData uids fdata
 
 listRelationships ::
     String -> Tabula (TabulaResponse [Relationship])

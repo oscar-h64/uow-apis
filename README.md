@@ -149,6 +149,14 @@ withTabula Live config $
    retrieveMember "1234567" ["member.fullname"]
 ```
 
+* [Retrieve multiple members](#), including support for specifying which fields should be retrieved:
+
+```haskell
+-- retrieve all fields
+withTabula Live config $ 
+   retrieveMembers ["1234567", "7654321"] []
+```
+
 * [Retrieve a member's relationships](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/member/retrieve-member-relationships)
 
 ```haskell
