@@ -61,7 +61,7 @@ instance ToJSON TabulaError where
 type Tabula = StateT APISession (ExceptT TabulaErr ClientM)
 
 data TabulaErr 
-    = TransportError ServantError 
+    = TransportError ClientError 
     | TabulaErrorRes {
          tabulaErrStatus   :: String,
          tabulaErrMessages :: [TabulaError]

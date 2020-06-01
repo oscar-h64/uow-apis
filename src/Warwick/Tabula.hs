@@ -108,7 +108,7 @@ withTabula inst APIConfig{..} m = do
 
     case r of
         Left serr -> case serr of 
-            FailureResponse res -> case decode (responseBody res) of
+            FailureResponse _ res -> case decode (responseBody res) of
                 Nothing -> pure $ Left $ TransportError serr
                 Just er -> pure $ Left er
             _ -> pure $ Left $ TransportError serr

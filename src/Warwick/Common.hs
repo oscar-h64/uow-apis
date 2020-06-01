@@ -58,7 +58,7 @@ class HasBaseUrl a where
 --------------------------------------------------------------------------------
 
 data APIError
-    = TransportError ServantError
+    = TransportError ClientError
     deriving Show
 
 -- | Represents computations involving a Warwick API.
