@@ -66,7 +66,22 @@ optsToXML PageOptions{..} = catMaybes [
 -- | 'defaultPageOpts' represents the default value for PageOptions (all fields
 --   are Nothing)
 defaultPageOpts :: PageOptions
-defaultPageOpts = PageOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
+defaultPageOpts = PageOptions{
+    poSearchable = Nothing,
+    poVisible = Nothing,
+    poSpanRHS = Nothing,
+    poDeleted = Nothing,
+    poDescription = Nothing,
+    poKeywords = Nothing,
+    poLinkCaption = Nothing,
+    poPageHeading = Nothing,
+    poTitleBarCaption = Nothing,
+    poPageOrder = Nothing,
+    poCommentable = Nothing,
+    poCommentsVisibleToCommentersOnly = Nothing,
+    poLayout = Nothing,
+    poEditComment = Nothing
+}
 
 data PageUpdate = PageUpdate {
     puContents :: Maybe Text,
