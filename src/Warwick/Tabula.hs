@@ -3,6 +3,8 @@
 -- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
+{-# LANGUAGE CPP #-}
+
 module Warwick.Tabula (
     module Warwick.Common,
     module Warwick.Config,
@@ -108,7 +110,11 @@ withTabula inst APIConfig{..} m = do
 
     case r of
         Left serr -> case serr of 
+#if MIN_VERSION_servant_client(0,16,0)
+            FailureResponse _ res -> case decode (responseBody res) of
+#else 
             FailureResponse res -> case decode (responseBody res) of
+#endif
                 Nothing -> pure $ Left $ TransportError serr
                 Just er -> pure $ Left er
             _ -> pure $ Left $ TransportError serr

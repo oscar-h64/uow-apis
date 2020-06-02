@@ -3,6 +3,8 @@
 -- Copyright 2018 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
+{-# LANGUAGE CPP #-}
+
 module Warwick.Tabula.Types (
     module UUID,
 
@@ -61,7 +63,11 @@ instance ToJSON TabulaError where
 type Tabula = StateT APISession (ExceptT TabulaErr ClientM)
 
 data TabulaErr 
-    = TransportError ServantError 
+#if MIN_VERSION_servant_client(0,16,0)
+    = TransportError ClientError
+#else 
+    = TransportError ServantError
+#endif
     | TabulaErrorRes {
          tabulaErrStatus   :: String,
          tabulaErrMessages :: [TabulaError]

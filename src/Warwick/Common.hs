@@ -3,6 +3,8 @@
 -- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
+{-# LANGUAGE CPP #-}
+
 module Warwick.Common where 
 
 --------------------------------------------------------------------------------
@@ -58,7 +60,11 @@ class HasBaseUrl a where
 --------------------------------------------------------------------------------
 
 data APIError
+#if MIN_VERSION_servant_client(0,16,0)
+    = TransportError ClientError
+#else 
     = TransportError ServantError
+#endif
     deriving Show
 
 -- | Represents computations involving a Warwick API.
