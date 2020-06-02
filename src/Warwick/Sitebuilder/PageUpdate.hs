@@ -61,6 +61,9 @@ optsToXML PageOptions{..} = catMaybes [
         xmlTextContent "sitebuilder:edit-comment" <$> (TextString <$> poEditComment)
     ]
 
+defaultPageOpts :: PageOptions
+defaultPageOpts = PageOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
+
 data PageUpdate = PageUpdate {
     puContents :: Maybe Text,
     puOptions :: PageOptions
