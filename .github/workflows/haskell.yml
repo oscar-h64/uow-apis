@@ -4,6 +4,13 @@ on: [push]
 
 jobs:
   build:
+    strategy: 
+      matrix:
+        resolver: 
+          - stack
+          - stack-lts-14.12
+          - stack-lts-13.26
+
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +30,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-stack-${{ hashFiles('uow-apis.cabal') }}
+        key: ${{ runner.os }}-${{ matrix.resolver }}-${{ hashFiles(format('{0}.yaml', matrix.resolver)) }}
         restore-keys: |
             ${{ runner.os }}-stack
             ${{ runner.os }}
@@ -31,14 +38,14 @@ jobs:
     - name: Install GHC 
       run: |
         export PATH=$HOME/.local/bin:$PATH
-        stack --no-terminal --install-ghc setup
+        stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal --install-ghc setup
 
     - name: Install dependencies
       run: |
         export PATH=$HOME/.local/bin:$PATH
-        stack --no-terminal build --only-dependencies --fast
+        stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal build --only-dependencies --fast
         
     - name: Build 
       run: |
         export PATH=$HOME/.local/bin:$PATH
-        stack --no-terminal build --fast
+        stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal build --fast
