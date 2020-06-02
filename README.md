@@ -293,7 +293,7 @@ An existing Sitebuilder page can be edited ([API docs](https://warwick.ac.uk/ser
 update :: PageUpdate
 update = PageUpdate {
     puContents = "<html><body>Test</body></html>",
-    puChangeNote = "Test change"
+    puOptions = defaultPageOpts { poEditComment = Just "change notes" }
 }
 
 -- replace the contents of the page at /fac/sci/dcs/test with data from `update`
