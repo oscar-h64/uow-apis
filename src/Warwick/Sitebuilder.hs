@@ -80,8 +80,8 @@ editPageFromFile :: Text -> Text -> FilePath -> Warwick ()
 editPageFromFile page comment fp = do 
     contents <- liftIO $ readFile fp
     editPage page API.PageUpdate{
-        puContents = pack contents,
-        puChangeNote = comment
+        puContents = Just $ pack contents,
+        puOptions = API.defaultPageOpts { API.poEditComment = Just comment }
     }
 
 -- | 'pageInfo' @path@ retrieves information about the page at @path@.
