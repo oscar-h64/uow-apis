@@ -39,10 +39,12 @@ data PageOptions = PageOptions {
     poEditComment :: Maybe Text
 } deriving Show
 
+-- | 'boolToLowerText' @bool@ converts @bool@ to lowercase text
 boolToLowerText :: Bool -> Text
 boolToLowerText True  = "true"
 boolToLowerText False = "false"
 
+-- | 'optsToXML' @opts@ converts @opts@ to an array of XML elements
 optsToXML :: PageOptions -> [Data.XML.Types.Element]
 optsToXML PageOptions{..} = catMaybes [
         xmlTextContent "sitebuilder:searchable" <$> (TextString . boolToLowerText <$> poSearchable),
@@ -61,6 +63,8 @@ optsToXML PageOptions{..} = catMaybes [
         xmlTextContent "sitebuilder:edit-comment" <$> (TextString <$> poEditComment)
     ]
 
+-- | 'defaultPageOpts' represents the default value for PageOptions (all fields
+--   are Nothing)
 defaultPageOpts :: PageOptions
 defaultPageOpts = PageOptions Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
 
