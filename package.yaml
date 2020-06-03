@@ -74,11 +74,13 @@ executables:
     source-dirs: app
     ghc-options:
     - -Wall
-    - -Werror
     dependencies:
       - uow-apis
+      - extra
       - optparse-applicative
       - filepath
+      - directory
+      - ascii-progress
     default-extensions:
       - LambdaCase
     when:

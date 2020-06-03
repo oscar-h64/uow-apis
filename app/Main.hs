@@ -12,6 +12,7 @@ module Main ( main ) where
 import CmdArgs
 import Config
 import Sitebuilder
+import Tabula
 
 -------------------------------------------------------------------------------
 
@@ -24,5 +25,6 @@ main = do
 
     case args of 
         SitebuilderCmd opts -> sitebuilderMain cfg opts
+        TabulaCmd opts -> tabulaMain cfg opts
 
 -------------------------------------------------------------------------------
