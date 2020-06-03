@@ -88,6 +88,7 @@ class FromJSON a => HasPayload a where
     payload v = v .: payloadFieldName (Proxy :: Proxy a)
 
 newtype ObjectList a = ObjectList { getList :: [a] }
+    deriving (Eq, Show)
 
 instance FromJSON a => FromJSON (ObjectList a) where
     parseJSON = withObject "Tabula object array" $ \obj ->
@@ -95,7 +96,8 @@ instance FromJSON a => FromJSON (ObjectList a) where
 
 --------------------------------------------------------------------------------
 
-data UUIDorString = UUID UUID | NotUUID T.Text deriving Show
+data UUIDorString = UUID UUID | NotUUID T.Text 
+    deriving (Eq, Show)
 
 instance FromJSON UUIDorString where
     parseJSON (String v) = case fromText v of
@@ -111,13 +113,13 @@ instance IsString UUID where
 type AcademicYear = String
 
 newtype ModuleCode = ModuleCode { moduleCode :: T.Text }
-    deriving IsString
+    deriving (Eq, Show, IsString)
 
 instance ToHttpApiData ModuleCode where
     toQueryParam (ModuleCode mc) = mc
 
 newtype AssignmentID = AssignmentID { unAssignmentID :: UUID }
-    deriving (IsString)
+    deriving (Eq, IsString)
 
 instance Show AssignmentID where
     show (AssignmentID uuid) = show uuid
@@ -126,6 +128,6 @@ instance FromJSON AssignmentID where
     parseJSON v = AssignmentID <$> parseJSON v
 
 newtype SubmissionID = SubmissionID { unSubmissionID :: UUID }
-    deriving (IsString)
+    deriving (Eq, Show, IsString)
 
 --------------------------------------------------------------------------------
