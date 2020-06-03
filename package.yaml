@@ -18,6 +18,11 @@ synopsis:            Haskell bindings for UoW APIs
 # common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/mbg/uow-apis#readme>
 
+flags:
+  build-exe:
+    manual: true 
+    default: false
+
 dependencies:
 - base
 - bytestring
@@ -62,3 +67,23 @@ library:
   source-dirs: src
   ghc-options:
   - -Wall
+
+executables:
+  uow-util:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+    - -Wall
+    - -Werror
+    dependencies:
+      - uow-apis
+      - optparse-applicative
+      - filepath
+    default-extensions:
+      - LambdaCase
+    when:
+      condition: flag(build-exe)
+      then:
+        buildable: true 
+      else: 
+        buildable: false
