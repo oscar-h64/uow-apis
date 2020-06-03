@@ -3,7 +3,7 @@
 -- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
-module Warwick.Sitebuilder.PageUpdate where 
+module Warwick.Sitebuilder.Page (Page(..)) where 
 
 --------------------------------------------------------------------------------
 
@@ -21,24 +21,25 @@ import Warwick.Sitebuilder.PageOptions
 
 --------------------------------------------------------------------------------
 
-data PageUpdate = PageUpdate {
-    puContents :: Maybe Text,
-    puOptions :: PageOptions
+data Page = Page {
+    pcTitle :: Text,
+    pcContents :: Text,
+    pcPageName :: Text,
+    pcOptions :: PageOptions
 } deriving Show
 
-instance MimeRender ATOM PageUpdate where 
-    mimeRender _ PageUpdate{..} = 
+instance MimeRender ATOM Page where 
+    mimeRender _ Page{..} = 
         renderLBS def $ 
         elementToDoc $ 
         xmlEntry $ 
         (nullEntry "" (TextString "") "") {
-            entryContent = HTMLContent <$> puContents,
+            entryTitle = TextString pcTitle,
+            entryContent = Just $ HTMLContent pcContents,
             entryAttrs = [
                 ("xmlns:sitebuilder", [
                     ContentText "http://go.warwick.ac.uk/elab-schemas/atom"
                 ])
             ],
-            entryOther = optsToXML puOptions
+            entryOther = xmlTextContent "sitebuilder:page-name" (TextString pcPageName) : optsToXML pcOptions
         } 
-
---------------------------------------------------------------------------------
