@@ -10,6 +10,7 @@ module Main ( main ) where
 --------------------------------------------------------------------------------
 
 import CmdArgs
+import Config
 import Sitebuilder
 
 -------------------------------------------------------------------------------
@@ -19,7 +20,9 @@ main :: IO ()
 main = do
     args <- parseCmdLineArgs
 
+    cfg <- loadConfig
+
     case args of 
-        SitebuilderCmd opts -> sitebuilderMain opts
+        SitebuilderCmd opts -> sitebuilderMain cfg opts
 
 -------------------------------------------------------------------------------

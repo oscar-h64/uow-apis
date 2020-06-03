@@ -10,9 +10,7 @@ module Sitebuilder ( sitebuilderMain ) where
 -------------------------------------------------------------------------------
 
 import Data.Maybe
-import Data.Text
 
-import System.Environment
 import System.Exit
 import System.IO
 
@@ -31,15 +29,8 @@ handleAPI m = m >>= \case
         exitWith (ExitFailure (-1)) 
     Right _ -> exitSuccess
 
-sitebuilderMain :: SitebuilderOpts -> IO ()
-sitebuilderMain opts = do 
-    username <- fromMaybe "" <$> lookupEnv "SB_USER"
-    password <- fromMaybe "" <$> lookupEnv "SB_PASSWORD"
-
-    let config = APIConfig {
-        apiUsername = pack username,
-        apiPassword = pack password
-    }
+sitebuilderMain :: APIConfig -> SitebuilderOpts -> IO ()
+sitebuilderMain config opts = do 
 
     case opts of 
         EditPage{..} -> do 
