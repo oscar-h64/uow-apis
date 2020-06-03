@@ -1,1 +1,9 @@
-cradle: {stack: { component: "uow-apis" }}
+cradle:
+    stack:
+      - path: "./src"
+        component: "uow-apis:lib"
+      - path: "./app"
+        component: "uow-apis:exe:uow-util"
+
+dependencies:
+  - package.yaml
