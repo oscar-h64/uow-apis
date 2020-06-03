@@ -87,7 +87,7 @@ downloadSubmissionWithCallbacks :: String
                    -> FilePath
                    -> FilePath
                    -> TabulaDownloadCallbacks a
-                   -> Warwick ()
+                   -> Tabula ()
 downloadSubmissionWithCallbacks sid mc aid subid fn out (Callbacks {..}) = do
     manager            <- getManager
     baseURL            <- getURL
