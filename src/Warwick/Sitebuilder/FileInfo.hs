@@ -3,7 +3,7 @@
 -- Copyright 2019-2020 Michael B. Gale (m.gale@warwick.ac.uk)                 --
 --------------------------------------------------------------------------------
 
-module Warwick.Sitebuilder.PageInfo where 
+module Warwick.Sitebuilder.FileInfo where 
 
 --------------------------------------------------------------------------------
 
@@ -14,80 +14,75 @@ import Warwick.Sitebuilder.PageEdit
 
 --------------------------------------------------------------------------------
 
-data PageProperties = PageProperties {
-    ppIncludeLegacyJS :: Bool,
-    ppShowInLocalNavigation :: Bool,
-    ppPageOrder :: Int, 
-    ppHasThumbnail :: Bool,
-    ppAllowSearchEngines :: Bool,
-    ppEscapeHtml :: Bool,
-    ppSupportsPagesToGo :: Bool,
-    ppSpanRhs :: Bool,
-    ppDeferJS :: Bool
+data FileProperties = FileProperties {
+    fpIncludeLegacyJS :: Bool,
+    fpShowInLocalNavigation :: Bool,
+    fpPageOrder :: Int, 
+    fpAllowSearchEngines :: Bool,
+    fpEscapeHtml :: Bool,
+    fpSupportsPagesToGo :: Bool,
+    fpDeferJS :: Bool
 } deriving Show
 
-instance FromJSON PageProperties where 
-    parseJSON = withObject "PageProperties" $ \obj ->
-        PageProperties <$> obj .: "includeLegacyJavascript"
+instance FromJSON FileProperties where 
+    parseJSON = withObject "FileProperties" $ \obj ->
+        FileProperties <$> obj .: "includeLegacyJavascript"
                        <*> obj .: "showInLocalNavigation"
                        <*> obj .: "pageOrder"
-                       <*> obj .: "hasThumbnail"
                        <*> obj .: "allowSearchEngines"
                        <*> obj .: "escapeHtml"
                        <*> obj .: "supportsPagesToGo"
-                       <*> obj .: "spanRhs"
                        <*> obj .: "deferJs"
 
-data PageInfo = PageInfo {
-    pageID :: Text,
-    pageParent :: Text,
-    pageLinkCaption :: Text, 
-    pageKeywords :: [Text],
-    pageCanEdit :: Bool,
-    pageCanAdmin :: Bool,
-    pageDescription :: Text,
-    pageShortTitle :: Text, 
-    pageMimeType :: Text,
-    pageEdited :: PageEdit, 
-    pagePath :: Text, 
-    pageHeading :: Text,
-    pageType :: Text, 
-    pageChildren :: [Text],
-    pageContentType :: Text,
-    pagePubliclyVisible :: Bool,
-    pageContact :: Text,
-    pageCreator :: Text,
-    pageIsSiteRoot :: Bool,
-    pageCreated :: PageEdit,
-    pageCanContribute :: Bool,
-    pagePropertiesUpdated :: PageEdit,
-    pageURL :: Text,
-    pageContentUpdated :: PageEdit,
-    pageDeleted :: Bool,
-    pageSiteRoot :: Text,
-    pageUpdated :: PageEdit,
-    pageProperties :: PageProperties
+data FileInfo = FileInfo {
+    fileID :: Text,
+    fileParent :: Text,
+    fileName :: Text,
+    fileLinkCaption :: Text, 
+    fileKeywords :: [Text],
+    fileCanEdit :: Bool,
+    fileCanAdmin :: Bool,
+    fileMimeType :: Text,
+    fileEdited :: PageEdit, 
+    filePath :: Text,
+    filePageType :: Text,
+    fileResizeableImage :: Bool, 
+    fileChildren :: [Text],
+    filePubliclyVisible :: Bool,
+    fileContact :: Text,
+    fileImage :: Bool,
+    fileCreator :: Text,
+    fileIsSiteRoot :: Bool,
+    fileCreated :: PageEdit,
+    fileCanContribute :: Bool,
+    filePropertiesUpdated :: PageEdit,
+    fileURL :: Text,
+    fileContentUpdated :: PageEdit,
+    fileDeleted :: Bool,
+    fileSiteRoot :: Text,
+    fileSize :: Int,
+    fileUpdated :: PageEdit,
+    fileProperties :: FileProperties
 } deriving Show
 
-instance FromJSON PageInfo where 
-    parseJSON = withObject "PageInfo" $ \obj ->
-        PageInfo <$> obj .: "id"
+instance FromJSON FileInfo where 
+    parseJSON = withObject "FileInfo" $ \obj ->
+        FileInfo <$> obj .: "id"
                  <*> obj .: "parent"
+                 <*> obj .: "fileName"
                  <*> obj .: "linkCaption"
                  <*> obj .: "keywords"
                  <*> obj .: "canEdit"
                  <*> obj .: "canAdmin"
-                 <*> obj .: "description"
-                 <*> obj .: "shortTitle"
                  <*> obj .: "mimeType"
                  <*> obj .: "editedUpdated"
                  <*> obj .: "path"
-                 <*> obj .: "pageHeading"
                  <*> obj .: "pageType"
+                 <*> obj .: "resizeableImage"
                  <*> obj .: "children"
-                 <*> obj .: "contentType"
                  <*> obj .: "publiclyVisible"
                  <*> obj .: "pageContact"
+                 <*> obj .: "image"
                  <*> obj .: "creator"
                  <*> obj .: "isSiteRoot"
                  <*> obj .: "created"
@@ -97,6 +92,7 @@ instance FromJSON PageInfo where
                  <*> obj .: "contentUpdated"
                  <*> obj .: "deleted"
                  <*> obj .: "siteRoot"
+                 <*> obj .: "fileSize"
                  <*> obj .: "updated"
                  <*> obj .: "properties"
 

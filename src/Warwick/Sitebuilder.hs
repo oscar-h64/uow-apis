@@ -17,8 +17,15 @@ module Warwick.Sitebuilder (
     editPage,
     editPageFromFile,
     pageInfo,
+    fileInfo,
     uploadFile,
-    purge
+    deletePage,
+    restorePage,
+    editFileProps,
+    deleteFile,
+    restoreFile,
+    purgePage,
+    purgeFile
 ) where 
 
 --------------------------------------------------------------------------------
@@ -45,6 +52,8 @@ import qualified Warwick.Sitebuilder.PageInfo as API
 import qualified Warwick.Sitebuilder.PageUpdate as API
 import qualified Warwick.Sitebuilder.PageOptions as API
 import qualified Warwick.Sitebuilder.Page as API
+import qualified Warwick.Sitebuilder.FileOptions as API
+import qualified Warwick.Sitebuilder.FileInfo as API
 
 --------------------------------------------------------------------------------
 
@@ -114,11 +123,54 @@ pageInfo page = do
     authData <- getAuthData
     lift $ lift $ API.pageInfo authData (Just page)
 
--- | 'purge' @path@ purges the page or file located at @path@.
-purge :: Text -> Warwick ()
-purge page = do 
+-- | 'fileInfo' @path@ retrieves information about the file at @path@.
+fileInfo :: Text -> Warwick API.FileInfo
+fileInfo page = do 
     authData <- getAuthData
-    lift $ lift $ API.purge authData (Just page) (Just "single")
+    lift $ lift $ API.fileInfo authData (Just page)
+
+-- | 'changeDeleteStatus' @deleted path@ sets the deleted status for the page at 
+--   @path@ to @deleted@
+changeDeleteStatus :: Bool -> Text -> Warwick ()
+changeDeleteStatus deleted page = do
+    authData <- getAuthData
+    lift $ lift $ API.editPage authData (Just page) (Just "single") $ 
+        API.PageUpdate Nothing $ API.defaultPageOpts { API.poDeleted = Just deleted }
+
+-- | 'deletePage' @path@ sets the deleted status to true for the page at @path@
+deletePage :: Text -> Warwick ()
+deletePage = changeDeleteStatus True
+
+-- | 'restorePage' @path@ sets the deleted status to false for the page at @path@
+restorePage :: Text -> Warwick ()
+restorePage = changeDeleteStatus False
+
+-- | 'editFileProps' @path options@ updates the properties for the file at @path@
+--   with the changes in @options@
+editFileProps :: Text -> API.FileOptions -> Warwick ()
+editFileProps file opts = do
+    authData <- getAuthData
+    lift $ lift $ API.editFileProps authData (Just file) (Just "single") opts
+
+-- | 'deletePage' @path@ sets the deleted status to true for the file at @path@
+deleteFile :: Text -> Warwick ()
+deleteFile = flip editFileProps API.defaultFileOpts { API.foDeleted = Just True }
+
+-- | 'restorePage' @path@ sets the deleted status to false for the file at @path@
+restoreFile :: Text -> Warwick ()
+restoreFile = flip editFileProps API.defaultFileOpts { API.foDeleted = Just False }
+
+-- | 'purgePage' @path@ purges the page located at @path@.
+purgePage :: Text -> Warwick ()
+purgePage page = do 
+    authData <- getAuthData
+    lift $ lift $ API.purgePage authData (Just page) (Just "single")
+
+-- | 'purgeFile' @path@ purges the file located at @path@.
+purgeFile :: Text -> Warwick ()
+purgeFile page = do 
+    authData <- getAuthData
+    lift $ lift $ API.purgeFile authData (Just page) (Just "single")
 
 -------------------------------------------------------------------------------
 
