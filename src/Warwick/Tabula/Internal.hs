@@ -70,6 +70,12 @@ listSmallGroupSets ::
     Maybe Text -> 
     ClientM (TabulaResponse [SmallGroupSet])
 
+createSmallGroupSet ::
+    BasicAuthData ->
+    ModuleCode ->
+    SmallGroupSet ->
+    ClientM None
+
 retrieveSmallGroupAllocations ::
     BasicAuthData ->
     ModuleCode ->
@@ -82,6 +88,7 @@ retrieveSmallGroupAttendance ::
     ClientM (TabulaResponse SmallGroupAttendanceResponse)
 
 listSmallGroupSets :<|> 
+    createSmallGroupSet :<|>
     retrieveSmallGroupAllocations :<|>
     retrieveSmallGroupAttendance = smallGroupAPI
 

@@ -135,6 +135,12 @@ type SmallGroupAPI =
       "groups" :>
       QueryParam "academicYear" Text :>
       Get '[JSON] (TabulaResponse [SmallGroupSet])
+ :<|> TabulaAuth :> 
+      "module" :>
+      Capture "moduleCode" ModuleCode :> 
+      "groups" :>
+      ReqBody '[JSON] SmallGroupSet :>
+      Post '[JSON] None
  :<|> TabulaAuth :>
       "module" :>
       Capture "moduleCode" ModuleCode :>
