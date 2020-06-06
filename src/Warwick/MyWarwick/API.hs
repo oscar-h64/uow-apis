@@ -1,9 +1,15 @@
---------------------------------------------------------------------------------
--- Haskell bindings for the University of Warwick APIs                        --
--- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Haskell bindings for the University of Warwick APIs                       --
+-------------------------------------------------------------------------------
+-- This source code is licensed under the MIT licence found in the           --
+-- LICENSE file in the root directory of this source tree.                   --
+-------------------------------------------------------------------------------
 
-module Warwick.MyWarwick.API where 
+module Warwick.MyWarwick.API (
+    MyWarwick,
+    postAlert,
+    postActivity
+) where 
 
 --------------------------------------------------------------------------------
 
