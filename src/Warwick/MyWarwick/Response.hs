@@ -83,6 +83,6 @@ instance FromJSON MyWarwickResponse where
         MyWarwickResponse <$> obj .: "success"
                           <*> obj .: "status"
                           <*> obj .: "data"
-                          <*> obj .: "errors"
+                          <*> obj .:? "errors"
 
 --------------------------------------------------------------------------------
