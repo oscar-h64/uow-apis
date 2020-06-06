@@ -82,7 +82,7 @@ instance FromJSON MyWarwickResponse where
     parseJSON = withObject "MyWarwickResponse" $ \obj ->
         MyWarwickResponse <$> obj .: "success"
                           <*> obj .: "status"
-                          <*> obj .: "data"
+                          <*> obj .:? "data"
                           <*> obj .:? "errors"
 
 --------------------------------------------------------------------------------
