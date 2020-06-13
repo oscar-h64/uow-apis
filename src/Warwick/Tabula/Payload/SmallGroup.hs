@@ -58,8 +58,9 @@ instance ToJSON SmallGroupFormat where
 
 --------------------------------------------------------------------------------
 
-data SmallGroupSet = SmallGroupSet {
-    sgsId :: Text,
+type SmallGroupSet = TabulaEntity Text SmallGroupSetData
+
+data SmallGroupSetData = SmallGroupSetData {
     sgsArchived :: Maybe Bool,
     sgsAcademicYear :: Maybe Text, 
     sgsName :: Text,
@@ -68,16 +69,10 @@ data SmallGroupSet = SmallGroupSet {
 
 } deriving (Eq, Show, Generic)
 
-instance FromJSON SmallGroupSet where 
-    parseJSON = withObject "SmallGroupSet" $ \obj -> 
-        SmallGroupSet <$> obj .: "id"
-                      <*> obj .:? "archived"
-                      <*> obj .:? "academicYear"
-                      <*> obj .: "name"
-                      <*> obj .: "format"
-                      <*> obj .: "module"
+instance FromJSON SmallGroupSetData where
+    parseJSON = parseTabulaJSON
 
-instance ToJSON SmallGroupSet where
+instance ToJSON SmallGroupSetData where
     toJSON = formatTabulaJSON
 
 instance HasPayload [SmallGroupSet] where 

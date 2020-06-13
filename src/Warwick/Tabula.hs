@@ -39,6 +39,7 @@ module Warwick.Tabula (
     downloadSubmissionWithCallbacks,
 
     listSmallGroupSets,
+    createSmallGroupSet,
     retrieveSmallGroupAllocations,
     retrieveSmallGroupAttendance,
 
@@ -82,6 +83,7 @@ import Warwick.Tabula.Types
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Member
 import Warwick.Tabula.Payload
+import Warwick.Tabula.Payload.BaseModule (mCode)
 import Warwick.Tabula.Relationship
 import Warwick.Tabula.MemberSearchFilter
 import Warwick.Tabula.API
@@ -196,6 +198,15 @@ listSmallGroupSets :: ModuleCode -> Maybe Text -> Tabula (TabulaResponse [SmallG
 listSmallGroupSets mc mYear = do 
     authData <- getAuthData 
     handle $ I.listSmallGroupSets authData mc mYear
+
+-- | `listSmallGroupSets` @moduleCode maybeAcademicYear@ lists all the small
+-- group sets for @moduleCode@. If @maybeAcademicYear@ is `Nothing`, the sets
+-- for the current academic year are returned. Otherwise the sets for the 
+-- specified academic year are returned.
+createSmallGroupSet :: SmallGroupSetData -> Tabula (TabulaResponse None)
+createSmallGroupSet sgs = do 
+    authData <- getAuthData 
+    handle $ I.createSmallGroupSet authData (ModuleCode $ mCode $ mBaseModule $ sgsModule sgs) sgs
 
 -- | `retrieveSmallGroupAllocations` @moduleCode sgSetId@ lists the 
 -- small group allocations for the small group set identified by @sgSetId@ for

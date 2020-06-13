@@ -139,8 +139,8 @@ type SmallGroupAPI =
       "module" :>
       Capture "moduleCode" ModuleCode :> 
       "groups" :>
-      ReqBody '[JSON] SmallGroupSet :>
-      Post '[JSON] None
+      ReqBody '[JSON] SmallGroupSetData :>
+      Post '[JSON] (TabulaResponse None)
  :<|> TabulaAuth :>
       "module" :>
       Capture "moduleCode" ModuleCode :>

@@ -73,8 +73,8 @@ listSmallGroupSets ::
 createSmallGroupSet ::
     BasicAuthData ->
     ModuleCode ->
-    SmallGroupSet ->
-    ClientM None
+    SmallGroupSetData ->
+    ClientM (TabulaResponse None)
 
 retrieveSmallGroupAllocations ::
     BasicAuthData ->
