@@ -23,7 +23,9 @@ module Warwick.Tabula.Types (
     AcademicYear,
     ModuleCode(..),
     AssignmentID(..),
-    SubmissionID(..)
+    SubmissionID(..),
+
+    TabulaEntity(..)
 ) where
 
 --------------------------------------------------------------------------------
@@ -127,5 +129,22 @@ instance FromJSON AssignmentID where
 
 newtype SubmissionID = SubmissionID { unSubmissionID :: UUID }
     deriving (IsString)
+
+--------------------------------------------------------------------------------
+
+data TabulaEntity a b = TabulaEntity {
+    teId  :: a,
+    teVal :: b
+} deriving (Show, Eq)
+
+instance (FromJSON a, FromJSON b) => FromJSON (TabulaEntity a b) where
+    parseJSON = withObject "TabulaEntity" $ \obj ->
+                    TabulaEntity <$> obj .: "id" 
+                                 <*> parseJSON (Object obj)
+
+-- Adds ID field to JSON representation of the rest of the object
+instance (ToJSON a, ToJSON b) => ToJSON (TabulaEntity a b) where
+    toJSON TabulaEntity{..} = Object . HM.unions . map (\(Object x) -> x) $ 
+                                [object [ "id" .= teId ], toJSON teVal]
 
 --------------------------------------------------------------------------------

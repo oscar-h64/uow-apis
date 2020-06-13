@@ -11,6 +11,8 @@ import Data.Aeson
 import Data.Text
 import qualified Data.Map as M
 
+import GHC.Generics
+
 import Warwick.Common
 import Warwick.Tabula.Types
 import Warwick.Tabula.Attachment
@@ -43,26 +45,35 @@ instance FromJSON SmallGroupFormat where
     parseJSON (String "exam") = pure Exam
     parseJSON _ = fail "Not a valid SmallGroupFormat"
 
+instance ToJSON SmallGroupFormat where
+    toJSON Seminar = "seminar"
+    toJSON Lab = "lab"
+    toJSON Tutorial = "tutorial"
+    toJSON Project = "project"
+    toJSON Example = "example"
+    toJSON Workshop = "workshop"
+    toJSON Lecture = "lecture"
+    toJSON Meeting = "meeting"
+    toJSON Exam = "exam"
+
 --------------------------------------------------------------------------------
 
-data SmallGroupSet = SmallGroupSet {
-    sgsId :: Text,
+type SmallGroupSet = TabulaEntity Text SmallGroupSetData
+
+data SmallGroupSetData = SmallGroupSetData {
     sgsArchived :: Maybe Bool,
     sgsAcademicYear :: Maybe Text, 
     sgsName :: Text,
     sgsFormat :: SmallGroupFormat,
     sgsModule :: Module
 
-} deriving (Eq, Show)
+} deriving (Eq, Show, Generic)
 
-instance FromJSON SmallGroupSet where 
-    parseJSON = withObject "SmallGroupSet" $ \obj -> 
-        SmallGroupSet <$> obj .: "id"
-                      <*> obj .:? "archived"
-                      <*> obj .:? "academicYear"
-                      <*> obj .: "name"
-                      <*> obj .: "format"
-                      <*> obj .: "module"
+instance FromJSON SmallGroupSetData where
+    parseJSON = parseTabulaJSON
+
+instance ToJSON SmallGroupSetData where
+    toJSON = formatTabulaJSON
 
 instance HasPayload [SmallGroupSet] where 
     payloadFieldName _ = "groups"
