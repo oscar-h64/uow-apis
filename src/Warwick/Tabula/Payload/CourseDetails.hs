@@ -3,7 +3,7 @@
 -- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
-module Warwick.Tabula.Payload.CourseDetails where
+module Warwick.Tabula.Payload.CourseDetails ( CourseDetails(..) ) where
 
 --------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ data CourseDetails = CourseDetails {
     courseName :: Text,
     -- | The course type (e.g. "UG").
     courseType :: Text
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON CourseDetails where
     parseJSON = withObject "CourseDetails" $ \v ->

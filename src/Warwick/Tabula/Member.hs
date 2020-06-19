@@ -3,14 +3,22 @@
 -- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
 --------------------------------------------------------------------------------
 
-module Warwick.Tabula.Member where
+module Warwick.Tabula.Member (
+    MemberRelationship(..),
+    Member(..),
+    StudentCourseDetails(..),
+    mostSignificantCourse
+) where
 
 --------------------------------------------------------------------------------
 
 import Data.Aeson
+import Data.Text
+import qualified Data.Map as M
 
 import Warwick.Tabula.Types
-import Warwick.Tabula.Payload.StudentCourseDetails
+import Warwick.Tabula.Payload.CourseDetails
+import Warwick.Tabula.Payload.Department
 
 --------------------------------------------------------------------------------
 
@@ -21,6 +29,16 @@ data MemberField
 instance Show MemberField where
     show MemberUniversityID = "member.universityId"
     show MemberFullName = "member.fullName"
+
+data MemberRelationship = MemberRelationship {
+    mrStartDate :: DateTime,
+    mrAgent :: Member
+} deriving (Eq, Show)
+
+instance FromJSON MemberRelationship where 
+    parseJSON = withObject "MemberRelationship" $ \obj ->
+        MemberRelationship <$> obj .: "startDate"
+                           <*> obj .: "agent"
 
 -- | Represents a member object.
 data Member = Member {
@@ -39,13 +57,14 @@ data Member = Member {
     memberInUse         :: Maybe String,
     memberJobTitle      :: Maybe String,
     memberPhoneNumber   :: Maybe String,
-    -- TODO: some private details fields here
     memberGroupName        :: Maybe String,
-    -- TODO: some more fields here
     memberInactivationDate :: Maybe Date,
-    -- TODO: some more fields here
-    memberStudentCourseDetails :: Maybe [StudentCourseDetails]
-} deriving Show
+    memberStudentCourseDetails :: Maybe [StudentCourseDetails],
+    -- | The member's home department.
+    memberHomeDepartment :: Maybe DepartmentR,
+    memberTouchedDepartments :: [DepartmentR],
+    memberAffiliatedDepartments :: [DepartmentR]
+} deriving (Eq, Show)
 
 instance FromJSON Member where
     parseJSON = withObject "member" $ \v ->
@@ -67,11 +86,70 @@ instance FromJSON Member where
                <*> v .:? "groupName"
                <*> v .:? "inactivationDate"
                <*> v .:? "studentCourseDetails"
+               <*> v .:? "homeDepartment"
+               <*> v .:? "touchedDepartments" .!= []
+               <*> v .:? "affiliatedDepartments" .!= []
 
 instance HasPayload Member where
     payloadFieldName _ = "member"
 
 instance HasPayload [Member] where 
     payloadFieldName _ = "members"
+
+--------------------------------------------------------------------------------
+
+-- | Represents information about a student's status on a course.
+data StudentCourseDetails = StudentCourseDetails {
+    -- | The "student course join" code for a student in SITS.
+    scdSCJCode :: Text,
+    -- | The "student programme route" code for a student in SITS.
+    scdSPRCode :: Text,
+    -- | The code for the current level for this student course details.
+    scdLevelCode :: Text,
+    -- | The date that this student course details begins.
+    scdBeginDate :: Date,
+    -- | The date that this student course details ended.
+    scdEndDate :: Maybe Date,
+    -- | The date that this student course details is expected to end.
+    scdExpectedEndDate :: Date,
+    -- | The expected length of the course, in years.
+    scdCourseYearLength :: Int,
+    -- | Whether this is currently the most significant student course details -
+    -- this will be `true` for only one student course details per student.
+    scdMostSignificant :: Bool,
+    -- | The SITS code for the reason for transfer.
+    scdReasonForTransferCode :: Maybe Text,
+    -- | An object representing the course for this student course details with
+    -- properties `code`, `name` and `type`.
+    scdCourse :: CourseDetails,
+    -- | The relationships this member has with other members.
+    scdRelationships :: M.Map Text [MemberRelationship],
+    -- | The department which runs the course.
+    scdDepartment :: DepartmentR
+    -- TODO: more fields here, see
+    -- https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/member/student-course-details-object
+} deriving (Eq, Show)
+
+instance FromJSON StudentCourseDetails where
+    parseJSON = withObject "StudentCourseDetails" $ \v ->
+        StudentCourseDetails <$> v .: "scjCode"
+                             <*> v .: "sprCode"
+                             <*> v .: "levelCode"
+                             <*> v .: "beginDate"
+                             <*> v .:? "endDate"
+                             <*> v .: "expectedEndDate"
+                             <*> v .: "courseYearLength"
+                             <*> v .: "mostSignificant"
+                             <*> v .:? "reasonForTransferCode"
+                             <*> v .: "course"
+                             <*> v .:? "relationships" .!= M.empty
+                             <*> v .: "department"
+
+-- | `mostSignificantCourse` @courses@ finds the most significant course in
+-- @courses@ if there is one (which there should always be).
+mostSignificantCourse :: [StudentCourseDetails] -> Maybe StudentCourseDetails
+mostSignificantCourse xs = case [c | c <- xs, scdMostSignificant c] of
+    [r] -> Just r
+    _   -> Nothing
 
 --------------------------------------------------------------------------------
