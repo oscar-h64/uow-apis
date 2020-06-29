@@ -13,7 +13,9 @@ module Warwick.Tabula.Config (
 --------------------------------------------------------------------------------
 
 import Data.Aeson
+import Data.Text
 
+import Servant.API
 import Servant.Client
 
 import Warwick.Common
@@ -36,6 +38,14 @@ instance FromJSON TabulaInstance where
     parseJSON (String "dev")     = pure Dev  
     parseJSON val = flip (withObject "TabulaInstance") val $ \obj -> 
         CustomInstance <$> obj .: "custom"
+
+instance FromHttpApiData TabulaInstance where
+    parseQueryParam "live"    = pure Live
+    parseQueryParam "dev"     = pure Dev
+    parseQueryParam "sandbox" = pure Sandbox
+    parseQueryParam url = either (Left . pack . show) (pure . CustomInstance) $
+        parseBaseUrl $ unpack url
+
 
 -- | The URL to the Tabula API.
 liveURL :: BaseUrl
