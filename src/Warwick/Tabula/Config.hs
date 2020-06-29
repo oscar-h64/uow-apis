@@ -43,8 +43,8 @@ instance FromHttpApiData TabulaInstance where
     parseQueryParam "live"    = pure Live
     parseQueryParam "dev"     = pure Dev
     parseQueryParam "sandbox" = pure Sandbox
-    parseQueryParam url       = either (Left . pack . show) (pure . CustomInstance) $
-                                    parseBaseUrl $ unpack url
+    parseQueryParam url = either (Left . pack . show) (pure . CustomInstance) $
+        parseBaseUrl $ unpack url
 
 
 -- | The URL to the Tabula API.
