@@ -14,6 +14,7 @@ module Warwick.Tabula.Config (
 
 import Data.Aeson
 
+import Servant.API
 import Servant.Client
 
 import Warwick.Common
@@ -36,6 +37,12 @@ instance FromJSON TabulaInstance where
     parseJSON (String "dev")     = pure Dev  
     parseJSON val = flip (withObject "TabulaInstance") val $ \obj -> 
         CustomInstance <$> obj .: "custom"
+
+instance FromHttpApiData TabulaInstance where
+    parseQueryParam "live"    = pure Live
+    parseQueryParam "dev"     = pure Dev
+    parseQueryParam "sandbox" = pure Sandbox
+    parseQueryParam url       = Left "Custom tabula instances are not yet supported" -- TODO: Allow parsing custom instances
 
 -- | The URL to the Tabula API.
 liveURL :: BaseUrl
