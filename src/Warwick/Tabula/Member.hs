@@ -1,7 +1,9 @@
---------------------------------------------------------------------------------
--- Haskell bindings for the Tabula API                                        --
--- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Haskell bindings for the University of Warwick APIs                       --
+-------------------------------------------------------------------------------
+-- This source code is licensed under the MIT licence found in the           --
+-- LICENSE file in the root directory of this source tree.                   --
+-------------------------------------------------------------------------------
 
 module Warwick.Tabula.Member (
     MemberRelationship(..),
@@ -14,6 +16,7 @@ module Warwick.Tabula.Member (
 
 import Data.Aeson
 import Data.Text
+import Data.Time
 import qualified Data.Map as M
 
 import Warwick.Tabula.Types
@@ -31,9 +34,16 @@ instance Show MemberField where
     show MemberFullName = "member.fullName"
 
 data MemberRelationship = MemberRelationship {
-    mrStartDate :: DateTime,
+    -- | The date and time when this relationship starts.
+    mrStartDate :: ZonedTime,
+    -- | The 'Member' who is the relationship agent.
     mrAgent :: Member
-} deriving (Eq, Show)
+} deriving Show
+
+instance Eq MemberRelationship where 
+    l == r = mrAgent l == mrAgent r 
+          && zonedTimeToUTC (mrStartDate l) == 
+             zonedTimeToUTC (mrStartDate r)
 
 instance FromJSON MemberRelationship where 
     parseJSON = withObject "MemberRelationship" $ \obj ->
