@@ -54,6 +54,7 @@ module Warwick.Tabula (
     listMembers,
     retrieveAttendance,
     listRelationshipTypes,
+    listAgents,
     
     -- * Timetabling API
     retrieveMemberEvents,
@@ -302,6 +303,15 @@ retrieveAttendance user academicYear = do
 -- relationships that Tabula is aware of.
 listRelationshipTypes :: Tabula (TabulaResponse [RelationshipType])
 listRelationshipTypes = getAuthData >>= handle . I.listRelationshipTypes
+
+-- | 'listAgents' @department relationshipType@ retrieves a list of reduced
+-- 'Member' values representing all members in @department@ who are agents
+-- for a relationship of type @relationshipType@.
+listAgents :: Text -> Text -> Tabula (TabulaResponse [Member])
+listAgents department relationshipType = do 
+    authData <- getAuthData
+    r <- handle $ I.listAgents authData department relationshipType
+    pure $ fmap getAgents r
 
 -------------------------------------------------------------------------------
 

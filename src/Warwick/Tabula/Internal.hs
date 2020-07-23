@@ -123,13 +123,21 @@ listRelationshipTypes ::
     BasicAuthData -> 
     ClientM (TabulaResponse [RelationshipType])
 
+
+listAgents :: 
+    BasicAuthData -> 
+    Text -> 
+    Text ->
+    ClientM (TabulaResponse AgentList)
+
 retrieveMember :<|>
     retrieveMembers :<|>
     listRelationships :<|>
     personAssignments :<|>
     listMembers :<|>
     retrieveAttendance :<|>
-    listRelationshipTypes = memberAPI
+    listRelationshipTypes :<|>
+    listAgents = memberAPI
 
 --------------------------------------------------------------------------------
 

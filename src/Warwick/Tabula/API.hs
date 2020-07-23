@@ -170,6 +170,16 @@ type SmallGroupAPI =
       "attendance" :>
       Get '[JSON] (TabulaResponse SmallGroupAttendanceResponse)
 
+-- | A list of very reduced 'Member' values.
+newtype AgentList = AgentList { getAgents :: [Member] }
+     deriving (Eq, Show)
+
+instance FromJSON AgentList where 
+     parseJSON x = AgentList <$> parseJSON x
+
+instance HasPayload AgentList where 
+     payloadFieldName _ = "agents"
+
 -- | Represents the membership part of Tabula's API as a type.
 type MemberAPI =
       TabulaAuth :> 
@@ -218,6 +228,12 @@ type MemberAPI =
  :<|> TabulaAuth :>
       "relationships" :>
       Get '[JSON] (TabulaResponse [RelationshipType])
+ :<|> TabulaAuth :>
+      "relationships" :>
+      "agents" :>
+      Capture "department" Text :>
+      Capture "studentRelationshipTypeId" Text :>
+      Get '[JSON] (TabulaResponse AgentList)
 
 -- | Represents the timetabling part of Tabula's API as a type.
 type TimetableAPI =
