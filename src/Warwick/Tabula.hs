@@ -257,11 +257,15 @@ retrieveMembers uids fields = do
     authData <- getAuthData
     handle $ I.retrieveMembers authData uids fdata
 
-listRelationships ::
-    String -> Tabula (TabulaResponse [Relationship])
-listRelationships uid = do
+-- | 'listRelationships' @universityId maybeRelationshipType@ retrieves all
+-- relationships that the user identified by @universityId@ has with other
+-- members, optionally filtering by @maybeRelationshipType@.
+listRelationships :: Text 
+                  -> Maybe Text 
+                  -> Tabula (TabulaResponse [Relationship])
+listRelationships uid mRelationshipType = do
     authData <- getAuthData
-    handle $ I.listRelationships authData uid
+    handle $ I.listRelationships authData uid mRelationshipType
 
 personAssignments ::
     String -> Maybe AcademicYear -> Tabula TabulaAssignmentResponse

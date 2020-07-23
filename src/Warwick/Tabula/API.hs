@@ -194,8 +194,9 @@ type MemberAPI =
       Get '[JSON] (TabulaResponse (HM.HashMap Text Member))
  :<|> TabulaAuth :> 
       "member" :> 
-      Capture "userID" String :> 
+      Capture "userID" Text :> 
       "relationships" :> 
+      QueryParam "relationshipType" Text :>
       Get '[JSON] (TabulaResponse [Relationship])
  :<|> TabulaAuth :> 
       "member" :> 

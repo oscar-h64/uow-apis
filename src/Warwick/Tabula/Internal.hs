@@ -55,10 +55,6 @@ uploadAttachment :: BasicAuthData -> Maybe String -> BS.ByteString -> ClientM (T
 
 retrieveJob :: BasicAuthData -> UUID -> ClientM (TabulaResponse JobInstance)
 
-retrieveMember :: BasicAuthData -> String -> Maybe String -> ClientM (TabulaResponse Member)
-listRelationships :: BasicAuthData -> String -> ClientM (TabulaResponse [Relationship])
-personAssignments :: BasicAuthData -> String -> Maybe Text -> ClientM TabulaAssignmentResponse
-
 listAssignments :<|>
     retrieveAssignment :<|>
     listSubmissions :<|>
@@ -91,6 +87,18 @@ listSmallGroupSets :<|>
 
 --------------------------------------------------------------------------------
 
+retrieveMember :: 
+    BasicAuthData -> 
+    String -> 
+    Maybe String -> 
+    ClientM (TabulaResponse Member)
+
+personAssignments :: 
+    BasicAuthData -> 
+    String -> 
+    Maybe Text -> 
+    ClientM TabulaAssignmentResponse
+
 retrieveMembers :: BasicAuthData 
                 -> [Text] 
                 -> Maybe Text 
@@ -119,10 +127,15 @@ retrieveAttendance ::
     Text ->
     ClientM (TabulaResponse MemberAttendance)
 
+listRelationships :: 
+    BasicAuthData -> 
+    Text -> 
+    Maybe Text ->
+    ClientM (TabulaResponse [Relationship])
+
 listRelationshipTypes :: 
     BasicAuthData -> 
     ClientM (TabulaResponse [RelationshipType])
-
 
 listAgents :: 
     BasicAuthData -> 
