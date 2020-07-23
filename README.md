@@ -162,7 +162,13 @@ withTabula Live config $
 ```haskell
 -- list all relationships that "1234567" has
 withTabula Live config $ 
-   listRelationships "1234567"
+   listRelationships "1234567" Nothing
+```
+
+```haskell
+-- list all relationships that "1234567" has as personal tutor
+withTabula Live config $ 
+   listRelationships "1234567" (Just "personalTutor")
 ```
 
 * [Search for members](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/member/search-for-members), see the documentation for `Warwick.Tabula.MemberSearchFilter` to see which filter options are available. Use `defaultMemberSearch` as a starting value for which all filters are initially set to `[]`.
@@ -188,6 +194,13 @@ withTabula Live config $ retrieveAttendance "1234567" "2018"
 ```haskell
 -- list all relationship types that Tabula knows 
 withTabula Live config listRelationshipTypes
+```
+
+* [List relationship agents in department](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/member/list-relationship-agents)
+
+```haskell
+-- list all members who are dissertation supervisors in Computer Science 
+withTabula Live config $ listAgents "cs" "dissertation-supervisor"
 ```
 
 * [Retrieve term dates](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/timetabling/termdates), including the ability to specify the academic year:
