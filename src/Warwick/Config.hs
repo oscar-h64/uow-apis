@@ -19,7 +19,7 @@ import Data.Text
 data APIConfig = APIConfig {
     apiUsername :: Text,
     apiPassword :: Text
-} 
+} deriving (Eq, Show)
 
 instance FromJSON APIConfig where
     parseJSON = withObject "APIConfig" $ \v ->

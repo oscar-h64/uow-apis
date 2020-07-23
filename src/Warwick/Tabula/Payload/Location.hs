@@ -29,4 +29,10 @@ instance FromJSON Location where
         Location <$> obj .: "name" 
                  <*> obj .: "locationId"
 
+instance ToJSON Location where 
+    toJSON Location{..} =
+        object [ "name" .= locationName
+               , "locationId" .= locationId
+               ]
+
 -------------------------------------------------------------------------------

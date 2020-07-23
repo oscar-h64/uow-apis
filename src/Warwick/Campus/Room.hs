@@ -50,4 +50,17 @@ instance FromJSON Room where
              <*> obj .: "gpsLat"
              <*> obj .: "gpsLon"
 
+instance ToJSON Room where 
+    toJSON Room{..} =
+        object [ "id" .= roomId
+               , "value" .= roomName
+               , "w2gid" .= roomW2Id
+               , "bf" .= roomBf
+               , "building" .= roomBuilding
+               , "floor" .= roomFloor
+               , "category" .= roomCategory
+               , "gpsLat" .= roomGpsLat
+               , "gpsLon" .= roomGpsLon
+               ]
+
 -------------------------------------------------------------------------------
