@@ -9,7 +9,6 @@ module Warwick.Tabula (
     module Warwick.Common,
     module Warwick.Config,
     module Warwick.Tabula.Coursework,
-    module Warwick.Tabula.Relationship,
 
     Tabula,
     TabulaErr(..),
@@ -91,7 +90,6 @@ import Warwick.Tabula.Types
 import Warwick.Tabula.Coursework
 import Warwick.Tabula.Member
 import Warwick.Tabula.Payload
-import Warwick.Tabula.Relationship
 import Warwick.Tabula.MemberSearchFilter
 import Warwick.Tabula.API
 import qualified Warwick.Tabula.Internal as I

@@ -23,7 +23,6 @@ import Warwick.Tabula.Coursework
 import Warwick.Tabula.Job
 import Warwick.Tabula.Member
 import Warwick.Tabula.Payload
-import Warwick.Tabula.Relationship
 import Warwick.Tabula.StudentAssignment
 
 --------------------------------------------------------------------------------

@@ -22,6 +22,7 @@ import Warwick.Tabula.Payload.Module as Payload
 import Warwick.Tabula.Payload.MonitoringPoints as Payload
 import Warwick.Tabula.Payload.None as Payload
 import Warwick.Tabula.Payload.Note as Payload
+import Warwick.Tabula.Payload.Relationship as Payload
 import Warwick.Tabula.Payload.SmallGroup as Payload
 import Warwick.Tabula.Payload.Term as Payload
 import Warwick.Tabula.Payload.Week as Payload
