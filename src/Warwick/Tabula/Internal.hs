@@ -119,12 +119,17 @@ retrieveAttendance ::
     Text ->
     ClientM (TabulaResponse MemberAttendance)
 
+listRelationshipTypes :: 
+    BasicAuthData -> 
+    ClientM (TabulaResponse [RelationshipType])
+
 retrieveMember :<|>
     retrieveMembers :<|>
     listRelationships :<|>
     personAssignments :<|>
     listMembers :<|>
-    retrieveAttendance = memberAPI
+    retrieveAttendance :<|>
+    listRelationshipTypes = memberAPI
 
 --------------------------------------------------------------------------------
 

@@ -53,6 +53,7 @@ module Warwick.Tabula (
     personAssignments,
     listMembers,
     retrieveAttendance,
+    listRelationshipTypes,
     
     -- * Timetabling API
     retrieveMemberEvents,
@@ -296,6 +297,11 @@ retrieveAttendance ::
 retrieveAttendance user academicYear = do 
     authData <- getAuthData
     handle $ I.retrieveAttendance authData user (pack academicYear)
+
+-- | 'listRelationshipTypes' retrieves information about all types of
+-- relationships that Tabula is aware of.
+listRelationshipTypes :: Tabula (TabulaResponse [RelationshipType])
+listRelationshipTypes = getAuthData >>= handle . I.listRelationshipTypes
 
 -------------------------------------------------------------------------------
 

@@ -183,6 +183,13 @@ withTabula Live config $ listMembers settings 0 10
 withTabula Live config $ retrieveAttendance "1234567" "2018"
 ```
 
+* Retrieve relationship types
+
+```haskell
+-- list all relationship types that Tabula knows 
+withTabula Live config listRelationshipTypes
+```
+
 * [Retrieve term dates](https://warwick.ac.uk/services/its/servicessupport/web/tabula/api/timetabling/termdates), including the ability to specify the academic year:
 
 ```haskell

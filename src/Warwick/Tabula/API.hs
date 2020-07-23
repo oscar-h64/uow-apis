@@ -215,6 +215,9 @@ type MemberAPI =
       "attendance" :> 
       Capture "academicYear" Text :>
       Get '[JSON] (TabulaResponse MemberAttendance)
+ :<|> TabulaAuth :>
+      "relationships" :>
+      Get '[JSON] (TabulaResponse [RelationshipType])
 
 -- | Represents the timetabling part of Tabula's API as a type.
 type TimetableAPI =
