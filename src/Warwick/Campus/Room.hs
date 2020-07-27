@@ -23,7 +23,7 @@ data Room = Room {
     -- | The name of the room.
     roomName :: Text,
     -- | No idea.
-    roomW2Id :: Int,
+    roomW2Id :: Maybe Int,
     -- | No idea.
     roomBf :: Int,
     -- | The name of the building in which the room is located.
@@ -42,11 +42,11 @@ instance FromJSON Room where
     parseJSON = withObject "Room" $ \obj ->
         Room <$> obj .: "id"
              <*> obj .: "value"
-             <*> obj .: "w2gid"
+             <*> obj .:? "w2gid"
              <*> obj .: "bf"
              <*> obj .: "building"
              <*> obj .: "floor"
-             <*> obj .: "category"
+             <*> obj .:? "category"
              <*> obj .: "gpsLat"
              <*> obj .: "gpsLon"
 
