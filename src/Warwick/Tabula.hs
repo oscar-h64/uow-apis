@@ -159,7 +159,7 @@ listRegisteredUsercodes mc = do
 -- | 'listRegisteredUsercodesIn' @code academicYear@ retrieves the usercodes 
 -- of all students registered for @code@ in the academic year given by
 -- @academicYear@.
-listRegisteredUsercodesIn :: ModuleCode -> Text -> Tabula (TabulaResponse [Text])
+listRegisteredUsercodesIn :: ModuleCode -> Integer -> Tabula (TabulaResponse [Text])
 listRegisteredUsercodesIn mc year = do 
     authData <- getAuthData
     r <- handle $ I.listRegisteredUsercodesIn authData mc year
@@ -173,10 +173,10 @@ listRegisteredUniversityIds mc = do
     r <- handle $ I.listRegisteredUniversityIds authData mc (Just True)
     pure $ fmap getUniversityIds r
 
--- | 'listRegisteredUniversityIdsIn' @code@ retrieves the University IDs of all
--- students registered for @code@ in the academic year given by
--- @academicYear@.
-listRegisteredUniversityIdsIn :: ModuleCode -> Text -> Tabula (TabulaResponse [Text])
+-- | 'listRegisteredUniversityIdsIn' @code academicYear@ retrieves the 
+-- University IDs of all students registered for @code@ in the academic year 
+-- given by @academicYear@.
+listRegisteredUniversityIdsIn :: ModuleCode -> Integer -> Tabula (TabulaResponse [Text])
 listRegisteredUniversityIdsIn mc year = do 
     authData <- getAuthData
     r <- handle $ I.listRegisteredUniversityIdsIn authData mc year (Just True)

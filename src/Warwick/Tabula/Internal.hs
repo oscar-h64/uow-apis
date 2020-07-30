@@ -32,9 +32,9 @@ adminAPI :<|> courseworkAPI :<|> smallGroupAPI :<|> memberAPI :<|> timetableAPI 
 
 retrieveModule :: BasicAuthData -> ModuleCode -> ClientM (TabulaResponse Module)
 listRegisteredUsercodes :: BasicAuthData -> ModuleCode -> ClientM (TabulaResponse UsercodeList)
-listRegisteredUsercodesIn :: BasicAuthData -> ModuleCode -> Text -> ClientM (TabulaResponse UsercodeList)
+listRegisteredUsercodesIn :: BasicAuthData -> ModuleCode -> Integer -> ClientM (TabulaResponse UsercodeList)
 listRegisteredUniversityIds :: BasicAuthData -> ModuleCode -> Maybe Bool -> ClientM (TabulaResponse UniversityIdList)
-listRegisteredUniversityIdsIn :: BasicAuthData -> ModuleCode -> Text -> Maybe Bool -> ClientM (TabulaResponse UniversityIdList)
+listRegisteredUniversityIdsIn :: BasicAuthData -> ModuleCode -> Integer -> Maybe Bool -> ClientM (TabulaResponse UniversityIdList)
 listDepartments :: BasicAuthData -> ClientM (TabulaResponse [Department])
 retrieveDepartment :: BasicAuthData -> Text -> ClientM (TabulaResponse Department)
 listDepartmentModules :: BasicAuthData -> Text -> ClientM (TabulaResponse [Module])
