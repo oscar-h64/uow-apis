@@ -104,7 +104,7 @@ type AdminAPI =
       "module" :>
       Capture "moduleCode" ModuleCode :>
       "students" :>
-      QueryFlag "universityIds" :>
+      QueryParam "universityIds" Bool :>
       Get '[JSON] (TabulaResponse UniversityIdList)
  :<|> TabulaAuth :>
       "module" :>
@@ -117,7 +117,7 @@ type AdminAPI =
       Capture "moduleCode" ModuleCode :>
       "students" :>
       Capture "academicYear" Text :>
-      QueryFlag "universityIds" :>
+      QueryParam "universityIds" Bool :>
       Get '[JSON] (TabulaResponse UniversityIdList)
  :<|> TabulaAuth :> 
       "department" :>

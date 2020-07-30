@@ -170,7 +170,7 @@ listRegisteredUsercodesIn mc year = do
 listRegisteredUniversityIds :: ModuleCode -> Tabula (TabulaResponse [Text])
 listRegisteredUniversityIds mc = do 
     authData <- getAuthData
-    r <- handle $ I.listRegisteredUniversityIds authData mc True
+    r <- handle $ I.listRegisteredUniversityIds authData mc (Just True)
     pure $ fmap getUniversityIds r
 
 -- | 'listRegisteredUniversityIdsIn' @code@ retrieves the University IDs of all
@@ -179,7 +179,7 @@ listRegisteredUniversityIds mc = do
 listRegisteredUniversityIdsIn :: ModuleCode -> Text -> Tabula (TabulaResponse [Text])
 listRegisteredUniversityIdsIn mc year = do 
     authData <- getAuthData
-    r <- handle $ I.listRegisteredUniversityIdsIn authData mc year True
+    r <- handle $ I.listRegisteredUniversityIdsIn authData mc year (Just True)
     pure $ fmap getUniversityIds r
 
 -- | 'listDepartments' retrieves information about all departments. 
