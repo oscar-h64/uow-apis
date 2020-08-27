@@ -19,7 +19,13 @@ data CourseType
     | PGR
     | Foundation 
     | PreSessional
-    deriving Show 
+
+instance Show CourseType where 
+    show UG = "UG"
+    show PGT = "PG(T)"
+    show PGR = "PG(R)"
+    show Foundation = "Foundation"
+    show PreSessional = "PreSessional"
 
 data MemberSearchFilter = MemberSearchFilter {
     -- | The department codes to filter by.
