@@ -6,7 +6,6 @@
 -------------------------------------------------------------------------------
 
 module Warwick.Postroom.Recipient (
-    PostroomHub(..),
     AccommodationBlock(..),
     RecipientSource(..),
     RecipientType(..),
@@ -16,30 +15,11 @@ module Warwick.Postroom.Recipient (
 -------------------------------------------------------------------------------
 
 import Data.Aeson
-import Data.Text ( Text )
-import Data.Time ( UTCTime )
+import Data.Text (unpack,  Text )
+import Data.Time ( Day )
 import Data.UUID ( UUID )
 
--------------------------------------------------------------------------------
-
--- | Represents a Warwick postroom hub
-data PostroomHub = PostroomHub {
-    -- | The unique ID of the hub
-    phId :: UUID,
-    -- | The name of the hub
-    phName :: Text,
-    -- | Where the hub is on campus
-    phLocation :: Text,
-    -- | The ID of the location on the campus map
-    phMapId :: Text
-}
-
-instance FromJSON PostroomHub where
-    parseJSON = withObject "PostroomHub" $ \v ->
-        PostroomHub <$> v .: "id"
-                    <*> v .: "name"
-                    <*> v .: "location"
-                    <*> v .: "mapId"
+import Warwick.Postroom.PostroomHub ( PostroomHub )
 
 -------------------------------------------------------------------------------
 
@@ -82,6 +62,9 @@ instance FromJSON RecipientSource where
         "ConferenceImport" -> pure ConferenceImport
         "KineticImport" -> pure KineticImport
         "ManualEntry" -> pure ManualEntry
+        x -> fail $ "Invalid Recipient Source: " ++ unpack x
+
+-------------------------------------------------------------------------------
 
 -- | Represents the type of the resident
 data RecipientType = CAL | MRC | RLT | StaffFamily | Student | VacationTenant
@@ -94,6 +77,9 @@ instance FromJSON RecipientType where
         "StaffFamily" -> pure StaffFamily
         "Student" -> pure Student
         "VacationTenant" -> pure VacationTenant
+        x -> fail $ "Invalid Recipient Type: " ++ unpack x
+
+-------------------------------------------------------------------------------
 
 -- TODO: Some of these should probably be Maybe
 data Recipient = Recipient {
@@ -111,8 +97,8 @@ data Recipient = Recipient {
     rSubAccommodationBlock :: AccommodationBlock,
     rType :: RecipientType,
     rUniversityId :: Text,
-    rValidFrom :: UTCTime,
-    rValidTo :: UTCTime
+    rValidFrom :: Day,
+    rValidTo :: Day
 }
 
 instance FromJSON Recipient where

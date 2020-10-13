@@ -6,14 +6,20 @@
 -------------------------------------------------------------------------------
 
 module Warwick.Postroom (
-    -- module Warwick.Campus.Room,
+    module Warwick.Config,
+    module Warwick.Common,
 
     PostroomInstance(..),
 
-    -- listRooms
+    getHubs,
+    getOpeningTimes,
+    getMyAddress,
+    getMyItems
 ) where 
 
 -------------------------------------------------------------------------------
+
+import Control.Monad.Trans
 
 import Data.Aeson
 -- import Data.Text
@@ -23,6 +29,12 @@ import Data.Aeson
 import Servant.Client
 
 import Warwick.Common
+import Warwick.Config
+import qualified Warwick.Postroom.API as PS
+import qualified Warwick.Postroom.OpeningTimes as PS
+import qualified Warwick.Postroom.PostItem as PS
+import qualified Warwick.Postroom.PostroomHub as PS
+import qualified Warwick.Postroom.Recipient as PS
 
 -------------------------------------------------------------------------------
 
@@ -50,12 +62,24 @@ instance HasBaseUrl PostroomInstance where
 
 -------------------------------------------------------------------------------
 
--- | 'listRooms' @limit query@ searches for rooms with names matching 
--- @query@. At most @limit@-many results are returned.
--- listRooms :: Int -> Text -> Warwick [Room]
--- listRooms limit query = do 
---     token <- ask 
---     lift $ lift $ API.listRooms 
---         (Just $ "Token " <> token) (Just 2) (Just limit) (Just query) (Just False)
+getHubs :: Warwick [PS.PostroomHub]
+getHubs = do
+    authData <- getAuthData
+    lift $ lift $ PS.getHubs authData
+
+getOpeningTimes :: Warwick PS.OpeningTimes
+getOpeningTimes = do
+    authData <- getAuthData
+    lift $ lift $ PS.getOpeningTimes authData
+
+getMyAddress :: Warwick [PS.Recipient]
+getMyAddress = do
+    authData <- getAuthData
+    lift $ lift $ PS.getMyAddress authData
+
+getMyItems :: Warwick [PS.PostItem]
+getMyItems = do
+    authData <- getAuthData
+    lift $ lift $ PS.getMyItems authData
 
 -------------------------------------------------------------------------------
