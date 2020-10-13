@@ -9,7 +9,6 @@ module Warwick.Postroom.API where
 
 -------------------------------------------------------------------------------
 
--- import Data.Text ( Text )
 import Data.Proxy
 
 import Servant.API
@@ -61,7 +60,7 @@ getOpeningTimes ::
     BasicAuthData ->
     ClientM OpeningTimes
 
-getMyAddress :: 
+getMyAddresses :: 
     BasicAuthData -> 
     ClientM [Recipient]
 
@@ -69,6 +68,6 @@ getMyItems ::
     BasicAuthData ->
     ClientM [PostItem]
 
-getHubs :<|> getOpeningTimes :<|> getMyAddress :<|> getMyItems = client postroom
+getHubs :<|> getOpeningTimes :<|> getMyAddresses :<|> getMyItems = client postroom
 
 --------------------------------------------------------------------------------

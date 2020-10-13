@@ -22,10 +22,15 @@ import Warwick.Postroom.Recipient ( Recipient )
 
 -------------------------------------------------------------------------------
 
+-- | Represents a courier in the Warwick system
 data Courier = Courier {
+    -- | The unique ID of the courier used by the university if included
     cId :: Maybe UUID,
+    -- | The time the courier was added to the database if included
     cCreatedAt :: Maybe UTCTime,
+    -- | The name of the courier
     cName :: Text,
+    -- | A short code representing the courier
     cShortCode :: Text
 }
 
@@ -38,6 +43,7 @@ instance FromJSON Courier where
 
 -------------------------------------------------------------------------------
 
+-- | Represents the possible statuses of postroom items
 data PostItemStatus = DeliveredNowOnShelf
                     | ForwardedToAccommodation
                     | PickedUpByStudent
@@ -55,15 +61,26 @@ instance FromJSON PostItemStatus where
 
 -------------------------------------------------------------------------------
 
+-- | Represents a post item in the Warwick post system
 data PostItem = PostItem {
+    -- | The unique ID of the item if included
     piId :: Maybe UUID,
+    -- | The barcode of the item in the postroom if included
     piBarcode :: Maybe Text,
+    -- | The deadline to collect the item by if included
     piCollectionBy :: Maybe UTCTime,
+    -- | The courier that delivered the item if included
     piCourier :: Maybe Courier,
+    -- | The time the item was added to the system if included
     piCreatedAt :: Maybe UTCTime,
+    -- | Where the parcel is currently located if included
     piLocationReference :: Maybe Text,
+    -- | The university ID of the non-recipient authorised to collect the item
+    -- if there is one
     piNomineeUniversityId :: Maybe Text,
+    -- | The recipient of the item if included
     piRecipient :: Maybe Recipient,
+    -- | The current status of the item
     piStatus :: PostItemStatus
 }
 

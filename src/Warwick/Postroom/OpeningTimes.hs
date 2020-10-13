@@ -16,8 +16,11 @@ import Data.Text ( Text )
 
 -------------------------------------------------------------------------------
 
+-- | Represents the response from the opening times endpoint
 data OpeningTimes = OpeningTimes {
+    -- | The opening times and linked accommodations of each hub in HTML format
     otHTML :: Text,
+    -- | The opening times and linked accommodations of each hub in text format
     otText :: Text
 }
 

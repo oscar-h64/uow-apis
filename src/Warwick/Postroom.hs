@@ -13,7 +13,7 @@ module Warwick.Postroom (
 
     getHubs,
     getOpeningTimes,
-    getMyAddress,
+    getMyAddresses,
     getMyItems
 ) where 
 
@@ -22,9 +22,6 @@ module Warwick.Postroom (
 import Control.Monad.Trans
 
 import Data.Aeson
--- import Data.Text
-
--- import Network.HTTP.Conduit
 
 import Servant.Client
 
@@ -62,21 +59,26 @@ instance HasBaseUrl PostroomInstance where
 
 -------------------------------------------------------------------------------
 
+-- | `getHubs` retrieves basic details about all postroom hubs
 getHubs :: Warwick [PS.PostroomHub]
 getHubs = do
     authData <- getAuthData
     lift $ lift $ PS.getHubs authData
 
+-- | `getOpeningTimes` retrieves the opening times for every postroom hub. It
+-- also includes which accommodations use each hub
 getOpeningTimes :: Warwick PS.OpeningTimes
 getOpeningTimes = do
     authData <- getAuthData
     lift $ lift $ PS.getOpeningTimes authData
 
-getMyAddress :: Warwick [PS.Recipient]
-getMyAddress = do
+-- | `getMyAddresses` retrieves the active addresses for the current user
+getMyAddresses :: Warwick [PS.Recipient]
+getMyAddresses = do
     authData <- getAuthData
-    lift $ lift $ PS.getMyAddress authData
+    lift $ lift $ PS.getMyAddresses authData
 
+-- | `getMyItems` retrieves all post items for the current user
 getMyItems :: Warwick [PS.PostItem]
 getMyItems = do
     authData <- getAuthData

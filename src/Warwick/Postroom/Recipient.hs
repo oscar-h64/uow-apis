@@ -82,6 +82,7 @@ instance FromJSON RecipientType where
 -------------------------------------------------------------------------------
 
 -- TODO: Some of these should probably be Maybe
+-- | Represents an addressee at Warwick
 data Recipient = Recipient {
     rId :: UUID,
     rAccommodationBlock :: AccommodationBlock,

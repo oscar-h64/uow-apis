@@ -424,3 +424,25 @@ The endpoint for searching rooms is implemented as `listRooms` which accepts two
 ```haskell
 withCampus Live "[API TOKEN]" $ listRooms 10 "CS2."
 ```
+
+## Postroom API
+
+- A list of postroom hubs can be retrieved:
+```haskell
+withAPI Live cfg getHubs
+```
+
+- The opening times of postroom hubs, and a list of which accommodations use with hubs can be retrieved:
+```haskell
+withAPI Live cfg getOpeningTimes
+```
+
+- The active addresses, if any, of the current user can be retrieved:
+```haskell
+withAPI Live cfg getMyAddresses
+```
+
+- The post items for the current user can be retrieved:
+```haskell
+withAPI Live cfg getMyItems
+```
