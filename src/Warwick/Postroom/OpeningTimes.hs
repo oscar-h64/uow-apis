@@ -22,7 +22,7 @@ data OpeningTimes = OpeningTimes {
     otHTML :: Text,
     -- | The opening times and linked accommodations of each hub in text format
     otText :: Text
-}
+} deriving Show
 
 instance FromJSON OpeningTimes where
     parseJSON = withObject "OpeningTimes" $ \v ->

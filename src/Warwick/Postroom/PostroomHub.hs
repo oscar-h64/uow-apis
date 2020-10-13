@@ -27,7 +27,7 @@ data PostroomHub = PostroomHub {
     phLocation :: Text,
     -- | The ID of the location on the campus map
     phMapId :: Text
-}
+} deriving Show
 
 instance FromJSON PostroomHub where
     parseJSON = withObject "PostroomHub" $ \v ->
