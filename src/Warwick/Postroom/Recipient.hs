@@ -17,7 +17,7 @@ module Warwick.Postroom.Recipient (
 import Data.Aeson
 import Data.Text (unpack,  Text )
 import Data.Time ( Day )
-import Data.UUID ( UUID )
+import Data.UUID.Types ( UUID )
 
 import Warwick.Postroom.PostroomHub ( PostroomHub )
 

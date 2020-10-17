@@ -13,7 +13,7 @@ module Warwick.Postroom.PostroomHub (
 
 import Data.Aeson
 import Data.Text ( Text )
-import Data.UUID ( UUID )
+import Data.UUID.Types ( UUID )
 
 -------------------------------------------------------------------------------
 

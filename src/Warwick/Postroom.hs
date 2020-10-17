@@ -27,11 +27,11 @@ import Servant.Client
 
 import Warwick.Common
 import Warwick.Config
-import qualified Warwick.Postroom.API as PS
-import qualified Warwick.Postroom.OpeningTimes as PS
-import qualified Warwick.Postroom.PostItem as PS
-import qualified Warwick.Postroom.PostroomHub as PS
-import qualified Warwick.Postroom.Recipient as PS
+import qualified Warwick.Postroom.API as PR
+import qualified Warwick.Postroom.OpeningTimes as PR
+import qualified Warwick.Postroom.PostItem as PR
+import qualified Warwick.Postroom.PostroomHub as PR
+import qualified Warwick.Postroom.Recipient as PR
 
 -------------------------------------------------------------------------------
 
@@ -67,28 +67,28 @@ instance HasBaseUrl PostroomInstance where
 -------------------------------------------------------------------------------
 
 -- | `getHubs` retrieves basic details about all postroom hubs
-getHubs :: Warwick [PS.PostroomHub]
+getHubs :: Warwick [PR.PostroomHub]
 getHubs = do
     authData <- getAuthData
-    lift $ lift $ PS.getHubs authData
+    lift $ lift $ PR.getHubs authData
 
 -- | `getOpeningTimes` retrieves the opening times for every postroom hub. It
 -- also includes which accommodations use each hub
-getOpeningTimes :: Warwick PS.OpeningTimes
+getOpeningTimes :: Warwick PR.OpeningTimes
 getOpeningTimes = do
     authData <- getAuthData
-    lift $ lift $ PS.getOpeningTimes authData
+    lift $ lift $ PR.getOpeningTimes authData
 
 -- | `getMyAddresses` retrieves the active addresses for the current user
-getMyAddresses :: Warwick [PS.Recipient]
+getMyAddresses :: Warwick [PR.Recipient]
 getMyAddresses = do
     authData <- getAuthData
-    lift $ lift $ PS.getMyAddresses authData
+    lift $ lift $ PR.getMyAddresses authData
 
 -- | `getMyItems` retrieves all post items for the current user
-getMyItems :: Warwick [PS.PostItem]
+getMyItems :: Warwick [PR.PostItem]
 getMyItems = do
     authData <- getAuthData
-    lift $ lift $ PS.getMyItems authData
+    lift $ lift $ PR.getMyItems authData
 
 -------------------------------------------------------------------------------

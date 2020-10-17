@@ -14,9 +14,9 @@ module Warwick.Postroom.PostItem (
 -------------------------------------------------------------------------------
 
 import Data.Aeson
-import Data.Text (unpack,  Text )
+import Data.Text ( Text, unpack )
 import Data.Time ( UTCTime )
-import Data.UUID ( UUID )
+import Data.UUID.Types ( UUID )
 
 import Warwick.Postroom.Recipient ( Recipient )
 

@@ -50,7 +50,6 @@ dependencies:
 - uuid-types
 - mtl
 - exceptions
-- uuid
 
 default-extensions:
 - OverloadedStrings
