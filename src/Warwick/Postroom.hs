@@ -36,25 +36,32 @@ import qualified Warwick.Postroom.Recipient as PS
 -------------------------------------------------------------------------------
 
 -- | Enumerates Postroom API instances.
-data PostroomInstance = Live | CustomInstance BaseUrl
+data PostroomInstance = Live | Dev | CustomInstance BaseUrl
     deriving (Eq, Show)
 
 instance ToJSON PostroomInstance where 
-    toJSON Live    = String "live"
+    toJSON Live = String "live"
+    toJSON Dev  = String "dev"
     toJSON (CustomInstance url) = 
         object [ "custom" .= url ]
 
 instance FromJSON PostroomInstance where 
-    parseJSON (String "live")    = pure Live 
+    parseJSON (String "live") = pure Live
+    parseJSON (String "dev")  = pure Dev
     parseJSON val = flip (withObject "PostroomInstance") val $ \obj -> 
         CustomInstance <$> obj .: "custom"
 
--- | The URL to the Campus API.
+-- | The URL to the live Postroom instance.
 liveURL :: BaseUrl
 liveURL = BaseUrl Https "postroom.warwick.ac.uk" 443 "/api/"
 
+-- | The URL to the dev Postroom instance.
+devURL :: BaseUrl
+devURL = BaseUrl Https "postroom.warwick.ac.uk" 443 "/api/"
+
 instance HasBaseUrl PostroomInstance where
     getBaseUrl Live                 = liveURL
+    getBaseUrl Dev                  = devURL
     getBaseUrl (CustomInstance url) = url
 
 -------------------------------------------------------------------------------
