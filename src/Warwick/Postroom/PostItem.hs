@@ -32,7 +32,7 @@ data Courier = Courier {
     cName :: Text,
     -- | A short code representing the courier
     cShortCode :: Text
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON Courier where
     parseJSON = withObject "Courier" $ \v ->
@@ -49,7 +49,7 @@ data PostItemStatus = DeliveredNowOnShelf
                     | PickedUpByStudent
                     | ReturnToSenderAwaitingPickup
                     | ReturnToSenderGone
-                    deriving Show
+                    deriving (Eq, Show)
 
 instance FromJSON PostItemStatus where
     parseJSON = withText "PostItemStatus" $ \t -> case t of
@@ -83,7 +83,7 @@ data PostItem = PostItem {
     piRecipient :: Maybe Recipient,
     -- | The current status of the item
     piStatus :: PostItemStatus
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON PostItem where
     parseJSON = withObject "OpeningTimes" $ \v ->

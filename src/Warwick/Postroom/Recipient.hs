@@ -40,7 +40,7 @@ data AccommodationBlock = AccommodationBlock {
     abKineticParentId :: Maybe Int,
     -- | 
     abKineticSiteId :: Maybe Int
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON AccommodationBlock where
     parseJSON = withObject "AccommodationBlock" $ \v ->
@@ -56,7 +56,7 @@ instance FromJSON AccommodationBlock where
 
 -- | Represents the source the recipient has been added from
 data RecipientSource = ConferenceImport | KineticImport | ManualEntry
-    deriving Show
+    deriving (Eq, Show)
 
 instance FromJSON RecipientSource where
     parseJSON = withText "RecipientSource" $ \t -> case t of
@@ -69,7 +69,7 @@ instance FromJSON RecipientSource where
 
 -- | Represents the type of the resident
 data RecipientType = CAL | MRC | RLT | StaffFamily | Student | VacationTenant
-    deriving Show
+    deriving (Eq, Show)
 
 instance FromJSON RecipientType where
     parseJSON = withText "RecipientType" $ \t -> case t of
@@ -120,7 +120,7 @@ data Recipient = Recipient {
     -- | The date the recipient is self-isolating to, if they are currently
     -- self-isolating
     rSelfIsolatingUntil :: Maybe Day
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON Recipient where
     parseJSON = withObject "Recipient" $ \v ->

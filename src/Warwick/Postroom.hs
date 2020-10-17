@@ -57,7 +57,7 @@ liveURL = BaseUrl Https "postroom.warwick.ac.uk" 443 "/api/"
 
 -- | The URL to the dev Postroom instance.
 devURL :: BaseUrl
-devURL = BaseUrl Https "postroom.warwick.ac.uk" 443 "/api/"
+devURL = BaseUrl Https "postroom-dev.warwick.ac.uk" 443 "/api/"
 
 instance HasBaseUrl PostroomInstance where
     getBaseUrl Live                 = liveURL
