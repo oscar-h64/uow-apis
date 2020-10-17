@@ -23,23 +23,23 @@ import Warwick.Postroom.PostroomHub ( PostroomHub )
 
 -------------------------------------------------------------------------------
 
--- TODO: Check the example code and name aren't bullshit
+-- TODO: Check the example code and name aren't made up
 -- | Represents an accommodation block
 data AccommodationBlock = AccommodationBlock {
-    -- | The unique ID of the block
-    abId :: UUID,
-    -- | The abriviation for the block, for example JM2
-    abCode :: Text,
-    -- | The name of the block, for example "Jack Martin 2"
-    abName :: Text,
-    -- | The postroom hub used for this block
-    abHub :: PostroomHub,
+    -- | The unique ID of the block if included
+    abId :: Maybe UUID,
+    -- | The abriviation for the block, for example JM2 if included
+    abCode :: Maybe Text,
+    -- | The name of the block, for example "Jack Martin 2" if included
+    abName :: Maybe Text,
+    -- | The postroom hub used for this block if included
+    abHub :: Maybe PostroomHub,
     -- | 
-    abKineticId :: Int,
+    abKineticId :: Maybe Int,
     -- | 
-    abKineticParentId :: Int,
+    abKineticParentId :: Maybe Int,
     -- | 
-    abKineticSiteId :: Int
+    abKineticSiteId :: Maybe Int
 } deriving Show
 
 instance FromJSON AccommodationBlock where
@@ -83,25 +83,43 @@ instance FromJSON RecipientType where
 
 -------------------------------------------------------------------------------
 
--- TODO: Some of these should probably be Maybe
 -- | Represents an addressee at Warwick
 data Recipient = Recipient {
-    rId :: UUID,
-    rAccommodationBlock :: AccommodationBlock,
+    -- | The unique ID of the recipient if included
+    rId :: Maybe UUID,
+    -- | The accommodation block the recipient lives in if applicable
+    rAccommodationBlock :: Maybe AccommodationBlock,
+    -- | The recipients first name
     rFirstName :: Text,
-    rMiddleName :: Text,
+    -- | The recipients middle name if included
+    rMiddleName :: Maybe Text,
+    -- | The recipients last name
     rLastName :: Text,
-    rPreferredName :: Text,
+    -- | The recipients preferred name if included
+    rPreferredName :: Maybe Text,
+    -- | Whether the recipient is currently active
     rInactive :: Bool,
-    rKineticFloor :: Int,
-    rKineticRoom :: Text,
-    rRoom :: Text,
+    -- | 
+    rKineticFloor :: Maybe Int,
+    -- | 
+    rKineticRoom :: Maybe Text,
+    -- | The room the recipient lives in if applicable
+    rRoom :: Maybe Text,
+    -- | Where the recipient has been imported from
     rSource :: RecipientSource,
-    rSubAccommodationBlock :: AccommodationBlock,
+    -- |
+    rSubAccommodationBlock :: Maybe AccommodationBlock,
+    -- | The type of the recipient, such as Student or RLT
     rType :: RecipientType,
+    -- | The recipient's univeristy ID
     rUniversityId :: Text,
-    rValidFrom :: Day,
-    rValidTo :: Day
+    -- | When the recipient is active from if included
+    rValidFrom :: Maybe Day,
+    -- | When the recipient is active to if included
+    rValidTo :: Maybe Day,
+    -- | The date the recipient is self-isolating to, if they are currently
+    -- self-isolating
+    rSelfIsolatingUntil :: Maybe Day
 } deriving Show
 
 instance FromJSON Recipient where
@@ -122,5 +140,6 @@ instance FromJSON Recipient where
                   <*> v .: "universityId"
                   <*> v .: "validFrom"
                   <*> v .: "validTo"
+                  <*> v .: "selfIsolatingUntil"
 
 -------------------------------------------------------------------------------
