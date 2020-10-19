@@ -26,11 +26,11 @@ import Warwick.Postroom.PostroomHub ( PostroomHub )
 -- TODO: Check the example code and name aren't made up
 -- | Represents an accommodation block
 data AccommodationBlock = AccommodationBlock {
-    -- | The unique ID of the block if included
-    abId :: Maybe UUID,
-    -- | The abriviation for the block, for example JM2 if included
+    -- | The unique ID of the block
+    abId :: UUID,
+    -- | The abriviation for the block, for example JM2
     abCode :: Maybe Text,
-    -- | The name of the block, for example "Jack Martin 2" if included
+    -- | The name of the block, for example "Jack Martin 2"
     abName :: Maybe Text,
     -- | The postroom hub used for this block if included
     abHub :: Maybe PostroomHub,
@@ -68,14 +68,19 @@ instance FromJSON RecipientSource where
 -------------------------------------------------------------------------------
 
 -- | Represents the type of the resident
-data RecipientType = CAL | MRC | RLT | StaffFamily | Student | VacationTenant
+data RecipientType = CentreForAppliedLinguistics
+                   | MathematicsResearchCentre
+                   | ResidentialLifeTeam
+                   | StaffFamily
+                   | Student
+                   | VacationTenant       
     deriving (Eq, Show)
 
 instance FromJSON RecipientType where
     parseJSON = withText "RecipientType" $ \t -> case t of
-        "CAL" -> pure CAL
-        "MRC" -> pure MRC
-        "RLT" -> pure RLT
+        "CAL" -> pure CentreForAppliedLinguistics
+        "MRC" -> pure MathematicsResearchCentre
+        "RLT" -> pure ResidentialLifeTeam
         "StaffFamily" -> pure StaffFamily
         "Student" -> pure Student
         "VacationTenant" -> pure VacationTenant
@@ -85,8 +90,8 @@ instance FromJSON RecipientType where
 
 -- | Represents an addressee at Warwick
 data Recipient = Recipient {
-    -- | The unique ID of the recipient if included
-    rId :: Maybe UUID,
+    -- | The unique ID of the recipient
+    rId :: UUID,
     -- | The accommodation block the recipient lives in if applicable
     rAccommodationBlock :: Maybe AccommodationBlock,
     -- | The recipients first name
@@ -99,9 +104,10 @@ data Recipient = Recipient {
     rPreferredName :: Maybe Text,
     -- | Whether the recipient is currently active
     rInactive :: Bool,
-    -- | 
+    -- | The floor number of the room if the recipient is a kinetic import
     rKineticFloor :: Maybe Int,
-    -- | 
+    -- | The room number of the recipient as stored in kinetic, if they are
+    -- a kinetic import
     rKineticRoom :: Maybe Text,
     -- | The room the recipient lives in if applicable
     rRoom :: Maybe Text,
@@ -113,9 +119,11 @@ data Recipient = Recipient {
     rType :: RecipientType,
     -- | The recipient's univeristy ID
     rUniversityId :: Text,
-    -- | When the recipient is active from if included
+    -- | When the recipient is active from if the resident is not a Kinetic
+    -- import
     rValidFrom :: Maybe Day,
-    -- | When the recipient is active to if included
+    -- | When the recipient is active to if the resident is not a Kinetic
+    -- import
     rValidTo :: Maybe Day,
     -- | The date the recipient is self-isolating to, if they are currently
     -- self-isolating

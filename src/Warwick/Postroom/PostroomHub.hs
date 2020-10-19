@@ -19,14 +19,14 @@ import Data.UUID.Types ( UUID )
 
 -- | Represents a Warwick postroom hub
 data PostroomHub = PostroomHub {
-    -- | The unique ID of the hub if included
-    phId :: Maybe UUID,
-    -- | The name of the hub if included
-    phName :: Maybe Text,
-    -- | Where the hub is on campus if included
-    phLocation :: Maybe Text,
-    -- | The ID of the location on the campus map if included
-    phMapId :: Maybe Text
+    -- | The unique ID of the hub
+    phId :: UUID,
+    -- | The name of the hub
+    phName :: Text,
+    -- | Where the hub is on campus
+    phLocation :: Text,
+    -- | The ID of the location on the campus map
+    phMapId :: Text
 } deriving (Eq, Show)
 
 instance FromJSON PostroomHub where
