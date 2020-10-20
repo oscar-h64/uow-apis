@@ -31,7 +31,7 @@ jobs:
 
     - name: Cache .stack
       id: cache-stack
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: ~/.stack
         key: ${{ runner.os }}-${{ matrix.resolver }}-${{ hashFiles(format('{0}.yaml', matrix.resolver)) }}
