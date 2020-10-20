@@ -49,3 +49,28 @@ jobs:
       run: |
         export PATH=$HOME/.local/bin:$PATH
         stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal build --flag uow-apis:build-exe --fast
+        stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal install --flag uow-apis:build-exe --fast --local-bin-path=${{ github.workspace }}/bin
+
+    - name: Create release 
+      id: create_release
+      uses: actions/create-release@v1
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: latest
+        release_name: Release ${{ github.sha }}
+        draft: false
+        prerelease: false
+
+    - name: Upload release asset
+      id: upload_release_asset 
+      uses: actions/upload-release-asset@v1
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ${{ github.workspace }}/bin/uow-util
+        asset_name: uow-util
+        asset_content_type: application/octet-stream
