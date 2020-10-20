@@ -19,6 +19,7 @@ import Data.Text
 import Options.Applicative
 
 import Warwick.Tabula.Types
+import Warwick.Tabula.MemberSearchFilter (CourseType)
 
 --------------------------------------------------------------------------------
 
@@ -64,6 +65,12 @@ data TabulaOpts
     | Tutees {
         tabulaOptsAcademicYear :: Text
     }
+    | Enrolments {
+        tabulaOptsAcademicYear :: Text,
+        tabulaOptsDepartments :: [Text],
+        tabulaOptsYearGroup :: [Int],
+        tabulaOptsCourseGroups :: [CourseType]
+    }
     deriving (Eq, Show) 
 
 mc :: ReadM ModuleCode
@@ -86,10 +93,18 @@ tuteesP :: Parser TabulaOpts
 tuteesP = Tutees
     <$> strOption (long "year" <> help "The academic year")
 
+enrolmentsP :: Parser TabulaOpts
+enrolmentsP = Enrolments
+    <$> strOption (long "academic-year" <> help "The academic year")
+    <*> some (strOption (long "department" <> help "Departments to filter by"))
+    <*> many (option auto (long "year" <> help "Year groups to filter by"))
+    <*> many (option auto (long "course-type" <> help "Course types to filter by"))
+
 tabulaP :: Parser Command
 tabulaP = fmap TabulaCmd $ subparser $
     command "download" (info downloadSubmissionsP (progDesc "Download coursework submissions."))
  <> command "tutees" (info tuteesP (progDesc "View information about tutees"))
+ <> command "enrolments" (info enrolmentsP (progDesc "View enrolment information"))
 
 --------------------------------------------------------------------------------
 

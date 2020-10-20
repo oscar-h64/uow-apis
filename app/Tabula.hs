@@ -17,6 +17,7 @@ import qualified Data.ByteString as BS (length)
 import qualified Data.HashMap.Lazy as HM
 import Data.Maybe
 import Data.Text (pack, unpack)
+import Data.List (nub)
 
 import System.Console.AsciiProgress
 import System.Directory
@@ -24,11 +25,14 @@ import System.FilePath
 import System.IO
 
 import Text.Read (readMaybe)
+import Text.Printf (printf)
 
 import Warwick.Tabula
 import Warwick.Tabula.Attachment
 import Warwick.Tabula.Member
+import Warwick.Tabula.MemberSearchFilter
 import Warwick.Tabula.StudentAssignment
+import Warwick.Tabula.Payload.Relationship
 
 import CmdArgs 
 
@@ -221,7 +225,7 @@ tabulaMain cfg opts = do
             uid <- getLine
 
             r <- withTabula Live cfg $ do
-                TabulaOK{..} <- listRelationships uid
+                TabulaOK{..} <- listRelationships (pack uid) (Just "personalTutor")
 
                 rs <- forM (relationshipsOfType "personalTutor" tabulaData) $ \r -> do
                     TabulaOK{..} <- retrieveMembers (map (pack . relationshipEntryUniversityID) $ relationshipStudents r) ["member.fullName"]
@@ -237,5 +241,49 @@ tabulaMain cfg opts = do
                 return ()
 
             print r
+        Enrolments{..} -> do 
+            let settings = defaultMemberSearch{ 
+                    filterDepartment = tabulaOptsDepartments, 
+                    filterCourseTypes = [PGT], 
+                    filterYearsOfStudy = tabulaOptsYearGroup, 
+                    filterFields = ["member.studentCourseDetails.studentCourseYearDetails"] 
+                }
+
+            putStrLn "Searching for members, this may take a moment..."
+
+            r <- withTabula Live cfg $ do
+                let fetchRange start = do 
+                        -- try to get 50 
+                        TabulaOK{..} <- listMembers settings start 50
+
+                        let states = map enrolmentStatusName 
+                                   $ catMaybes
+                                   $ map (currentEnrolmentStatus tabulaOptsAcademicYear) 
+                                   $ catMaybes
+                                   $ map memberStudentCourseDetails
+                                   $ tabulaData
+
+                        unless (tabulaTotal == Nothing) $ liftIO $ do 
+                            putStrLn $ printf "Fetched %d members (%d total to fetch)" 
+                                (length tabulaData) (fromJust tabulaTotal) 
+
+
+                        case tabulaTotal of  
+                            Just total | total > start+50 -> do 
+                                xs <- fetchRange (start+50)
+                                pure (states++xs)
+                            _ -> pure states
+
+                fetchRange 0
+            
+            case r of 
+                Left err -> print err 
+                Right states -> do
+                    let grouped = [ (x, length $ filter (==x) states) 
+                                  | x <- nub states 
+                                  ]
+
+                    forM_ grouped $ \(name,count) ->
+                        putStrLn $ unpack name <> ": " <> show count
 
 -------------------------------------------------------------------------------

@@ -19,6 +19,7 @@ data CourseType
     | PGR
     | Foundation 
     | PreSessional
+    deriving (Eq, Read)
 
 instance Show CourseType where 
     show UG = "UG"
