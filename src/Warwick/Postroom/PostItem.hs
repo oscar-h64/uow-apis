@@ -71,10 +71,10 @@ data PostItem = PostItem {
     piBarcode :: Maybe Text,
     -- | The deadline to collect the item by if the item requires collecting
     piCollectionBy :: Maybe UTCTime,
-    -- | The courier that delivered the item if included
-    piCourier :: Maybe Courier,
-    -- | The time the item was added to the system if included
-    piCreatedAt :: Maybe UTCTime,
+    -- | The courier that delivered the item
+    piCourier :: Courier,
+    -- | The time the item was added to the system
+    piCreatedAt :: UTCTime,
     -- | The shelf the parcel is currently located if the parcel is yet to be
     -- collected
     piLocationReference :: Maybe Text,
