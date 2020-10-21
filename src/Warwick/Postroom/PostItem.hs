@@ -37,7 +37,7 @@ data Courier = Courier {
 instance FromJSON Courier where
     parseJSON = withObject "Courier" $ \v ->
         Courier <$> v .: "id"
-                <*> v .: "createdAt"
+                <*> v .:? "createdAt"
                 <*> v .: "name"
                 <*> v .: "shortCode"
 
@@ -90,13 +90,13 @@ data PostItem = PostItem {
 instance FromJSON PostItem where
     parseJSON = withObject "OpeningTimes" $ \v ->
         PostItem <$> v .: "id"
-                 <*> v .: "barcode"
-                 <*> v .: "collectionBy"
+                 <*> v .:? "barcode"
+                 <*> v .:? "collectionBy"
                  <*> v .: "courier"
                  <*> v .: "createdAt"
-                 <*> v .: "locationReference"
-                 <*> v .: "nomineeUniversityId"
-                 <*> v .: "recipient"
+                 <*> v .:? "locationReference"
+                 <*> v .:? "nomineeUniversityId"
+                 <*> v .:? "recipient"
                  <*> v .: "status"
 
 -------------------------------------------------------------------------------

@@ -45,12 +45,12 @@ data AccommodationBlock = AccommodationBlock {
 instance FromJSON AccommodationBlock where
     parseJSON = withObject "AccommodationBlock" $ \v ->
         AccommodationBlock <$> v .: "id"
-                           <*> v .: "code"
-                           <*> v .: "hub"
-                           <*> v .: "kineticId"
-                           <*> v .: "kineticParentId"
-                           <*> v .: "kineticSiteId"
+                           <*> v .:? "code"
                            <*> v .: "name"
+                           <*> v .:? "hub"
+                           <*> v .: "kineticId"
+                           <*> v .:? "kineticParentId"
+                           <*> v .: "kineticSiteId"
 
 -------------------------------------------------------------------------------
 
@@ -135,21 +135,21 @@ data Recipient = Recipient {
 instance FromJSON Recipient where
     parseJSON = withObject "Recipient" $ \v ->
         Recipient <$> v .: "id"
-                  <*> v .: "accommodationBlock"
+                  <*> v .:? "accommodationBlock"
                   <*> v .: "firstName"
-                  <*> v .: "middleName"
+                  <*> v .:? "middleName"
                   <*> v .: "lastName"
-                  <*> v .: "preferredName"
+                  <*> v .:? "preferredName"
                   <*> v .: "inactive"
-                  <*> v .: "kineticFloor"
-                  <*> v .: "kineticRoom"
-                  <*> v .: "room"
+                  <*> v .:? "kineticFloor"
+                  <*> v .:? "kineticRoom"
+                  <*> v .:? "room"
                   <*> v .: "source"
-                  <*> v .: "subAccommodationBlock"
+                  <*> v .:? "subAccommodationBlock"
                   <*> v .: "type"
                   <*> v .: "universityId"
-                  <*> v .: "validFrom"
-                  <*> v .: "validTo"
-                  <*> v .: "selfIsolatingUntil"
+                  <*> v .:? "validFrom"
+                  <*> v .:? "validTo"
+                  <*> v .:? "selfIsolatingUntil"
 
 -------------------------------------------------------------------------------
