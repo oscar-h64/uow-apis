@@ -93,4 +93,5 @@ jobs:
       if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       run: |
         IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-        docker push $IMAGE_NAME:latest
+        docker tag $IMAGE_NAME:latest $IMAGE_ID:latest
+        docker push $IMAGE_ID:latest
