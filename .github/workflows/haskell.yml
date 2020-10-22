@@ -76,20 +76,21 @@ jobs:
 
     - name: Upload release asset
       id: upload_release_asset 
-      uses: actions/upload-release-asset@v1
+      uses: svenstaro/upload-release-action@v2
       if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ${{ github.workspace }}/bin/uow-util
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ${{ github.workspace }}/bin/uow-util
         asset_name: uow-util
-        asset_content_type: application/octet-stream
+        tag: latest
+        overwrite: true
 
     - name: Build Docker image
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       run: docker build . --file .github/Dockerfile --tag $IMAGE_NAME:latest
 
     - name: Publish latest Docker image 
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       run: |
         IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
         docker push $IMAGE_ID:latest
