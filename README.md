@@ -1,6 +1,95 @@
 # University of Warwick API client
 
-Haskell bindings for various University of Warwick APIs. Note that this library does not yet implement client functions for all supported endpoints. Please open an issue if there is an endpoint you require to be supported. Pull requests are also welcome.
+A client program (`uow-util`) and Haskell library (`uow-apis`) for various University of Warwick APIs. Please [open an issue](https://github.com/mbg/uow-apis/issues/new) if there is an endpoint or a feature you require, but that is not yet supported. Pull requests are also welcome.
+
+## Usage
+
+Pre-built binaries for linux (x86-64) can be downloaded from the [releases page](https://github.com/mbg/uow-apis/releases) and [Docker images are also available](https://github.com/mbg/uow-apis/packages/468684).
+
+The `uow-util` tool currently only provides a small number of commands to interact with Tabula and SiteBuilder. For anything else, the `uow-apis` library can be used.
+
+### Configuration
+
+The `uow-util` tool requires user credentials to function. ITS recommend that you use an [external user account](https://warwick.ac.uk/services/its/servicessupport/web/sign-on/externalusers) for this. Note that any external user accounts you create will not have the same permissions you have! You will need to grant any required permissions on Tabula or SiteBuilder as required. 
+
+Once you have suitable user credentials, there are two ways to configure `uow-util` with them. You can create a `uow-util.json` file with the following structure:
+
+```json
+{
+    "username": "username_goes_here",
+    "password": "password_goes_here"
+}
+```
+
+By default, `uow-util` looks for `uow-util.json` in the current working directory. You can specify a different filename with the `--credentials /path/to/your/config.json` option.
+
+The second option for providing user credentials to `uow-util` is to set environment variables named `UOW_USER` and `UOW_PASSWORD` with the username and password, respectively.
+
+### Tabula commands
+
+#### Download coursework submissions
+
+You can use `uow-util` to download all submissions for a particular coursework. To do this, run `uow-util tabula download MODULE --year YEAR` where `MODULE` is the module code of the relevant module and `YEAR` is the academic year in `yy/yy` format. Your user account will need to have `Permissions.Module.ManageAssignments` on the module and `Permissions.Submission.Read` on the assignment. The program will list all assignments for the module and you can then choose which one to download submissions for.
+
+You can also specify the following options:
+
+- `--unpack` to automatically unpack archives (`.zip` and `.tar.gz`) that are downloaded
+
+- `--only-pdf` to only download `.pdf` files
+
+#### View information about tutees
+
+`uow-util tabula tutees` will show a summary of assignments that have been submitted late or are current late for the personal tutees of a given member of staff. This command requires department-level permissions: 
+
+- `Permissions.Profiles.StudentRelationship.Read`
+- `Profiles.Read.Coursework`
+- `Profiles.Submission.Read`
+- `Profiles.AssignmentFeedback.Read`
+- `Profiles.Extension.Read`
+
+You will be prompted for the University ID of the member of staff to view this information for.
+
+#### View information about enrolments 
+
+`uow-util tabula enrolments DEPARTMENT --academic-year YEAR` will show an overview of enrolments for the department identified by `DEPARTMENT` in the academic year given by `YEAR`. For example: `uow-util tabula enrolments cs --academic-year 20/21`. Several options are available which restrict the search:
+
+- `--year YEAR` filters by a specific year group. For example `--year 1` will only return the enrolment status for students in their first year.
+
+- `--course-type TYPE` filters by a specific course type. For example `--course-type PGT` will only return the enrolment status for postgraduate taught students.
+
+The above filters can be combined so that e.g. `uow-util tabula enrolments cs --academic-year 20/21 --year 1 --course-type UG` returns the enrolment status of all first-year undergraduates in Computer Science for 20/21.
+
+### SiteBuilder commands
+
+#### Edit a page
+
+To edit an existing SiteBuilder page (i.e. update it with new HTML), you can run `uow-util sitebuilder edit PAGE FILE` where `PAGE` is the path of the SiteBuilder page to edit and `FILE` is the name of the file to load the new HTML from.
+
+- `--comment 'Fix typo'` can optionally be provided to specify a comment for SiteBuilder's history view about the change
+
+#### Upload a file
+
+To upload a file, such as an image or a PDF, to SiteBuilder, you can use `uow-util sitebuilder upload PAGE FILE` where `PAGE` is the path of the SiteBuilder page under which the file should be uploaded to and `FILE` is the name of the file to upload. 
+
+- `--name FILENAME` can be used to specify a custom name for the file, different from the name of the file that is being uploaded.
+
+### Docker
+
+To acquire the latest version of the Docker image, run `docker pull docker.pkg.github.com/mbg/uow-apis/uow-util:latest` (you may need to be authenticated to the GitHub registry). The image can then be run as usual with `docker run --rm docker.pkg.github.com/mbg/uow-apis/uow-util:latest` and options/commands can be specified as if you were running `uow-util` directly. Using this has the advantage that you do not need to compile the binaries yourself if you are on a platform for which we do not provide pre-built executables.
+
+### Compiling
+
+If you want to compile the library or program yourself, you will first need [Stack](https://docs.haskellstack.org/en/stable/README/). The library can then be built with `stack build` and the library+program can be built with `stack build --flag uow-apis:build-exe`. The program can then be invoked with `stack exec uow-util` or installed with `stack install`.
+
+### Library
+
+The library is deliberately not on Hackage/Stackage due to its niche use. You will need to download the sources and compile it locally. You can then point at the library in e.g. the `stack.yaml` for your project with:
+
+```yaml
+packages:
+- .
+- path/to/uow-apis
+```
 
 ## Tabula API
 
