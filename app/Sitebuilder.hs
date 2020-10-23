@@ -47,8 +47,8 @@ instance FromJSON PageConfig where
         PageConfig <$> v .: "page"
                    <*> v .: "content"
                    <*> v .: "properties"
-                   <*> v .: "files"
-                   <*> v .: "children"
+                   <*> fmap (fromMaybe []) (v .:? "files")
+                   <*> fmap (fromMaybe []) (v .:? "children")
 
 -------------------------------------------------------------------------------
 
