@@ -3,6 +3,8 @@ name: Haskell CI
 on:
   push:
     branches: [master]
+    tags:
+      - 'v*'
   pull_request:
     branches: [master]
 
@@ -59,6 +61,7 @@ jobs:
       id: build
       run: |
         echo ::set-output name=sha_short::$(git rev-parse --short=7 ${{ github.sha }})
+        echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
         export PATH=$HOME/.local/bin:$PATH
         stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal build --flag uow-apis:build-exe --fast
         stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal install --flag uow-apis:build-exe --fast --local-bin-path=${{ github.workspace }}/bin
@@ -72,30 +75,37 @@ jobs:
     - name: Create release 
       id: create_release
       uses: release-drafter/release-drafter@v5
-      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: Release ${{ steps.build.outputs.sha_short }}
+        name: Release ${{ steps.build.outputs.version }}
+        tag: ${{ github.ref }}
 
     - name: Upload release asset
       id: upload_release_asset 
       uses: svenstaro/upload-release-action@v2
-      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ github.workspace }}/bin/uow-util
         asset_name: uow-util
-        tag: latest
+        tag: ${{ github.ref }}
         overwrite: true
 
     - name: Build Docker image
-      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      run: docker build . --file .github/Dockerfile --tag $IMAGE_NAME:latest
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
+      run: docker build . --file .github/Dockerfile --tag $IMAGE_NAME:$VERSION
+      env:
+        VERSION: ${{ steps.build.outputs.version }}
 
-    - name: Publish latest Docker image 
-      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    - name: Publish Docker images 
+      if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       run: |
         IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-        docker tag $IMAGE_NAME:latest $IMAGE_ID:latest
+        docker tag $IMAGE_NAME:$VERSION $IMAGE_ID:$VERSION
+        docker tag $IMAGE_NAME:$VERSION $IMAGE_ID:latest
+        docker push $IMAGE_ID:$VERSION
         docker push $IMAGE_ID:latest
+      env:
+        VERSION: ${{ steps.build.outputs.version }}
