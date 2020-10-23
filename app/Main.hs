@@ -19,11 +19,11 @@ import Tabula
 -- | 'main' is the main entry point for this application.
 main :: IO ()
 main = do
-    args <- parseCmdLineArgs
+    UtilArgs{..} <- parseCmdLineArgs
 
-    cfg <- loadConfig
+    cfg <- loadConfig argsCredentialsFile
 
-    case args of 
+    case argsCommand of 
         SitebuilderCmd opts -> sitebuilderMain cfg opts
         TabulaCmd opts -> tabulaMain cfg opts
 

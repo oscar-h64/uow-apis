@@ -9,6 +9,7 @@ module CmdArgs (
     SitebuilderOpts(..),
     TabulaOpts(..),
     Command(..),
+    UtilArgs(..),
     parseCmdLineArgs
 ) where 
 
@@ -118,12 +119,28 @@ commandP = subparser $
     command "sitebuilder" (info sitebuilderP (progDesc "Sitebuilder commands"))
  <> command "tabula" (info tabulaP (progDesc "Tabula commands"))
 
-opts :: ParserInfo Command 
-opts = info (commandP <**> helper) idm
+data UtilArgs = UtilArgs {
+    -- | The path to the .json file which stores the user credentials.
+    argsCredentialsFile :: FilePath,
+    -- | The command to execute.
+    argsCommand :: Command
+} deriving (Eq, Show)
+
+utilArgsP :: Parser UtilArgs
+utilArgsP = UtilArgs 
+        <$> strOption ( long "credentials" <>
+                        metavar "FILE" <>
+                        value "uow-util.json" <>
+                        help "The path to a .json file with user credentials."
+                      ) 
+        <*> commandP
+
+opts :: ParserInfo UtilArgs 
+opts = info (utilArgsP <**> helper) idm
 
 -- | 'parseCmdLineArgs' is a computation which parses the command-line
--- arguments into a 'Command' value.
-parseCmdLineArgs :: IO Command 
+-- arguments into a 'UtilArgs' value.
+parseCmdLineArgs :: IO UtilArgs 
 parseCmdLineArgs = execParser opts
 
 -------------------------------------------------------------------------------

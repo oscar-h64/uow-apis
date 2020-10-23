@@ -23,13 +23,14 @@ import Warwick.Config
 
 -------------------------------------------------------------------------------
 
--- | 'loadConfig' is a computation which tries to load the 
-loadConfig :: IO APIConfig 
-loadConfig = do 
-    exists <- doesFileExist "warwick.json"
+-- | 'loadConfig' @filepath@ is a computation which tries to load the user
+-- credentials from the file identified by @filepath@.
+loadConfig :: FilePath -> IO APIConfig 
+loadConfig fp = do 
+    exists <- doesFileExist fp
 
     -- first, try to load the configuration from disk 
-    mCfg <- if exists then readAPIConfig "warwick.json"
+    mCfg <- if exists then readAPIConfig fp
             else pure Nothing
 
     case mCfg of 
