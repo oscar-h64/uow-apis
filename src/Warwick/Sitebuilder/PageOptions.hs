@@ -11,6 +11,7 @@ module Warwick.Sitebuilder.PageOptions (
 
 --------------------------------------------------------------------------------
 
+import Data.Aeson
 import Data.Maybe (catMaybes)
 import Data.List (intersperse)
 import Data.Text (Text, pack)
@@ -37,6 +38,23 @@ data PageOptions = PageOptions {
     poLayout :: Maybe Text,
     poEditComment :: Maybe Text
 } deriving Show
+
+instance FromJSON PageOptions where
+    parseJSON = withObject "PageOptions" $ \v ->
+        PageOptions <$> v .:? "searchable"
+                    <*> v .:? "visible"
+                    <*> v .:? "spanRHS"
+                    <*> v .:? "deleted"
+                    <*> v .:? "description"
+                    <*> v .:? "keywords"
+                    <*> v .:? "linkCaption"
+                    <*> v .:? "pageHeading"
+                    <*> v .:? "titleBarCaption"
+                    <*> v .:? "pageOrder"
+                    <*> v .:? "commentable"
+                    <*> v .:? "commentsVisibleToCommentersOnly"
+                    <*> v .:? "layout"
+                    <*> v .:? "editComment"
 
 -- | 'optsToXML' @opts@ converts @opts@ to an array of XML elements
 optsToXML :: PageOptions -> [Element]

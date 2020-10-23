@@ -35,6 +35,9 @@ data SitebuilderOpts
         cFile :: FilePath,
         cSlug :: Maybe Text
     }
+    | SyncSite {
+        cConfigPath :: FilePath
+    }
     deriving (Eq, Show)
 
 editPageP :: Parser SitebuilderOpts 
@@ -49,10 +52,14 @@ uploadFileP = UploadFile
     <*> strOption (long "file" <> metavar "FILE")
     <*> optional (strOption (long "name"))
 
+syncSiteP :: Parser SitebuilderOpts
+syncSiteP = SyncSite <$> strOption (long "config-file" <> metavar "CONFIG_FILE")
+
 sitebuilderP :: Parser Command 
 sitebuilderP = fmap SitebuilderCmd $ subparser $
     command "edit" (info editPageP (progDesc "Edit a file.")) <> 
-    command "upload" (info uploadFileP (progDesc "Upload a file."))
+    command "upload" (info uploadFileP (progDesc "Upload a file.")) <>
+    command "sync" (info syncSiteP (progDesc "Synchronise a site."))
 
 --------------------------------------------------------------------------------
 
