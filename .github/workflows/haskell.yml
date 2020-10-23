@@ -55,8 +55,10 @@ jobs:
         export PATH=$HOME/.local/bin:$PATH
         stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal build --flag uow-apis:build-exe --only-dependencies --fast
         
-    - name: Build 
+    - name: Build
+      id: build
       run: |
+        echo ::set-output name=sha_short::$(git rev-parse --short=7 ${{ github.sha }})
         export PATH=$HOME/.local/bin:$PATH
         stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal build --flag uow-apis:build-exe --fast
         stack --stack-yaml=${{ matrix.resolver }}.yaml --no-terminal install --flag uow-apis:build-exe --fast --local-bin-path=${{ github.workspace }}/bin
@@ -73,6 +75,8 @@ jobs:
       if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: Release ${{ steps.build.outputs.sha_short }}
 
     - name: Upload release asset
       id: upload_release_asset 
