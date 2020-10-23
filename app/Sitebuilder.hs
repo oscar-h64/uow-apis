@@ -59,16 +59,19 @@ handleAPI m = m >>= \case
         exitWith (ExitFailure (-1)) 
     Right _ -> exitSuccess
 
-processPage :: APIConfig -> PageConfig -> IO ()
-processPage config PageConfig{..} = do   
+processPage :: APIConfig -> Text -> PageConfig -> IO ()
+processPage config prefix PageConfig{..} = do
+    -- TODO: this breaks if prefix doesn't end in /
+    let page = prefix <> pcPage
+
     -- upload page
     -- TODO: need to check if page exists and use create if so
-    handleAPI $ withAPI Live config $ editPageFromFile pcPage "" pcContent
+    handleAPI $ withAPI Live config $ editPageFromFile page "" pcContent
 
     -- upload files
 
     -- process children
-    mapM_ (processPage config) pcChildren
+    mapM_ (processPage config page) pcChildren
 
 sitebuilderMain :: APIConfig -> SitebuilderOpts -> IO ()
 sitebuilderMain config opts = do 
@@ -87,6 +90,6 @@ sitebuilderMain config opts = do
         SyncSite{..} -> do
             pages <- decodeFileThrow cConfigPath :: IO [PageConfig]
 
-            mapM_ (processPage config) pages
+            mapM_ (processPage config "") pages
 
 -------------------------------------------------------------------------------
