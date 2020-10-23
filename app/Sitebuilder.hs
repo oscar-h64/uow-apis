@@ -14,6 +14,7 @@ import Data.Maybe
 import Data.Text (Text)
 import Data.Yaml (decodeFileThrow)
 
+import System.Directory (doesFileExist, doesDirectoryExist)
 import System.Exit
 import System.IO
 
@@ -27,11 +28,18 @@ import CmdArgs
 -------------------------------------------------------------------------------
 
 data PageConfig = PageConfig {
-    scPage :: Text,
-    scContent :: FilePath,
-    scProperties :: PageOptions,
-    scFiles :: FilePath,
-    scChildren :: [PageConfig]
+    -- | The path of the page on the site
+    pcPage :: Text,
+    -- | The path to the contents for the page
+    pcContent :: FilePath,
+    -- | The properties for the page
+    pcProperties :: PageOptions,
+    -- | The files to upload under this page. If a directory is specified all
+    -- files in that directory will be uploaded. If the file or folder does
+    -- not exist the program simply continues
+    pcFiles :: [FilePath],
+    -- | The children of the page
+    pcChildren :: [PageConfig]
 }
 
 instance FromJSON PageConfig where
@@ -52,7 +60,15 @@ handleAPI m = m >>= \case
     Right _ -> exitSuccess
 
 processPage :: APIConfig -> PageConfig -> IO ()
-processPage = undefined
+processPage config PageConfig{..} = do   
+    -- upload page
+    -- TODO: need to check if page exists and use create if so
+    handleAPI $ withAPI Live config $ editPageFromFile pcPage "" pcContent
+
+    -- upload files
+
+    -- process children
+    mapM_ (processPage config) pcChildren
 
 sitebuilderMain :: APIConfig -> SitebuilderOpts -> IO ()
 sitebuilderMain config opts = do 
@@ -69,8 +85,8 @@ sitebuilderMain config opts = do
             handleAPI $ withAPI Live config $ 
                 uploadFile cPage name cFile
         SyncSite{..} -> do
-            conf <- decodeFileThrow cConfigPath :: IO [PageConfig]
+            pages <- decodeFileThrow cConfigPath :: IO [PageConfig]
 
-            mapM_ (processPage config) conf
+            mapM_ (processPage config) pages
 
 -------------------------------------------------------------------------------
