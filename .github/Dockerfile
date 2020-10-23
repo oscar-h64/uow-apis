@@ -5,5 +5,8 @@
 FROM ubuntu:latest
 WORKDIR /
 COPY ./bin /
-RUN chmod +x uow-util
+RUN \
+    chmod +x uow-util && \
+    RUN apt-get update && \
+    apt-get install -y netbase ca-certificates
 ENTRYPOINT ["/uow-util"]
