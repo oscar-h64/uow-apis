@@ -11,7 +11,7 @@ module Sitebuilder ( sitebuilderMain ) where
 
 import Data.Aeson
 import Data.Maybe
-import Data.Text as T (Text, snoc, last)
+import Data.Text as T (Text, breakOnEnd, last, pack, snoc)
 import Data.Yaml (decodeFileThrow)
 
 import System.Exit
@@ -22,7 +22,7 @@ import System.IO
 import Warwick.Config
 import Warwick.Common
 import Warwick.Sitebuilder
-import Warwick.Sitebuilder.PageOptions ( PageOptions )
+import Warwick.Sitebuilder.PageOptions (PageOptions, defaultPageOpts)
 
 import CmdArgs 
 
@@ -46,26 +46,24 @@ instance FromJSON PageConfig where
     parseJSON = withObject "PageConfig" $ \v -> 
         PageConfig <$> v .: "page"
                    <*> v .: "content"
-                   <*> v .: "properties"
+                   <*> fmap (fromMaybe defaultPageOpts) (v .:? "properties")
                    <*> fmap (fromMaybe []) (v .:? "files")
                    <*> fmap (fromMaybe []) (v .:? "children")
 
 -------------------------------------------------------------------------------
 
-handleAPI :: Show e => IO (Either e a) -> IO a
+handleAPI :: Show e => IO (Either e a) -> IO ()
 handleAPI m = m >>= \case 
     Left err -> do 
         hPutStrLn stderr (show err)
         exitWith (ExitFailure (-1)) 
-    Right _ -> exitSuccess
+    Right _ -> pure ()
 
 processPage :: APIConfig -> Text -> PageConfig -> IO ()
 processPage config parent PageConfig{..} = do
     -- generate path for this page by appending it to the parent page, adding
     -- a '/' if necessary
-    let page = if T.last parent == '/'
-               then parent
-               else parent `snoc` '/' <> pcPage
+    let page = parent <> pcPage
 
     -- check whether the page exists by checking if getting the page info
     -- throws an error
@@ -73,17 +71,22 @@ processPage config parent PageConfig{..} = do
 
     -- create the page if it doesn't exist or edit it if it does
     -- TODO: Sort page title
-    let action = case info of
-            Left _ -> flip createPageFromFile ""
-            Right _ -> editPageFromFile            
-    handleAPI $ withAPI Live config $ action page "" pcContent
+    let (pageParent, pageName) = case breakOnEnd "/" page of
+            (pageNoSlash, "") -> breakOnEnd "/" pageNoSlash
+            x -> x
+    case info of
+        Left _ -> handleAPI $ withAPI Live config
+                            $ createPageFromFile pageParent "" pageName pcContent
+        Right _ -> handleAPI $ withAPI Live config
+                             $ editPageFromFile page "" pcContent           
 
     -- get all files matching the patterns given and upload them
     files <- getDirectoryFiles "." pcFiles
-    mapM_ (\f -> handleAPI $ withAPI Live config $ uploadFile page "" f) files
+    mapM_ (\f -> handleAPI $ withAPI Live config $ uploadFile page (pack f) f) files
 
     -- process children
-    mapM_ (processPage config page) pcChildren
+    let newParent = if T.last page == '/' then page else page `snoc` '/'
+    mapM_ (processPage config newParent) pcChildren
 
 sitebuilderMain :: APIConfig -> SitebuilderOpts -> IO ()
 sitebuilderMain config opts = do 
@@ -95,7 +98,7 @@ sitebuilderMain config opts = do
             handleAPI $ withAPI Live config $ 
                 editPageFromFile cPage comment cFile
         UploadFile{..} -> do 
-            let name = fromMaybe "" cSlug
+            let name = fromMaybe (pack cFile) cSlug
 
             handleAPI $ withAPI Live config $ 
                 uploadFile cPage name cFile

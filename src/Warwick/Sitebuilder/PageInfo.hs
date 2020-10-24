@@ -45,7 +45,6 @@ data PageInfo = PageInfo {
     pageKeywords :: [Text],
     pageCanEdit :: Bool,
     pageCanAdmin :: Bool,
-    pageDescription :: Text,
     pageShortTitle :: Text, 
     pageMimeType :: Text,
     pageEdited :: PageEdit, 
@@ -77,7 +76,6 @@ instance FromJSON PageInfo where
                  <*> obj .: "keywords"
                  <*> obj .: "canEdit"
                  <*> obj .: "canAdmin"
-                 <*> obj .: "description"
                  <*> obj .: "shortTitle"
                  <*> obj .: "mimeType"
                  <*> obj .: "editedUpdated"
