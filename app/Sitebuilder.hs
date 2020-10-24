@@ -15,7 +15,8 @@ import Data.Text as T (Text, snoc, last)
 import Data.Yaml (decodeFileThrow)
 
 import System.Exit
-import System.FilePattern.Directory (FilePattern, getDirectoryFiles) 
+import System.FilePattern (FilePattern)
+import System.FilePattern.Directory (getDirectoryFiles) 
 import System.IO
 
 import Warwick.Config
