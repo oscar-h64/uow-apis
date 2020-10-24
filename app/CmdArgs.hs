@@ -53,7 +53,7 @@ uploadFileP = UploadFile
     <*> optional (strOption (long "name"))
 
 syncSiteP :: Parser SitebuilderOpts
-syncSiteP = SyncSite <$> strOption (long "config-file" <> metavar "CONFIG_FILE")
+syncSiteP = SyncSite <$> strOption (long "config" <> metavar "FILE")
 
 sitebuilderP :: Parser Command 
 sitebuilderP = fmap SitebuilderCmd $ subparser $

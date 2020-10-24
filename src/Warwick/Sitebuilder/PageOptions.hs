@@ -37,7 +37,7 @@ data PageOptions = PageOptions {
     poCommentsVisibleToCommentersOnly :: Maybe Bool,
     poLayout :: Maybe Text,
     poEditComment :: Maybe Text
-} deriving Show
+} deriving (Eq, Show)
 
 instance FromJSON PageOptions where
     parseJSON = withObject "PageOptions" $ \v ->

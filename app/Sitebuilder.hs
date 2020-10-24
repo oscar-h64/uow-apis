@@ -11,17 +11,17 @@ module Sitebuilder ( sitebuilderMain ) where
 
 import Data.Aeson
 import Data.Maybe
-import Data.Text (Text)
+import Data.Text as T (Text, snoc, last)
 import Data.Yaml (decodeFileThrow)
 
-import System.Directory (doesFileExist, doesDirectoryExist)
 import System.Exit
+import System.FilePattern.Directory (FilePattern, getDirectoryFiles) 
 import System.IO
 
 import Warwick.Config
 import Warwick.Common
 import Warwick.Sitebuilder
-import Warwick.Sitebuilder.PageOptions
+import Warwick.Sitebuilder.PageOptions ( PageOptions )
 
 import CmdArgs 
 
@@ -34,13 +34,12 @@ data PageConfig = PageConfig {
     pcContent :: FilePath,
     -- | The properties for the page
     pcProperties :: PageOptions,
-    -- | The files to upload under this page. If a directory is specified all
-    -- files in that directory will be uploaded. If the file or folder does
-    -- not exist the program simply continues
-    pcFiles :: [FilePath],
+    -- | The files to upload under this page. Note that all files are flattened
+    -- and uploaded directly under the page, directory structure is not kept
+    pcFiles :: [FilePattern],
     -- | The children of the page
     pcChildren :: [PageConfig]
-}
+} deriving (Eq, Show)
 
 instance FromJSON PageConfig where
     parseJSON = withObject "PageConfig" $ \v -> 
@@ -60,15 +59,27 @@ handleAPI m = m >>= \case
     Right _ -> exitSuccess
 
 processPage :: APIConfig -> Text -> PageConfig -> IO ()
-processPage config prefix PageConfig{..} = do
-    -- TODO: this breaks if prefix doesn't end in /
-    let page = prefix <> pcPage
+processPage config parent PageConfig{..} = do
+    -- generate path for this page by appending it to the parent page, adding
+    -- a '/' if necessary
+    let page = if T.last parent == '/'
+               then parent
+               else parent `snoc` '/' <> pcPage
 
-    -- upload page
-    -- TODO: need to check if page exists and use create if so
-    handleAPI $ withAPI Live config $ editPageFromFile page "" pcContent
+    -- check whether the page exists by checking if getting the page info
+    -- throws an error
+    info <- withAPI Live config $ pageInfo page
 
-    -- upload files
+    -- create the page if it doesn't exist or edit it if it does
+    -- TODO: Sort page title
+    let action = case info of
+            Left _ -> flip createPageFromFile ""
+            Right _ -> editPageFromFile            
+    handleAPI $ withAPI Live config $ action page "" pcContent
+
+    -- get all files matching the patterns given and upload them
+    files <- getDirectoryFiles "." pcFiles
+    mapM_ (\f -> handleAPI $ withAPI Live config $ uploadFile page "" f) files
 
     -- process children
     mapM_ (processPage config page) pcChildren
