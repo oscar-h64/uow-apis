@@ -9,6 +9,8 @@ module Sitebuilder ( sitebuilderMain ) where
 
 -------------------------------------------------------------------------------
 
+import Control.Monad (forM_)
+
 import Data.Aeson
 import Data.Maybe
 import Data.Text as T (Text, breakOnEnd, last, pack, snoc)
@@ -28,6 +30,7 @@ import CmdArgs
 
 -------------------------------------------------------------------------------
 
+-- | The configuration for syncing a particular page
 data PageConfig = PageConfig {
     -- | The path of the page on the site
     pcPage :: Text,
@@ -52,22 +55,17 @@ instance FromJSON PageConfig where
 
 -------------------------------------------------------------------------------
 
-handleAPI :: Show e => IO (Either e a) -> IO ()
-handleAPI m = m >>= \case 
-    Left err -> do 
-        hPutStrLn stderr (show err)
-        exitWith (ExitFailure (-1)) 
-    Right _ -> pure ()
-
+-- | `processPage` @apiCfg parent pageCfg@ syncs the page described by
+-- @pageCfg@ with sitebuilder, using @parent@ as the URL of the parent and
+-- @apiCfg@ to authenticate
 processPage :: APIConfig -> Text -> PageConfig -> IO ()
-processPage config parent PageConfig{..} = do
-    -- generate path for this page by appending it to the parent page, adding
-    -- a '/' if necessary
+processPage apiCfg parent PageConfig{..} = do
+    -- generate path for this page
     let page = parent <> pcPage
 
     -- check whether the page exists by checking if getting the page info
     -- throws an error
-    info <- withAPI Live config $ pageInfo page
+    info <- withAPI Live apiCfg $ pageInfo page
 
     -- create the page if it doesn't exist or edit it if it does
     -- TODO: Sort page title
@@ -75,18 +73,28 @@ processPage config parent PageConfig{..} = do
             (pageNoSlash, "") -> breakOnEnd "/" pageNoSlash
             x -> x
     case info of
-        Left _ -> handleAPI $ withAPI Live config
+        Left _ -> handleAPI $ withAPI Live apiCfg
                             $ createPageFromFile pageParent "" pageName pcContent
-        Right _ -> handleAPI $ withAPI Live config
+        Right _ -> handleAPI $ withAPI Live apiCfg
                              $ editPageFromFile page "" pcContent           
 
     -- get all files matching the patterns given and upload them
     files <- getDirectoryFiles "." pcFiles
-    mapM_ (\f -> handleAPI $ withAPI Live config $ uploadFile page (pack f) f) files
+    forM_ files $ \f -> handleAPI $ withAPI Live apiCfg
+                                  $ uploadFile page (pack f) f
 
     -- process children
     let newParent = if T.last page == '/' then page else page `snoc` '/'
-    mapM_ (processPage config newParent) pcChildren
+    mapM_ (processPage apiCfg newParent) pcChildren
+
+-------------------------------------------------------------------------------
+
+handleAPI :: Show e => IO (Either e a) -> IO ()
+handleAPI m = m >>= \case 
+    Left err -> do 
+        hPutStrLn stderr (show err)
+        exitWith (ExitFailure (-1)) 
+    Right _ -> pure ()
 
 sitebuilderMain :: APIConfig -> SitebuilderOpts -> IO ()
 sitebuilderMain config opts = do 
@@ -103,8 +111,11 @@ sitebuilderMain config opts = do
             handleAPI $ withAPI Live config $ 
                 uploadFile cPage name cFile
         SyncSite{..} -> do
+            -- read the sync config from the given filepath
             pages <- decodeFileThrow cConfigPath :: IO [PageConfig]
 
+            -- process every page specified in the config (children are
+            -- processed recursively by `processPage`)
             mapM_ (processPage config "") pages
 
 -------------------------------------------------------------------------------
