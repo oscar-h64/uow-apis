@@ -24,7 +24,9 @@ import System.IO
 import Warwick.Config
 import Warwick.Common
 import Warwick.Sitebuilder
+import Warwick.Sitebuilder.Page (Page(..))
 import Warwick.Sitebuilder.PageOptions (PageOptions, defaultPageOpts)
+import Warwick.Sitebuilder.PageUpdate (PageUpdate(..))
 
 import CmdArgs 
 
@@ -67,16 +69,26 @@ processPage apiCfg parent PageConfig{..} = do
     -- throws an error
     info <- withAPI Live apiCfg $ pageInfo page
 
-    -- create the page if it doesn't exist or edit it if it does
-    -- TODO: Sort page title
+    -- extract page name from path (this is used when creating pages)
     let (pageParent, pageName) = case breakOnEnd "/" page of
             (pageNoSlash, "") -> breakOnEnd "/" pageNoSlash
             x -> x
+    
+    -- read the contents of the file specified
+    -- TODO: test this works and now sets properties (and titles work on
+    -- creating pages)
+    contents <- pack <$> readFile pcContent
     case info of
+        -- if the page doesn't exist then create the page with the given content
+        -- and properties
         Left _ -> handleAPI $ withAPI Live apiCfg
-                            $ createPageFromFile pageParent "" pageName pcContent
+                            $ createPage pageParent
+                            $ Page "" contents pageName pcProperties
+        -- if the page exists then update the page with given contents and
+        -- properties
         Right _ -> handleAPI $ withAPI Live apiCfg
-                             $ editPageFromFile page "" pcContent           
+                             $ editPage page
+                             $ PageUpdate (Just contents) pcProperties
 
     -- get all files matching the patterns given and upload them
     files <- getDirectoryFiles "." pcFiles
