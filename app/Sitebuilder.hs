@@ -25,10 +25,10 @@ import Warwick.Config
 import Warwick.Common
 import Warwick.Sitebuilder
 import Warwick.Sitebuilder.Page (Page(..))
-import Warwick.Sitebuilder.PageOptions (PageOptions, defaultPageOpts)
+import Warwick.Sitebuilder.PageOptions (PageOptions(..), defaultPageOpts)
 import Warwick.Sitebuilder.PageUpdate (PageUpdate(..))
 
-import CmdArgs 
+import CmdArgs
 
 -------------------------------------------------------------------------------
 
@@ -75,15 +75,18 @@ processPage apiCfg parent PageConfig{..} = do
             x -> x
     
     -- read the contents of the file specified
-    -- TODO: test this works and now sets properties (and titles work on
-    -- creating pages)
     contents <- pack <$> readFile pcContent
+    
+    -- if pageHeading is set in the config use this as the title when creating
+    -- pages
+    let pageTitle = fromMaybe "" $ poPageHeading pcProperties
+
     case info of
         -- if the page doesn't exist then create the page with the given content
         -- and properties
         Left _ -> handleAPI $ withAPI Live apiCfg
                             $ createPage pageParent
-                            $ Page "" contents pageName pcProperties
+                            $ Page pageTitle contents pageName pcProperties
         -- if the page exists then update the page with given contents and
         -- properties
         Right _ -> handleAPI $ withAPI Live apiCfg
