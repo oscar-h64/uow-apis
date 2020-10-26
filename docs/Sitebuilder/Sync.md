@@ -1,13 +1,13 @@
 # Sitebuilder Sync Config
 
-The configuration for the sync function consists of a yaml file containing a list of page configurations. If the page doesn't exist it is created, and if it does exist it is updated. Each page consists of the fields:
-- `page`: The path to the page
-- `content`: The path to the file containing the page content
-- `properties`: (optional) A list of properties to set for the page (for a list of all options see [here](Types.md#pageoptions), the name of the property in the config is the name here without the `po` prefix)
-- `files`: (optional) A list of files to upload under the page. File patterns are accepted.
-- `children`: (optional) A list of child pages to this page. These follow the same structure as described here
+The configuration for the sync function consists of a yaml file containing a list of page configurations. If a page doesn't exist it is created, and if it does exist it is updated. Each page configuration consists of the following fields:
+- `page`: The path to the page on SiteBuilder
+- `content`: The path to the file containing the page contents with which the page should be created or updated
+- `properties`: (optional) A list of properties to set for the page (for a list of all options see [here](Types.md#pageoptions), the name of the property in the config here is the name of the option without the `po` prefix)
+- `files`: (optional) A list of files to upload under the page. [File patterns](https://hackage.haskell.org/package/filepattern-0.1.2/docs/System-FilePattern.html#v:-63--61--61-) are accepted
+- `children`: (optional) A list of child pages configurations. These configurations are the same as for top-level page configurations as described here, except the paths are relative to their parent
 
-It is important to note if you are defining subpages not as children then the subpage must come after the parent in the list, otherwise creating the pages will fail.
+It is important to note if you are are configuring sub-pages at the top-level, rather than as children of a given page, then the sub-page configurations must come after the parent in the configuration file, otherwise creating the pages will fail.
 
 ### Example Config
 

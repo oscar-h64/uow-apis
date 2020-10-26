@@ -83,12 +83,11 @@ processPage apiCfg parent PageConfig{..} = do
         -- the properties due to an issue with how sitebuilder handles captions
         -- and creating pages
         Left _ -> do
-            handleAPI $ withAPI Live apiCfg
-                      $ createPage pageParent
-                      $ Page "" contents pageName defaultPageOpts
-            handleAPI $ withAPI Live apiCfg
-                      $ editPage page
-                      $ PageUpdate Nothing pcProperties
+            handleAPI $ withAPI Live apiCfg $ do
+                  createPage pageParent $ 
+                      Page "" contents pageName defaultPageOpts
+                  editPage page $ 
+                      PageUpdate Nothing pcProperties
         -- if the page exists then update the page with given contents and
         -- properties
         Right _ -> handleAPI $ withAPI Live apiCfg
@@ -97,8 +96,7 @@ processPage apiCfg parent PageConfig{..} = do
 
     -- get all files matching the patterns given and upload them
     files <- getDirectoryFiles "." pcFiles
-    forM_ files $ \f -> handleAPI $ withAPI Live apiCfg
-                                  $ uploadFile page (pack f) f
+    handleAPI $ withAPI Live apiCfg $ forM_ files $ \f -> uploadFile page (pack f) f
 
     -- process children
     let newParent = if T.last page == '/' then page else page `snoc` '/'
