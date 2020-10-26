@@ -9,7 +9,7 @@ The configuration for the sync function consists of a yaml file containing a lis
 
 It is important to note if you are defining subpages not as children then the subpage must come after the parent in the list, otherwise creating the pages will fail.
 
-## Example Config
+### Example Config
 
 ```yaml
 - path: /fac/sci/dcs/materials/cs141
