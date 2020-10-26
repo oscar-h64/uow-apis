@@ -76,17 +76,19 @@ processPage apiCfg parent PageConfig{..} = do
     
     -- read the contents of the file specified
     contents <- pack <$> readFile pcContent
-    
-    -- if pageHeading is set in the config use this as the title when creating
-    -- pages
-    let pageTitle = fromMaybe "" $ poPageHeading pcProperties
 
     case info of
         -- if the page doesn't exist then create the page with the given content
-        -- and properties
-        Left _ -> handleAPI $ withAPI Live apiCfg
-                            $ createPage pageParent
-                            $ Page pageTitle contents pageName pcProperties
+        -- and properties. This makes a second edit request to the page to set
+        -- the properties due to an issue with how sitebuilder handles captions
+        -- and creating pages
+        Left _ -> do
+            handleAPI $ withAPI Live apiCfg
+                      $ createPage pageParent
+                      $ Page "" contents pageName defaultPageOpts
+            handleAPI $ withAPI Live apiCfg
+                      $ editPage page
+                      $ PageUpdate Nothing pcProperties
         -- if the page exists then update the page with given contents and
         -- properties
         Right _ -> handleAPI $ withAPI Live apiCfg
