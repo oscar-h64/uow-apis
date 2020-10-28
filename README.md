@@ -73,6 +73,10 @@ To upload a file, such as an image or a PDF, to SiteBuilder, you can use `uow-ut
 
 - `--name FILENAME` can be used to specify a custom name for the file, different from the name of the file that is being uploaded.
 
+#### Syncing a site
+
+To sync a site from a configuration file, you can run `uow-util sitebuilder sync --config FILE`, where `FILE` is the path to the configuration file. See [here](docs/Sitebuilder/Sync.md) for more information about the configuration
+
 ### Docker
 
 To acquire the latest version of the Docker image, run `docker pull docker.pkg.github.com/mbg/uow-apis/uow-util:latest` (you may need to be authenticated to the GitHub registry). The image can then be run as usual with `docker run --rm docker.pkg.github.com/mbg/uow-apis/uow-util:latest` and options/commands can be specified as if you were running `uow-util` directly. Using this has the advantage that you do not need to compile the binaries yourself if you are on a platform for which we do not provide pre-built executables.

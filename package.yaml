@@ -81,6 +81,8 @@ executables:
       - filepath
       - directory
       - ascii-progress
+      - yaml
+      - filepattern
     default-extensions:
       - LambdaCase
     when:
