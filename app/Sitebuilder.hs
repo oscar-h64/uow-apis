@@ -14,6 +14,7 @@ import Control.Monad (forM_)
 import Data.Aeson
 import Data.Maybe
 import Data.Text as T (Text, breakOnEnd, last, pack, snoc)
+import Data.Text.IO as T (readFile)
 import Data.Yaml (decodeFileThrow)
 
 import System.Exit
@@ -51,9 +52,9 @@ instance FromJSON PageConfig where
     parseJSON = withObject "PageConfig" $ \v -> 
         PageConfig <$> v .: "page"
                    <*> v .: "content"
-                   <*> fmap (fromMaybe defaultPageOpts) (v .:? "properties")
-                   <*> fmap (fromMaybe []) (v .:? "files")
-                   <*> fmap (fromMaybe []) (v .:? "children")
+                   <*> v .:? "properties" .!= defaultPageOpts
+                   <*> v .:? "files" .!= []
+                   <*> v .:? "children" .!= []
 
 -------------------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ processPage apiCfg parent PageConfig{..} = do
             x -> x
     
     -- read the contents of the file specified
-    contents <- pack <$> readFile pcContent
+    contents <- T.readFile pcContent
 
     case info of
         -- if the page doesn't exist then create the page with the given content
@@ -96,7 +97,8 @@ processPage apiCfg parent PageConfig{..} = do
 
     -- get all files matching the patterns given and upload them
     files <- getDirectoryFiles "." pcFiles
-    handleAPI $ withAPI Live apiCfg $ forM_ files $ \f -> uploadFile page (pack f) f
+    handleAPI $ withAPI Live apiCfg
+              $ forM_ files $ \f -> uploadFile page (pack f) f
 
     -- process children
     let newParent = if T.last page == '/' then page else page `snoc` '/'
