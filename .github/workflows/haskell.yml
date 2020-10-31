@@ -5,8 +5,12 @@ on:
     branches: [master]
     tags:
       - 'v*'
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     branches: [master]
+    paths-ignore:
+      - 'docs/**'
 
 env:
   IMAGE_NAME: uow-util
@@ -92,6 +96,7 @@ jobs:
         asset_name: uow-util
         tag: ${{ github.ref }}
         overwrite: true
+        release_name: Release ${{ steps.build.outputs.version }}
 
     - name: Build Docker image
       if: ${{ matrix.resolver == 'stack' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
