@@ -20,14 +20,14 @@ import Data.Text
 data Location = Location {
     -- | The name of the location.
     locationName :: Text,
-    -- | The unique ID of the location.
-    locationId :: Text
+    -- | The unique ID of the location, if it exists.
+    locationId :: Maybe Text
 } deriving (Eq, Show)
 
 instance FromJSON Location where 
     parseJSON = withObject "Location" $ \obj ->
         Location <$> obj .: "name" 
-                 <*> obj .: "locationId"
+                 <*> obj .:? "locationId"
 
 instance ToJSON Location where 
     toJSON Location{..} =
