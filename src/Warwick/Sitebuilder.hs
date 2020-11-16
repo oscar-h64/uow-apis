@@ -1,7 +1,9 @@
---------------------------------------------------------------------------------
--- Haskell bindings for the University of Warwick APIs                        --
--- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Haskell bindings for the University of Warwick APIs                       --
+-------------------------------------------------------------------------------
+-- This source code is licensed under the MIT licence found in the           --
+-- LICENSE file in the root directory of this source tree.                   --
+-------------------------------------------------------------------------------
 
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -13,9 +15,11 @@ module Warwick.Sitebuilder (
     SitebuilderInstance(..),
 
     createPage,
+    createPageWithRHSFromFile,
     createPageFromFile,
     editPage,
     editPageFromFile,
+    editPageRHSFromFile,
     pageInfo,
     fileInfo,
     uploadFile,
@@ -87,15 +91,33 @@ createPage path pageData = do
     authData <- getAuthData
     lift $ lift $ API.createPage authData (Just path) pageData
 
+-- | `createPageWithRHSFromFile` @path title pageName filepath rhsFilepath@ 
+-- creates a page @pageName@ at the location @path@ with title @title@ and  
+-- the contents of @filePath@ as the page contents and the contents of
+-- @rhsFilepath@ as the RHS contents of the page.
+createPageWithRHSFromFile :: Text -> Text -> Text -> FilePath -> FilePath 
+                          -> Warwick ()
+createPageWithRHSFromFile path title name fp rhsfp = do
+    contents <- liftIO $ readFile fp
+    rhsContents <- liftIO $ readFile rhsfp
+    createPage path $ API.Page{
+        pcTitle = title,
+        pcContents = pack contents,
+        pcRhsContents = Just $ pack rhsContents,
+        pcPageName = name,
+        pcOptions = API.defaultPageOpts
+    }
+
 -- | `createPageFromFile` @path title pageName filepath@ creates a page @pageName@
 --   at the location @path@ with title @title@ and the contents of @filePath@ as 
 --   the page contents
 createPageFromFile :: Text -> Text -> Text -> FilePath -> Warwick ()
 createPageFromFile path title name fp = do
     contents <- liftIO $ readFile fp
-    createPage path $ API.Page {
+    createPage path $ API.Page{
         pcTitle = title,
         pcContents = pack contents,
+        pcRhsContents = Nothing,
         pcPageName = name,
         pcOptions = API.defaultPageOpts
     }
@@ -114,6 +136,19 @@ editPageFromFile page comment fp = do
     contents <- liftIO $ readFile fp
     editPage page API.PageUpdate{
         puContents = Just $ pack contents,
+        puRhsContents = Nothing,
+        puOptions = API.defaultPageOpts { API.poEditComment = Just comment }
+    }
+
+-- | 'editPageRHSFromFile' @page comment filepath@ updates the RHS of @page@  
+-- with the contents of the file located at @filepath@. @comment@ is used as 
+-- the change note for this edit.
+editPageRHSFromFile :: Text -> Text -> FilePath -> Warwick ()
+editPageRHSFromFile page comment fp = do 
+    contents <- liftIO $ readFile fp
+    editPage page API.PageUpdate{
+        puContents = Nothing,
+        puRhsContents = Just $ pack contents,
         puOptions = API.defaultPageOpts { API.poEditComment = Just comment }
     }
 
@@ -135,7 +170,11 @@ changeDeleteStatus :: Bool -> Text -> Warwick ()
 changeDeleteStatus deleted page = do
     authData <- getAuthData
     lift $ lift $ API.editPage authData (Just page) (Just "single") $ 
-        API.PageUpdate Nothing $ API.defaultPageOpts { API.poDeleted = Just deleted }
+        API.PageUpdate{
+            puContents = Nothing,
+            puRhsContents = Nothing,
+            puOptions = API.defaultPageOpts{ API.poDeleted = Just deleted }
+        }
 
 -- | 'deletePage' @path@ sets the deleted status to true for the page at @path@
 deletePage :: Text -> Warwick ()
