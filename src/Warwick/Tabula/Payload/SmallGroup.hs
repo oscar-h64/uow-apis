@@ -128,21 +128,25 @@ instance FromJSON SmallGroup where
 
 data EventState
     = AttendedEvent 
+    | AttendedEventRemotely
     | MissedAuthorisedEvent
     | MissedUnauthorisedEvent
     | NotRecordedEvent
     | LateEvent
     | NotExpectedEvent
+    | NotExpectedPastEvent
     | Other Text
     deriving (Eq, Show)
 
 instance FromJSON EventState where 
     parseJSON (String "Attended") = pure AttendedEvent
+    parseJSON (String "AttendedRemotely") = pure AttendedEventRemotely
     parseJSON (String "MissedAuthorised") = pure MissedAuthorisedEvent
     parseJSON (String "MissedUnauthorised") = pure MissedUnauthorisedEvent
     parseJSON (String "NotRecorded") = pure NotRecordedEvent
     parseJSON (String "Late") = pure LateEvent
     parseJSON (String "NotExpected") = pure NotExpectedEvent
+    parseJSON (String "NotExpectedPast") = pure NotExpectedPastEvent
     parseJSON (String other) = pure $ Other other
     parseJSON _ = fail "Not a valid EventState"
 
