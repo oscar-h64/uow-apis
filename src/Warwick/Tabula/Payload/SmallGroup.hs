@@ -89,7 +89,7 @@ data EventRef = EventRef {
 
 instance FromJSON EventRef where 
     parseJSON = withObject "EventRef" $ \obj ->
-        EventRef <$> obj .: "event"
+        EventRef <$> obj .: "id"
                  <*> obj .: "week"
 
 data Event = Event {
