@@ -48,6 +48,7 @@ module Warwick.Tabula (
     retrieveSmallGroupAllocations,
     retrieveSmallGroupAttendance,
     registerAttendance,
+    addEventMember,
 
     -- * Profiles API
     retrieveMember,
@@ -274,6 +275,23 @@ registerAttendance
 registerAttendance mc smallGroupSet smallGroup event week req = do 
     authData <- getAuthData
     handle $ I.registerAttendance 
+        authData mc smallGroupSet smallGroup event (Just week) req
+
+-- | `addEventMember` @moduleCode smallGroupSet smallGroup event week req@
+-- adds a member to the event identified by @event@. The member's University
+-- ID is contained in @req@ along with (optional) identifiers of the event
+-- and week that is being replaced.
+addEventMember
+    :: ModuleCode
+    -> UUID
+    -> UUID 
+    -> UUID 
+    -> Int
+    -> AddEventMemberReq
+    -> Tabula (TabulaResponse None)
+addEventMember mc smallGroupSet smallGroup event week req = do 
+    authData <- getAuthData
+    handle $ I.addEventMember 
         authData mc smallGroupSet smallGroup event (Just week) req
 
 -------------------------------------------------------------------------------

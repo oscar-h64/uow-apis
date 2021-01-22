@@ -95,10 +95,21 @@ registerAttendance ::
     RegisterAttendanceReq ->
     ClientM (TabulaResponse None)
 
+addEventMember 
+    :: BasicAuthData
+    -> ModuleCode
+    -> UUID
+    -> UUID
+    -> UUID
+    -> Maybe Int
+    -> AddEventMemberReq
+    -> ClientM (TabulaResponse None)
+
 listSmallGroupSets :<|> 
     retrieveSmallGroupAllocations :<|>
     retrieveSmallGroupAttendance :<|>
-    registerAttendance = smallGroupAPI
+    registerAttendance :<|>
+    addEventMember = smallGroupAPI
 
 --------------------------------------------------------------------------------
 

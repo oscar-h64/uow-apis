@@ -175,6 +175,19 @@ type CourseworkAPI =
       Capture "jobID" UUID :> 
       Get '[JSON] (TabulaResponse JobInstance)
 
+data AddEventMemberReq = MkAddEventMemberReq {
+     addEventMemberUniversityID :: Text,
+     addEventMemberReplaceWeek :: Maybe Int,
+     addEventMemberReplaceEvent :: Maybe UUID
+} deriving (Eq, Show)
+
+instance ToJSON AddEventMemberReq where
+     toJSON MkAddEventMemberReq{..} =
+          object [ "member" .= addEventMemberUniversityID 
+                 , "replacedWeek" .= addEventMemberReplaceWeek
+                 , "replacedEvent" .= addEventMemberReplaceEvent 
+                 ]
+
 newtype RegisterAttendanceReq = MkRegisterAttendanceReq {
      registerAttendees :: M.Map Text Text
 } deriving (Eq, Show)
@@ -214,6 +227,19 @@ type SmallGroupAPI =
       "register" :>
       QueryParam "week" Int :>
       ReqBody '[JSON] RegisterAttendanceReq :>
+      Put '[JSON] (TabulaResponse None)
+ :<|> TabulaAuth :>
+      "module" :>
+      Capture "moduleCode" ModuleCode :>
+      "groups" :>
+      Capture "smallGroupSetId" UUID :>
+      "groups" :>
+      Capture "smallGroupId" UUID :>
+      "events" :>
+      Capture "smallGroupEvent" UUID :>
+      "members" :>
+      QueryParam "week" Int :>
+      ReqBody '[JSON] AddEventMemberReq :>
       Put '[JSON] (TabulaResponse None)
 
 -- | A list of very reduced 'Member' values.
