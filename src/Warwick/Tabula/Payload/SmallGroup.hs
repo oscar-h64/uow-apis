@@ -223,7 +223,7 @@ data SmallGroupEventAttendance = SmallGroupEventAttendance {
     sgeaJoinedOn :: Maybe Date,
     sgeaExpectedToAttend :: Bool,
     sgeaAddedManually :: Bool,
-    sgeaReplacesAttendance :: Maybe SmallGroupEventAttendance,
+    sgeaReplacesAttendance :: Maybe EventRef,
     sgeaReplacedBy :: [SmallGroupEventAttendance]
 } deriving (Eq, Show)
 
