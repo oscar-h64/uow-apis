@@ -205,25 +205,17 @@ instance HasPayload SmallGroupAllocations where
 
 data StudentEventAttendance = StudentEventAttendance {
     seaEventRef :: EventRef, 
-    seaStatus :: EventAttendanceStatus
+    seaState :: Text,
+    seaDetails :: Maybe SmallGroupEventAttendance,
+    seaNote :: Maybe AttendanceNote
 } deriving (Eq, Show)
 
 instance FromJSON StudentEventAttendance where
     parseJSON = withObject "StudentEventAttendance" $ \obj ->
         StudentEventAttendance <$> obj .: "event"
-                               <*> obj .: "status"
-
-data EventAttendanceStatus = EventAttendanceStatus {
-    easState :: Text,
-    easDetails :: Maybe SmallGroupEventAttendance,
-    easNote :: Maybe AttendanceNote
-} deriving (Eq, Show)
-
-instance FromJSON EventAttendanceStatus where 
-    parseJSON = withObject "EventAttendanceStatus" $ \obj ->
-        EventAttendanceStatus <$> obj .: "state"
-                              <*> obj .:? "details"
-                              <*> obj .:? "note"
+                               <*> obj .: "state"
+                               <*> obj .:? "details"
+                               <*> obj .:? "note"
 
 data SmallGroupEventAttendance = SmallGroupEventAttendance {
     sgeaUpdatedBy :: Text,
