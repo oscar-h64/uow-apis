@@ -85,9 +85,20 @@ retrieveSmallGroupAttendance ::
     Text -> 
     ClientM (TabulaResponse SmallGroupAttendanceResponse)
 
+registerAttendance ::
+    BasicAuthData ->
+    ModuleCode ->
+    UUID ->
+    UUID ->
+    UUID ->
+    Maybe Int ->
+    RegisterAttendanceReq ->
+    ClientM (TabulaResponse None)
+
 listSmallGroupSets :<|> 
     retrieveSmallGroupAllocations :<|>
-    retrieveSmallGroupAttendance = smallGroupAPI
+    retrieveSmallGroupAttendance :<|>
+    registerAttendance = smallGroupAPI
 
 --------------------------------------------------------------------------------
 

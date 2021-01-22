@@ -1,7 +1,9 @@
---------------------------------------------------------------------------------
--- Haskell bindings for the Tabula API                                        --
--- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Haskell bindings for the University of Warwick APIs                       --
+-------------------------------------------------------------------------------
+-- This source code is licensed under the MIT licence found in the           --
+-- LICENSE file in the root directory of this source tree.                   --
+-------------------------------------------------------------------------------
 
 module Warwick.Tabula.API where
 
@@ -9,6 +11,7 @@ module Warwick.Tabula.API where
 
 import Data.Aeson
 import qualified Data.HashMap.Lazy as HM
+import qualified Data.Map as M
 import Data.ByteString as BS
 import Data.UUID.Types
 import Data.Proxy
@@ -172,6 +175,14 @@ type CourseworkAPI =
       Capture "jobID" UUID :> 
       Get '[JSON] (TabulaResponse JobInstance)
 
+newtype RegisterAttendanceReq = MkRegisterAttendanceReq {
+     registerAttendees :: M.Map Text Text
+} deriving (Eq, Show)
+
+instance ToJSON RegisterAttendanceReq where
+     toJSON MkRegisterAttendanceReq{..} = 
+          object [ "attendance" .= registerAttendees ]
+
 type SmallGroupAPI = 
       TabulaAuth :> 
       "module" :>
@@ -191,6 +202,19 @@ type SmallGroupAPI =
       Capture "smallGroupId" Text :> 
       "attendance" :>
       Get '[JSON] (TabulaResponse SmallGroupAttendanceResponse)
+ :<|> TabulaAuth :>
+      "module" :>
+      Capture "moduleCode" ModuleCode :>
+      "groups" :>
+      Capture "smallGroupSetId" UUID :>
+      "groups" :>
+      Capture "smallGroupId" UUID :>
+      "events" :>
+      Capture "smallGroupEvent" UUID :>
+      "register" :>
+      QueryParam "week" Int :>
+      ReqBody '[JSON] RegisterAttendanceReq :>
+      Put '[JSON] (TabulaResponse None)
 
 -- | A list of very reduced 'Member' values.
 newtype AgentList = AgentList { getAgents :: [Member] }
