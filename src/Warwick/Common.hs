@@ -1,11 +1,23 @@
---------------------------------------------------------------------------------
--- Haskell bindings for the University of Warwick APIs                        --
--- Copyright 2019 Michael B. Gale (m.gale@warwick.ac.uk)                      --
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-- Haskell bindings for the University of Warwick APIs                       --
+-------------------------------------------------------------------------------
+-- This source code is licensed under the MIT licence found in the           --
+-- LICENSE file in the root directory of this source tree.                   --
+-------------------------------------------------------------------------------
 
 {-# LANGUAGE CPP #-}
 
-module Warwick.Common where 
+module Warwick.Common (
+    DateTime(..),
+    Date(..),
+    HasBaseUrl(..),
+    APIError(..),
+    Warwick,
+    APISession(..),
+    HasApiSession(..),
+    withAPI,
+    withPublicAPI
+) where 
 
 --------------------------------------------------------------------------------
 
@@ -91,8 +103,15 @@ instance Monad m => HasApiSession (StateT APISession m) where
 
 --------------------------------------------------------------------------------
 
-withAPI ::
-    HasBaseUrl i => i -> APIConfig -> Warwick a -> IO (Either APIError a)
+-- | `withAPI` @instance credentials action@ runs an API client @action@
+-- against an API instance given by @instance@. For authentication, the
+-- credentials given by @credentials@ are used.
+withAPI 
+    :: HasBaseUrl inst 
+    => inst 
+    -> APIConfig 
+    -> Warwick a 
+    -> IO (Either APIError a)
 withAPI inst APIConfig{..} m = do
     manager <- newManager tlsManagerSettings
 
@@ -108,5 +127,25 @@ withAPI inst APIConfig{..} m = do
     case r of
         Left serr -> pure $ Left $ TransportError serr
         Right res -> pure res
+
+-- | `withPublicAPI` @instance action@ runs an API client @action@ which
+-- assumes that no authentication is required against an API instance given
+-- by @instance@.
+withPublicAPI
+    :: HasBaseUrl inst
+    => inst
+    -> ClientM a
+    -> IO (Either APIError a)
+withPublicAPI inst m = do
+    manager <- newManager tlsManagerSettings
+
+    let url = getBaseUrl inst
+    let env = ClientEnv manager url
+
+    r <- runClientM m (env Nothing)
+
+    case r of
+        Left serr -> pure $ Left $ TransportError serr
+        Right res -> pure $ Right res
 
 --------------------------------------------------------------------------------
