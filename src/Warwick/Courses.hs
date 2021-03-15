@@ -7,7 +7,8 @@
 
 module Warwick.Courses (
     CoursesInstance(..),
-    API.getModule
+    API.getModule,
+    API.searchModules
 ) where
 
 -------------------------------------------------------------------------------
