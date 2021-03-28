@@ -30,7 +30,7 @@ data FileUpload = MkFileUpload {
 }
 
 instance ToForm FileUpload where
-    toForm MkFileUpload{..} = Form $ HM.singleton "csrfToken" [fuCsrf]
+    toForm MkFileUpload{..} = Form $ HM.empty -- HM.singleton "csrfToken" [fuCsrf]
 
 -------------------------------------------------------------------------------
 
@@ -41,6 +41,7 @@ type AEP =
       "assessment" :>
       Capture "assessmentID" UUID :>
       "upload" :>
+      Header "OnlineExams-Upload" Bool :>
       ReqBody '[FormUrlEncoded] FileUpload :>
       Post '[JSON] () 
 
@@ -52,6 +53,7 @@ aep = Proxy
 uploadFile :: 
     Maybe Text ->
     UUID ->
+    Maybe Bool ->
     FileUpload ->
     ClientM ()
 

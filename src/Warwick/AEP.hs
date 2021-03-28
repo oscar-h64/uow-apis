@@ -88,11 +88,10 @@ withAEP inst sscCookie m = do
 uploadFile :: UUID -> FilePath -> AEP ()
 uploadFile assessmentID _ = do
     sscCookie <- ask
-    let cookies = "__Host-SSO-SSC-OnlineExams=" <> sscCookie
-               <> "; __Host-OnlineExams-CSRF" <> "0"
+    let cookie = "__Host-SSO-SSC-OnlineExams=" <> sscCookie
 
     let form = AEP.MkFileUpload "0"
     
-    lift $ lift $ AEP.uploadFile (Just cookies) assessmentID form
+    lift $ lift $ AEP.uploadFile (Just cookie) assessmentID (Just True) form
 
 --------------------------------------------------------------------------------
