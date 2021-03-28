@@ -22,6 +22,7 @@ import Servant.API
 import Servant.Client
 
 import Web.FormUrlEncoded
+import Warwick.MultiPart
 
 -------------------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ type AEP =
       Capture "assessmentID" UUID :>
       "upload" :>
       Header "OnlineExams-Upload" Bool :>
-      ReqBody '[FormUrlEncoded] FileUpload :>
+      ReqBody '[MultiPart] FileUpload :>
       Post '[JSON] () 
 
 aep :: Proxy AEP
