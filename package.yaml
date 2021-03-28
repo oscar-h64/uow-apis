@@ -51,6 +51,8 @@ dependencies:
 - uuid-types
 - mtl
 - exceptions
+- http-api-data
+- uuid
 
 default-extensions:
 - OverloadedStrings
