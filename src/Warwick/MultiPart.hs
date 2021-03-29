@@ -16,9 +16,8 @@ module Warwick.MultiPart (
 
 -------------------------------------------------------------------------------
 
-import Data.ByteString
+import Data.ByteString.Lazy (ByteString, toStrict)
 import qualified Data.HashMap.Lazy as HM
-import Data.Text
 
 import Network.HTTP.Media ((//), (/:))
 
@@ -32,15 +31,16 @@ boundary :: ByteString
 boundary = "------------------------------"
 
 instance Accept MultiPart where
-    contentType _ = "multipart" // "form-data" /: ("boundary", boundary)
+    contentType _ = "multipart" // "form-data"
+                                /: ("boundary", toStrict boundary)
 
 -------------------------------------------------------------------------------
 
-type MultiPartForm = HM.HashMap Text Part
+type MultiPartForm = HM.HashMap ByteString Part
 
-data Part = Field { fieldValue :: Text }
-          | File { fileName :: Text
-                 , fileType :: Text
+data Part = Field { fieldValue :: ByteString }
+          | File { fileName :: ByteString
+                 , fileType :: ByteString
                  , fileContents :: ByteString
                  }
 
@@ -55,6 +55,24 @@ instance ToMultiPartForm MultiPartForm where
 -------------------------------------------------------------------------------
 
 instance ToMultiPartForm a => MimeRender MultiPart a where
-    mimeRender = undefined
+    mimeRender _ object =
+        let form = toMultiPartForm object
+
+            renderPart (name, Field{..}) = mconcat
+                [ boundary, "\n"
+                , "Content-Disposition: form-data; name=\"", name, "\"\n"
+                , "\n"
+                , fieldValue, "\n"
+                ]
+            renderPart (name, File{..}) = mconcat
+                [ boundary, "\n"
+                , "Content-Disposition: form-data; name=\"", name, "\"; ",
+                    "filename=\"", fileName, "\"\n"
+                , "Content-Type: ", fileType, "\n"
+                , "\n"
+                , fileContents, "\n"
+                ]
+
+        in mconcat (map renderPart $ HM.toList form) <> boundary <> "--" 
 
 -------------------------------------------------------------------------------

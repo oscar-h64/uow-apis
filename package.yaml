@@ -51,6 +51,7 @@ dependencies:
 - uuid-types
 - mtl
 - exceptions
+- filepath
 - http-api-data
 - uuid
 
@@ -82,7 +83,6 @@ executables:
       - uow-apis
       - extra
       - optparse-applicative
-      - filepath
       - directory
       - ascii-progress
       - yaml

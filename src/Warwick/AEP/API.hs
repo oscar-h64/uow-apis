@@ -7,13 +7,11 @@
 
 module Warwick.AEP.API (
     AEP,
-    FileUpload(..),
-    uploadFile,
+    uploadFile
 ) where 
 
 --------------------------------------------------------------------------------
 
-import qualified Data.HashMap.Lazy as HM
 import Data.Text
 import Data.Proxy
 import Data.UUID
@@ -21,17 +19,8 @@ import Data.UUID
 import Servant.API
 import Servant.Client
 
-import Web.FormUrlEncoded
+import Warwick.AEP.FileUpload
 import Warwick.MultiPart
-
--------------------------------------------------------------------------------
-
-data FileUpload = MkFileUpload {
-    fuCsrf :: Text
-}
-
-instance ToForm FileUpload where
-    toForm MkFileUpload{..} = Form $ HM.empty -- HM.singleton "csrfToken" [fuCsrf]
 
 -------------------------------------------------------------------------------
 

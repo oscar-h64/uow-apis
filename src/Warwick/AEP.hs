@@ -7,6 +7,7 @@
 
 module Warwick.AEP (
     module Warwick.Common,
+    module Warwick.AEP.FileUpload,
 
     AEPInstance(..),
 
@@ -22,15 +23,23 @@ import Control.Monad.Except
 import Control.Monad.Reader
 
 import Data.Aeson
+import Data.ByteString.Lazy as BS (fromStrict, readFile)
+import Data.Proxy
 import Data.Text
 import Data.UUID
 
-import Network.HTTP.Conduit
+import Network.HTTP.Conduit hiding ( Proxy )
+import Network.Mime
 
 import Servant.Client
 
+import System.FilePath
+
 import Warwick.Common
+import Warwick.AEP.FileUpload
 import qualified Warwick.AEP.API as AEP
+import Servant.API
+import Warwick.MultiPart
 
 --------------------------------------------------------------------------------
 
@@ -86,11 +95,17 @@ withAEP inst sscCookie m = do
 -- | `uploadFile` @assessmentID file@ uploads @file@ as an answer file to the
 -- assessment identified by @assessmentID@.
 uploadFile :: UUID -> FilePath -> AEP ()
-uploadFile assessmentID _ = do
+uploadFile assessmentID filePath = do
     sscCookie <- ask
     let cookie = "__Host-SSO-SSC-OnlineExams=" <> sscCookie
 
-    let form = AEP.MkFileUpload "0"
+    let fileName = pack $ takeFileName filePath
+    fileContents <- liftIO $ BS.readFile filePath
+    let form = MkFileUpload fileName
+                            (fromStrict $ defaultMimeLookup fileName)
+                            fileContents
+
+    liftIO $ print $ mimeRender (Proxy :: Proxy MultiPart) form
     
     lift $ lift $ AEP.uploadFile (Just cookie) assessmentID (Just True) form
 
