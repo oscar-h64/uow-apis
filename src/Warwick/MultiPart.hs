@@ -59,20 +59,22 @@ instance ToMultiPartForm a => MimeRender MultiPart a where
         let form = toMultiPartForm object
 
             renderPart (name, Field{..}) = mconcat
-                [ boundary, "\n"
-                , "Content-Disposition: form-data; name=\"", name, "\"\n"
-                , "\n"
-                , fieldValue, "\n"
+                [ "--", boundary, "\r\n"
+                , "Content-Disposition: form-data; name=\"", name, "\"\r\n"
+                , "\r\n"
+                , fieldValue, "\r\n"
                 ]
             renderPart (name, File{..}) = mconcat
-                [ boundary, "\n"
+                [ "--", boundary, "\r\n"
                 , "Content-Disposition: form-data; name=\"", name, "\"; ",
-                    "filename=\"", fileName, "\"\n"
-                , "Content-Type: ", fileType, "\n"
-                , "\n"
-                , fileContents, "\n"
+                    "filename=\"", fileName, "\"\r\n"
+                , "Content-Type: ", fileType, "\r\n"
+                , "\r\n"
+                , fileContents, "\r\n"
                 ]
 
-        in mconcat (map renderPart $ HM.toList form) <> boundary <> "--" 
+            endBoundary = "--" <> boundary <> "--\r\n"
+
+        in mconcat (map renderPart $ HM.toList form) <> endBoundary
 
 -------------------------------------------------------------------------------
