@@ -16,6 +16,8 @@ import qualified Data.HashMap.Lazy as HM
 import Data.Text
 import Data.Text.Encoding
 
+import Servant.API
+
 import Warwick.MultiPart
 
 -------------------------------------------------------------------------------
@@ -23,12 +25,14 @@ import Warwick.MultiPart
 data FileUpload = MkFileUpload {
     fuFileName :: Text,
     fuFileType :: ByteString,
-    fuFileContents :: ByteString
+    fuFileContents :: ByteString,
+    fuOverwrite :: Bool
 }
 
 instance ToMultiPartForm FileUpload where
     toMultiPartForm MkFileUpload{..} =
-        HM.fromList [ ("xhr", Field "true")
+        HM.fromList [ ("overwrite", Field $ fromStrict $ toHeader fuOverwrite)
+                    , ("xhr", Field "true")
                     , ("file", File (fromStrict $ encodeUtf8 fuFileName)
                                     fuFileType
                                     fuFileContents

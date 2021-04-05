@@ -24,9 +24,9 @@ import Control.Monad.Reader
 
 import Data.Aeson
 import Data.ByteString.Lazy as BS (fromStrict, readFile)
-import Data.Proxy
 import Data.Text
 import Data.UUID
+import Data.Version
 
 import Network.HTTP.Conduit hiding ( Proxy )
 import Network.Mime
@@ -35,11 +35,10 @@ import Servant.Client
 
 import System.FilePath
 
+import Paths_uow_apis (version)
 import Warwick.Common
 import Warwick.AEP.FileUpload
 import qualified Warwick.AEP.API as AEP
-import Servant.API
-import Warwick.MultiPart
 
 --------------------------------------------------------------------------------
 
@@ -92,10 +91,11 @@ withAEP inst sscCookie m = do
 
 -------------------------------------------------------------------------------
 
--- | `uploadFile` @assessmentID file@ uploads @file@ as an answer file to the
--- assessment identified by @assessmentID@.
-uploadFile :: UUID -> FilePath -> AEP ()
-uploadFile assessmentID filePath = do
+-- | `uploadFile` @assessmentID file overwrite@ uploads @file@ as an answer 
+-- file to the assessment identified by @assessmentID@. If @overwrite@ is True
+-- then an existing file with the same name will be overwritten
+uploadFile :: UUID -> FilePath -> Bool -> AEP ()
+uploadFile assessmentID filePath overwrite = do
     sscCookie <- ask
     let cookie = "__Host-SSO-SSC-OnlineExams=" <> sscCookie
 
@@ -104,9 +104,15 @@ uploadFile assessmentID filePath = do
     let form = MkFileUpload fileName
                             (fromStrict $ defaultMimeLookup fileName)
                             fileContents
-
-    liftIO $ print $ mimeRender (Proxy :: Proxy MultiPart) form
+                            overwrite
     
-    lift $ lift $ AEP.uploadFile (Just cookie) assessmentID (Just True) form
+    -- Requested by Adam/IDG
+    let userAgent = "uow-apis/" <> pack (showVersion version)
+
+    void $ lift $ lift $ AEP.uploadFile (Just cookie)
+                                        assessmentID
+                                        True
+                                        userAgent
+                                        form
 
 --------------------------------------------------------------------------------

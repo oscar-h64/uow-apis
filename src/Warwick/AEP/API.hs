@@ -8,12 +8,12 @@
 module Warwick.AEP.API (
     AEP,
     uploadFile
-) where 
+) where
 
 --------------------------------------------------------------------------------
 
-import Data.Text
 import Data.Proxy
+import Data.Text
 import Data.UUID
 
 import Servant.API
@@ -31,23 +31,24 @@ type AEP =
       "assessment" :>
       Capture "assessmentID" UUID :>
       "upload" :>
-      Header "OnlineExams-Upload" Bool :>
+      Header' '[Required, Strict] "OnlineExams-Upload" Bool :>
+      Header' '[Required, Strict] "User-Agent" Text :>
       ReqBody '[MultiPart] FileUpload :>
-      Post '[JSON] () 
+      Post '[*] NoContent
 
 aep :: Proxy AEP
 aep = Proxy
 
 --------------------------------------------------------------------------------
 
-uploadFile :: 
+uploadFile ::
     Maybe Text ->
     UUID ->
-    Maybe Bool ->
+    Bool ->
+    Text ->
     FileUpload ->
-    ClientM ()
+    ClientM NoContent
 
 uploadFile = client aep
 
 --------------------------------------------------------------------------------
-    
