@@ -12,7 +12,7 @@ module Warwick.AEP.API (
 
 --------------------------------------------------------------------------------
 
-import Data.ByteString.Lazy   ( ByteString )
+import Data.ByteString.Lazy ( ByteString )
 import Data.Proxy
 import Data.Text
 import Data.UUID
@@ -28,6 +28,8 @@ import Warwick.AEP.FileUpload
 type AEPAuth = Header' '[Required, Strict] "Cookie" Text
 
 type AEP =
+      -- POST /assessment/:uuid/upload
+      -- Attach a file to the assessment identified by `uuid`
       AEPAuth :>
       "assessment" :>
       Capture "assessmentID" UUID :>

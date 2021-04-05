@@ -18,6 +18,7 @@ import Servant.Multipart
 
 -------------------------------------------------------------------------------
 
+-- | Represents the information required to upload a file
 data FileUpload = MkFileUpload {
     fuFilePath  :: FilePath,
     fuFileName  :: Text,
@@ -36,12 +37,5 @@ instance ToMultipart Tmp FileUpload where
                                  fuFilePath
 
                       ]
-        -- HM.fromList [ ("overwrite", Field $ fromStrict $ toHeader fuOverwrite)
-        --             , ("xhr", Field "true")
-        --             , ("file", File (fromStrict $ encodeUtf8 fuFileName)
-        --                             fuFileType
-        --                             fuFileContents
-        --               )
-        --             ]
 
 -------------------------------------------------------------------------------

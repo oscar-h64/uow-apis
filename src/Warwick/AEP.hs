@@ -98,9 +98,11 @@ withAEP inst sscCookie m = do
 -- then an existing file with the same name will be overwritten
 uploadFile :: UUID -> FilePath -> Bool -> AEP ()
 uploadFile assessmentID filePath overwrite = do
+    -- Set SSC cookie for auth
     sscCookie <- ask
     let cookie = "__Host-SSO-SSC-OnlineExams=" <> sscCookie
 
+    -- Make `FileUpload` value. The mimetype is derived from the extension
     let fileName = pack $ takeFileName filePath
     let form = MkFileUpload filePath
                             fileName
@@ -110,6 +112,7 @@ uploadFile assessmentID filePath overwrite = do
     -- Requested by Adam/IDG
     let userAgent = "uow-apis/" <> pack (showVersion version)
 
+    -- The boundary to use for the request
     boundary <- liftIO $ genBoundary
 
     void $ lift $ lift $ AEP.uploadFile cookie
