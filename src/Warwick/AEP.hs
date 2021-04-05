@@ -23,15 +23,16 @@ import Control.Monad.Except
 import Control.Monad.Reader
 
 import Data.Aeson
-import Data.ByteString.Lazy as BS (fromStrict, readFile)
 import Data.Text
+import Data.Text.Encoding
 import Data.UUID
 import Data.Version
 
-import Network.HTTP.Conduit hiding ( Proxy )
+import Network.HTTP.Conduit hiding (Proxy)
 import Network.Mime
 
 import Servant.Client
+import Servant.Multipart
 
 import System.FilePath
 
@@ -44,6 +45,7 @@ import qualified Warwick.AEP.API as AEP
 
 -- | Enumerates AEP instances.
 data AEPInstance = Live | Sandbox | CustomInstance BaseUrl
+    deriving Show
 
 instance ToJSON AEPInstance where 
     toJSON Live    = String "live"
@@ -100,19 +102,20 @@ uploadFile assessmentID filePath overwrite = do
     let cookie = "__Host-SSO-SSC-OnlineExams=" <> sscCookie
 
     let fileName = pack $ takeFileName filePath
-    fileContents <- liftIO $ BS.readFile filePath
-    let form = MkFileUpload fileName
-                            (fromStrict $ defaultMimeLookup fileName)
-                            fileContents
+    let form = MkFileUpload filePath
+                            fileName
+                            (decodeUtf8 $ defaultMimeLookup fileName)
                             overwrite
     
     -- Requested by Adam/IDG
     let userAgent = "uow-apis/" <> pack (showVersion version)
 
-    void $ lift $ lift $ AEP.uploadFile (Just cookie)
+    boundary <- liftIO $ genBoundary
+
+    void $ lift $ lift $ AEP.uploadFile cookie
                                         assessmentID
                                         True
                                         userAgent
-                                        form
+                                        (boundary, form)
 
 --------------------------------------------------------------------------------

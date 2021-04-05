@@ -12,19 +12,20 @@ module Warwick.AEP.API (
 
 --------------------------------------------------------------------------------
 
+import Data.ByteString.Lazy   ( ByteString )
 import Data.Proxy
 import Data.Text
 import Data.UUID
 
 import Servant.API
 import Servant.Client
+import Servant.Multipart
 
 import Warwick.AEP.FileUpload
-import Warwick.MultiPart
 
 -------------------------------------------------------------------------------
 
-type AEPAuth = Header "Cookie" Text
+type AEPAuth = Header' '[Required, Strict] "Cookie" Text
 
 type AEP =
       AEPAuth :>
@@ -33,7 +34,7 @@ type AEP =
       "upload" :>
       Header' '[Required, Strict] "OnlineExams-Upload" Bool :>
       Header' '[Required, Strict] "User-Agent" Text :>
-      ReqBody '[MultiPart] FileUpload :>
+      MultipartForm Tmp FileUpload :>
       Post '[*] NoContent
 
 aep :: Proxy AEP
@@ -42,11 +43,11 @@ aep = Proxy
 --------------------------------------------------------------------------------
 
 uploadFile ::
-    Maybe Text ->
+    Text ->
     UUID ->
     Bool ->
     Text ->
-    FileUpload ->
+    (ByteString, FileUpload) ->
     ClientM NoContent
 
 uploadFile = client aep
