@@ -28,14 +28,11 @@ data FileUpload = MkFileUpload {
 
 instance ToMultipart Tmp FileUpload where
     toMultipart MkFileUpload{..} =
-        MultipartData [ Input "overwrite" (toQueryParam fuOverwrite)
-                      , Input "xhr" "true"
-                      ]
+        MultipartData [ Input "overwrite" (toQueryParam fuOverwrite) ]
                       [ FileData "file"
                                  fuFileName
                                  fuFileType
                                  fuFilePath
-
                       ]
 
 -------------------------------------------------------------------------------
