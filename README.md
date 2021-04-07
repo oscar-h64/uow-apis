@@ -556,7 +556,7 @@ withAPI Live cfg getMyItems
 
 ## AEP API
 
-**Please note this endpoint is not an official API endpoint, and its use is not supported. Do not contact ITS about any issues regarding this endpoint. Note that using this endpoint directly lacks the enhanced logging provided by the AEP and all use of it is at your own risk. You should always be prepared to upload normally via the AEP interface.**
+**Please note this endpoint is not an official API endpoint, and its use is not supported. Do not contact ITS about any issues regarding this endpoint. Note that using this endpoint directly lacks the enhanced logging provided by the AEP (such as logging the start time of uploads, and logging failed upload attempts) and all use of it is at your own risk. You should always be prepared to upload normally via the AEP interface.**
 
 - A file can be uploaded to an assessment. The last parameter determines if existing files with the same name should be overwritten or not:
 ```haskell
