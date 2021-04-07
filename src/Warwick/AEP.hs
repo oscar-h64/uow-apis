@@ -25,7 +25,7 @@ import Control.Monad.Reader
 import Data.Aeson
 import Data.Text
 import Data.Text.Encoding
-import Data.UUID
+import Data.UUID.Types
 import Data.Version
 
 import Network.HTTP.Conduit hiding (Proxy)
@@ -113,7 +113,7 @@ uploadFile assessmentID filePath overwrite = do
     let userAgent = "uow-apis/" <> pack (showVersion version)
 
     -- The boundary to use for the request
-    boundary <- liftIO $ genBoundary
+    boundary <- liftIO genBoundary
 
     void $ lift $ lift $ AEP.uploadFile cookie
                                         assessmentID

@@ -15,7 +15,7 @@ module Warwick.AEP.API (
 import Data.ByteString.Lazy ( ByteString )
 import Data.Proxy
 import Data.Text
-import Data.UUID
+import Data.UUID.Types
 
 import Servant.API
 import Servant.Client

@@ -54,7 +54,6 @@ dependencies:
 - filepath
 - http-api-data
 - servant-multipart
-- uuid
 
 default-extensions:
 - OverloadedStrings
